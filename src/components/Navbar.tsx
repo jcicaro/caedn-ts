@@ -15,6 +15,7 @@ export default function Navbar() {
         <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
         <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
         <Link to="/lunaspeech" className="btn btn-ghost">Speech</Link>
+        <Link to="/lunanarrative" className="btn btn-ghost">Narrative</Link>
       </div>
 
       
@@ -57,6 +58,8 @@ export default function Navbar() {
           <li><Link to="/">Home</Link></li>
           <li><Link to="/basicmath">Basic Math</Link></li>
           <li><Link to="/multiplication">Multiplication</Link></li>
+          <li><Link to="/lunaspeech" className="btn btn-ghost">Speech</Link></li>
+          <li><Link to="/lunanarrative" className="btn btn-ghost">Narrative</Link></li>
         </ul>
       </div>
 
