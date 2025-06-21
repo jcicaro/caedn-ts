@@ -22,12 +22,11 @@ const generateProblem = (difficulty: Difficulty, multiples: number[]) => {
 };
 
 const ProblemDisplay: React.FC<{ num1: number; num2: number }> = ({ num1, num2 }) => (
-  <div className="text-6xl font-bold text-center lg:text-left text-primary">
+  <div className="text-5xl font-bold text-center lg:text-left">
     {num1} × {num2} = ?
   </div>
 );
 
-// SkipCountVisual shows rows for skip counting: each row represents one skip
 const SkipCountVisual: React.FC<{ times: number; step: number; icon?: string }> = ({ times, step, icon = '⭐' }) => (
   <div className="flex flex-col gap-4 items-center lg:items-start">
     {Array.from({ length: times }).map((_, i) => {
@@ -125,35 +124,45 @@ export default function Multiplication() {
               <ProblemDisplay num1={problem.num1} num2={problem.num2} />
               {difficulty === DIFFICULTY.EASY && (
                 <div className="mt-6">
-                  <div className="text-xl font-semibold text-info mb-3">Skip Counting Visual:</div>
                   <SkipCountVisual times={problem.num2} step={problem.num1} />
                 </div>
               )}
             </div>
 
-            <div className="flex-1 flex flex-col justify-center lg:pl-8">
-              <div className="bg-base-200 border border-base-300 rounded-box p-6 shadow-inner">
-                <div className="text-2xl font-bold text-accent mb-4">Answer</div>
+            <div className="flex-1 flex justify-center">
+              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+                <legend className="fieldset-legend text-xl">Answer</legend>
+
                 <input
                   type="number"
-                  ref={inputRef}
+                  placeholder="?"
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
                   onKeyDown={onKey}
-                  className="input input-bordered input-primary input-lg w-full text-center text-3xl mb-4"
+                  ref={inputRef}
+                  className="input input-bordered input-lg mb-4 w-full text-center"
                 />
-                <button onClick={check} className="btn btn-success btn-block mb-2">
-                  Check
-                </button>
-                <button onClick={newProblem} className="btn btn-info btn-block">
-                  New
-                </button>
+
+                <div className="flex flex-col justify-center gap-2">
+                  <button
+                    onClick={(e) => { e.preventDefault(); check(); }}
+                    className="btn btn-outline btn-success w-full"
+                  >
+                    Check
+                  </button>
+                  <button
+                    onClick={(e) => { e.preventDefault(); newProblem(); }}
+                    className="btn btn-outline btn-primary w-full"
+                  >
+                    New
+                  </button>
+                </div>
+
                 {feedback && (
-                  <div className={`mt-4 text-xl font-bold text-center ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}> 
-                    {feedback}
-                  </div>
+                  <div className={`text-lg text-center mt-4 ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}>{feedback}</div>
                 )}
-              </div>
+
+              </fieldset>
             </div>
           </div>
         </div>
