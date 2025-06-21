@@ -106,13 +106,13 @@ export default function Multiplication() {
   };
 
   return (
-    <section className="hero min-h-screen">
-      <div className="hero-content flex-col w-full max-w-4xl px-4">
+    <section className="hero">
+      <div className="hero-content flex-col w-full max-w-4xl">
         <h1 className="text-4xl font-bold text-center">
           Luna's Fun with Products!
         </h1>
 
-        <div className="stats stats-vertical md:stats-horizontal shadow mb-8">
+        <div className="stats stats-vertical md:stats-horizontal shadow my-4">
           <div className="stat text-center">
             <div className="stat-title">Correct Answers</div>
             <div className="stat-value">{score}</div>

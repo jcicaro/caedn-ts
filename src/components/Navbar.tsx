@@ -10,14 +10,14 @@ export default function Navbar() {
       </div>
 
 
-      {/* <div className="flex-none hidden md:flex space-x-4">
+      <div className="flex-none hidden md:flex space-x-4">
         <Link to="/" className="btn btn-ghost">Home</Link>
         <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
         <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
-      </div> */}
+      </div>
 
       
-      <div className="flex-none">
+      {/* <div className="flex-none">
         <ul className="menu menu-horizontal px-20">
           <li><Link to="/" className="btn btn-ghost">Home</Link></li>
           <li>
@@ -34,7 +34,7 @@ export default function Navbar() {
             </details>
           </li>
         </ul>
-      </div>
+      </div> */}
 
 
 
