@@ -24,7 +24,7 @@ const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL;
 
 // Set your initial prompt here:
-const INITIAL_PROMPT = "Hello, I am Luna. Write a Year 1 speech for me about something interesting for primary schoolers? It should have an Introduction, 3 main points, and a conclusion. Also add a 'secret sauce' to make it interesting. Make it easy to read.";
+const INITIAL_PROMPT = "Hello, I am Luna. Write a Year 1 speech for me about something interesting for primary schoolers? It should have an Introduction, 3 main points, and a conclusion. Also add a 'secret sauce' to make it interesting. Make it very short and easy to read.";
 
 export default function LunaSpeech() {
   // Start with empty history
