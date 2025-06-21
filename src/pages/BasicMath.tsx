@@ -80,7 +80,7 @@ const BasicMath = () => {
           <div className="card-body lg:flex-row">
             {/* Problem Display */}
             <div className="flex-1 mb-4 lg:mb-0">
-              <div className="text-5xl font-bold text-center lg:text-left">{num1} {operator} {num2}</div>
+              <div className="text-5xl font-bold text-center lg:text-left">{num1} {operator} {num2} = ?</div>
               <div className="grid grid-cols-1 gap-4 mt-4 text-left">
                 {createVisual(num1)}
                 {createVisual(num2)}
@@ -105,16 +105,16 @@ const BasicMath = () => {
                   className="input input-bordered input-lg mb-4 w-full text-center"
                 />
 
-                <div className="flex justify-center gap-2">
+                <div className="flex flex-col justify-center gap-2">
                   <button
                     onClick={(e) => { e.preventDefault(); checkAnswer(); }}
-                    className="btn btn-outline btn-success"
+                    className="btn btn-outline btn-success w-full"
                   >
                     Check
                   </button>
                   <button
                     onClick={generateProblem}
-                    className="btn btn-outline btn-primary"
+                    className="btn btn-outline btn-primary w-full"
                   >
                     New
                   </button>

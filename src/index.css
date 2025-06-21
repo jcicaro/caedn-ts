@@ -1,4 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap');
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: all;
+}
+
+@theme {
+  --font-primary: "Montserrat", sans-serif; 
+}
+
+:root {
+  --font-primary: "Montserrat", sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
 }
