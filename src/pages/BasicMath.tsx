@@ -11,9 +11,9 @@ const BasicMath = () => {
   const answerInputRef = useRef<HTMLInputElement>(null);
 
   const createVisual = (count: number) => (
-    <div className="text-5xl leading-none mb-2">
+    <div className="text-5xl leading-none">
       {'🍎'.repeat(count)}
-      <div className="text-sm text-gray-400 mt-1">{count}</div>
+      <div className="text-sm mt-1">{count}</div>
     </div>
   );
 
@@ -65,78 +65,68 @@ const BasicMath = () => {
   }, []);
 
   return (
-    <section className="p-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-6xl mx-auto">
-        <header className="text-center mb-10">
-          <h1 className="text-6xl font-extrabold text-gray-800 mb-4">Let's Practice Math!</h1>
-          <p className="text-2xl font-medium text-gray-700">
-            ✅ Correct Answers: <span className="font-bold text-green-600">{score}</span>
-          </p>
-        </header>
+    <section className="hero bg-base-100">
+      <div className="hero-content flex-col w-full max-w-4xl">
+        <h1 className="text-4xl font-bold text-center">Let's Practice Math!</h1>
 
-        <div className="card bg-white shadow-2xl p-10 rounded-3xl">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-10">
-            {/* Visual Aid */}
-            <div className="flex-1 text-center lg:text-left">
-              <div className="text-6xl font-bold text-gray-800 mb-6">
-                {num1} {operator} {num2} = ?
-              </div>
-              <div className="grid grid-cols-1 gap-4">
+        <div className="stats stats-vertical md:stats-horizontal shadow my-4">
+          <div className="stat text-center">
+            <div className="stat-title">Correct Answers</div>
+            <div className="stat-value">{score}</div>
+          </div>
+        </div>
+
+        <div className="card bg-base-100 shadow-xl w-full">
+          <div className="card-body lg:flex-row">
+            {/* Problem Display */}
+            <div className="flex-1 mb-4 lg:mb-0">
+              <div className="text-5xl font-bold text-center lg:text-left">{num1} {operator} {num2}</div>
+              <div className="grid grid-cols-1 gap-4 mt-4 text-left">
                 {createVisual(num1)}
                 {createVisual(num2)}
               </div>
             </div>
 
-            {/* Card-styled Form */}
-            <div className="flex-1 text-center">
-              <div className="card bg-white shadow-lg p-6 rounded-2xl mx-auto w-full max-w-xs">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    checkAnswer();
-                  }}
-                >
-                  {/* Label + Input */}
-                  <div className="form-control mb-4">
-                    <label className="label">
-                      <span className="label-text text-lg font-medium">Answer</span>
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="?"
-                      className="input input-bordered input-lg w-full text-center text-3xl"
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      ref={answerInputRef}
-                    />
-                  </div>
+            {/* Input Form */}
+            <div className="flex-1 flex justify-center">
+              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+                <legend className="fieldset-legend text-xl">Answer</legend>
 
-                  {/* Buttons */}
-                  <div className="flex justify-center gap-4">
-                    <button type="submit" className="btn btn-success btn-lg">
-                      ✅ Check
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-primary btn-lg"
-                      onClick={generateProblem}
-                    >
-                      🔄 New
-                    </button>
-                  </div>
-                </form>
+                {/* <label className="label">
+                  <span className="label-text">Your Answer</span>
+                </label> */}
+                <input
+                  type="number"
+                  placeholder="?"
+                  value={userAnswer}
+                  onChange={(e) => setUserAnswer(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  ref={answerInputRef}
+                  className="input input-bordered input-lg mb-4 w-full text-center"
+                />
+
+                <div className="flex justify-center gap-2">
+                  <button
+                    onClick={(e) => { e.preventDefault(); checkAnswer(); }}
+                    className="btn btn-outline btn-success"
+                  >
+                    Check
+                  </button>
+                  <button
+                    onClick={generateProblem}
+                    className="btn btn-outline btn-primary"
+                  >
+                    New
+                  </button>
+                </div>
+
 
                 {feedback && (
-                  <div
-                    className={`text-2xl font-bold mt-4 transition-all duration-300 ${
-                      feedback.startsWith('✅') ? 'text-green-600' : 'text-red-500'
-                    }`}
-                  >
-                    {feedback}
-                  </div>
+                  <div className={`text-lg text-center mt-4 ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}>{feedback}</div>
                 )}
-              </div>
+
+              </fieldset>
+
             </div>
           </div>
         </div>
