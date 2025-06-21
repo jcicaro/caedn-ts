@@ -65,7 +65,7 @@ const BasicMath = () => {
   }, []);
 
   return (
-    <section className="bg-gradient-to-br from-blue-100 to-white p-8 flex flex-col items-center justify-center">
+    <section className="p-8 flex flex-col items-center justify-center">
       <div className="w-full max-w-6xl mx-auto">
         <header className="text-center mb-10">
           <h1 className="text-6xl font-extrabold text-gray-800 mb-4">Let's Practice Math!</h1>
