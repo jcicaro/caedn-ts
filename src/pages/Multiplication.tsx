@@ -38,7 +38,7 @@ const SkipCountVisual: React.FC<{ times: number; step: number; icon?: string }> 
               <span key={j} className="text-3xl">{icon}</span>
             ))}
           </div>
-          <span className="ml-4 text-lg font-semibold">= {count}</span>
+          <span className="ml-4 text-lg font-semibold"> {count}</span>
         </div>
       );
     })}
