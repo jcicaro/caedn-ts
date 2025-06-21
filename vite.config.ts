@@ -9,6 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  base: "/",
   server: {
     host: true, // Same as '0.0.0.0', allows LAN access
     port: 8090,
