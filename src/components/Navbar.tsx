@@ -14,6 +14,7 @@ export default function Navbar() {
         <Link to="/" className="btn btn-ghost">Home</Link>
         <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
         <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
+        <Link to="/lunaspeech" className="btn btn-ghost">Speech</Link>
       </div>
 
       

@@ -4,6 +4,7 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 import BasicMath from "../pages/BasicMath";
 import Multiplication from "../pages/Multiplication";
+import LunaSpeech from "../pages/LunaSpeech";
 
 export const router = createBrowserRouter([
   {
@@ -14,6 +15,7 @@ export const router = createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "basicmath", element: <BasicMath /> }, 
       { path: "multiplication", element: <Multiplication /> }, 
+      { path: "lunaspeech", element: <LunaSpeech /> }, 
     ]
   }
 ]);
