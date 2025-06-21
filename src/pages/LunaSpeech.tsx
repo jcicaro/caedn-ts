@@ -6,7 +6,8 @@ import remarkGfm from 'remark-gfm';
  * LunaSpeech Component (for Vite)
  *
  * Installation:
- *   npm install react-markdown remark-gfm
+ *   npm install react-markdown remark-gfm 
+ * 
  *
  * Usage in code-server environment:
  * 1. At your project root, create a `.env` file:
