@@ -58,8 +58,8 @@ export default function Navbar() {
           <li><Link to="/">Home</Link></li>
           <li><Link to="/basicmath">Basic Math</Link></li>
           <li><Link to="/multiplication">Multiplication</Link></li>
-          <li><Link to="/lunaspeech" className="btn btn-ghost">Speech</Link></li>
-          <li><Link to="/lunanarrative" className="btn btn-ghost">Narrative</Link></li>
+          <li><Link to="/lunaspeech">Speech</Link></li>
+          <li><Link to="/lunanarrative">Narrative</Link></li>
         </ul>
       </div>
 
