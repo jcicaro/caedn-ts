@@ -65,7 +65,7 @@ const BasicMath = () => {
   }, []);
 
   return (
-    <section className="hero bg-base-100">
+    <section className="hero">
       <div className="hero-content flex-col w-full max-w-4xl">
         <h1 className="text-4xl font-bold text-center">Let's Practice Math!</h1>
 
@@ -76,7 +76,7 @@ const BasicMath = () => {
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow-xl w-full">
+        <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">
             {/* Problem Display */}
             <div className="flex-1 mb-4 lg:mb-0">

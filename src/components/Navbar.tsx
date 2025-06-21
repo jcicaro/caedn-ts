@@ -12,6 +12,7 @@ export default function Navbar() {
         <Link to="/" className="btn btn-ghost">Home</Link>
         {/* <Link to="/about" className="btn btn-ghost">About</Link> */}
         <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
+        <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
         {/* Add more links as needed */}
       </div>
       <div className="dropdown dropdown-end md:hidden">
@@ -32,6 +33,7 @@ export default function Navbar() {
           <li><Link to="/">Home</Link></li>
           {/* <li><Link to="/about">About</Link></li> */}
           <li><Link to="/basicmath">Basic Math</Link></li>
+          <li><Link to="/multiplication">Multiplication</Link></li>
         </ul>
       </div>
     </div>
