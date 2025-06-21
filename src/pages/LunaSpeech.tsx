@@ -123,8 +123,8 @@ export default function LunaSpeech() {
           </li>
         ))}
         {loading && (
-          <li className="chat-start">
-            <div className="chat-bubble loading">Loading...</div>
+          <li className="flex items-center justify-center h-screen">
+            <div className="chat-bubble loading">...</div>
           </li>
         )}
       </ul>
