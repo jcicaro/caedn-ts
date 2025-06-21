@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-base-100 py-12 px-6">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-5xl font-bold text-primary mb-6">Welcome to CAEDN</h1>
+        <h1 className="text-5xl font-bold text-primary mb-6">Welcome to LunaLearn</h1>
         <p className="text-lg text-base-content mb-12">
           Explore our interactive learning tools for young minds. From basic math to storytelling, Luna and friends are here to guide your child every step of the way!
         </p>
