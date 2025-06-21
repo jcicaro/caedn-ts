@@ -4,14 +4,14 @@ export default function Navbar() {
   return (
     <div className="navbar bg-base-100 shadow-md px-4">
       <div className="flex-1">
-        <Link to="/" className="text-xl font-bold text-primary">
+        <Link to="/" className="text-xl font-bold text-black">
           CAEDN
         </Link>
       </div>
       <div className="flex-none hidden md:flex space-x-4">
         <Link to="/" className="btn btn-ghost">Home</Link>
-        <Link to="/about" className="btn btn-ghost">About</Link>
-        <Link to="/learnadditionandsubtraction" className="btn btn-ghost">Addition and Subtraction</Link>
+        {/* <Link to="/about" className="btn btn-ghost">About</Link> */}
+        <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
         {/* Add more links as needed */}
       </div>
       <div className="dropdown dropdown-end md:hidden">
@@ -30,8 +30,8 @@ export default function Navbar() {
           className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-40"
         >
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/learnadditionandsubtraction">Addition and Subtraction</Link></li>
+          {/* <li><Link to="/about">About</Link></li> */}
+          <li><Link to="/basicmath">Basic Math</Link></li>
         </ul>
       </div>
     </div>
