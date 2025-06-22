@@ -81,7 +81,8 @@ export default function Multiplication() {
     if (val === problem.answer) {
       setFeedback('✅ Correct!');
       setScore((s) => s + 1);
-      setTimeout(newProblem, 700);
+      // 2-second delay before loading next problem
+      setTimeout(newProblem, 2000);
     } else {
       setFeedback(`❌ Wrong! ${problem.num1}×${problem.num2}=${problem.answer}`);
     }
@@ -110,13 +111,6 @@ export default function Multiplication() {
         <h1 className="text-4xl font-bold text-center">
           Luna's Fun with Products!
         </h1>
-
-        {/* <div className="stats stats-vertical md:stats-horizontal shadow my-4">
-          <div className="stat text-center">
-            <div className="stat-title">Correct Answers</div>
-            <div className="stat-value">{score}</div>
-          </div>
-        </div> */}
 
         <div className="card shadow w-full mb-8">
           <div className="card-body lg:flex-row lg:items-center p-6">

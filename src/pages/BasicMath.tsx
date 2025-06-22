@@ -8,6 +8,9 @@ const BasicMath = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
   const [score, setScore] = useState(0);
+
+  // Ref to hold the timeout ID so we can clear it if needed
+  const timeoutRef = useRef<number | null>(null);
   const answerInputRef = useRef<HTMLInputElement>(null);
 
   const createVisual = (count: number) => (
@@ -18,6 +21,12 @@ const BasicMath = () => {
   );
 
   const generateProblem = () => {
+    // Clear any pending timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
     const isAddition = Math.random() > 0.85;
     const n1 = Math.floor(Math.random() * 6) + 1;
     const n2 = Math.floor(Math.random() * 6) + 1;
@@ -45,6 +54,11 @@ const BasicMath = () => {
     if (parsed === correctAnswer) {
       setFeedback('✅ Great Job!');
       setScore((s) => s + 1);
+
+      // Automatically go to next problem after 2 seconds
+      timeoutRef.current = window.setTimeout(() => {
+        generateProblem();
+      }, 2000);
     } else {
       setFeedback('❌ Try Again!');
     }
@@ -60,6 +74,16 @@ const BasicMath = () => {
     }
   };
 
+  // On unmount, clear any pending timeout
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Generate first problem on mount
   useEffect(() => {
     generateProblem();
   }, []);
@@ -69,18 +93,13 @@ const BasicMath = () => {
       <div className="hero-content flex-col w-full max-w-4xl">
         <h1 className="text-4xl font-bold text-center">Let's Practice Math!</h1>
 
-        {/* <div className="stats stats-vertical md:stats-horizontal shadow my-4">
-          <div className="stat text-center">
-            <div className="stat-title">Correct Answers</div>
-            <div className="stat-value">{score}</div>
-          </div>
-        </div> */}
-
         <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">
             {/* Problem Display */}
             <div className="flex-1 mb-4 lg:mb-0">
-              <div className="text-5xl font-bold text-center lg:text-left">{num1} {operator} {num2} = ?</div>
+              <div className="text-5xl font-bold text-center lg:text-left">
+                {num1} {operator} {num2} = ?
+              </div>
               <div className="grid grid-cols-1 gap-4 mt-4 text-left">
                 {createVisual(num1)}
                 {createVisual(num2)}
@@ -91,12 +110,11 @@ const BasicMath = () => {
             <div className="flex-1 flex justify-center">
               <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
                 <legend className="fieldset-legend text-xl text-center">
-                  <div className="badge badge-xl badge-success">Correct Answers: {score}</div>
+                  <div className="badge badge-xl badge-success">
+                    Correct Answers: {score}
+                  </div>
                 </legend>
 
-                {/* <label className="label">
-                  <span className="label-text">Your Answer</span>
-                </label> */}
                 <input
                   type="number"
                   placeholder="?"
@@ -109,7 +127,10 @@ const BasicMath = () => {
 
                 <div className="flex flex-col justify-center gap-2">
                   <button
-                    onClick={(e) => { e.preventDefault(); checkAnswer(); }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      checkAnswer();
+                    }}
                     className="btn btn-outline btn-success w-full"
                   >
                     Check
@@ -122,13 +143,16 @@ const BasicMath = () => {
                   </button>
                 </div>
 
-
                 {feedback && (
-                  <div className={`text-lg text-center mt-4 ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}>{feedback}</div>
+                  <div
+                    className={`text-lg text-center mt-4 ${
+                      feedback.startsWith('✅') ? 'text-success' : 'text-error'
+                    }`}
+                  >
+                    {feedback}
+                  </div>
                 )}
-
               </fieldset>
-
             </div>
           </div>
         </div>
