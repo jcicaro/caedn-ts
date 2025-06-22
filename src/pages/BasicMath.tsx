@@ -13,9 +13,10 @@ const BasicMath = () => {
   const timeoutRef = useRef<number | null>(null);
   const answerInputRef = useRef<HTMLInputElement>(null);
 
-  const createVisual = (count: number) => (
+  const createVisual = (count: number, emoji: string = '🍎') => (
     <div className="text-5xl leading-none">
-      {'🍎'.repeat(count)}
+      {/* {emoji  ? emoji.repeat(count) : '🍎'.repeat(count)} */}
+      {emoji.repeat(count)}
       <div className="text-sm mt-1">{count}</div>
     </div>
   );
@@ -102,7 +103,7 @@ const BasicMath = () => {
               </div>
               <div className="grid grid-cols-1 gap-4 mt-4 text-left">
                 {createVisual(num1)}
-                {createVisual(num2)}
+                {createVisual(num2, operator == "-" ? "🍽️" : '🍎')}
               </div>
             </div>
 
