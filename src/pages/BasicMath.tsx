@@ -8,6 +8,7 @@ const BasicMath = () => {
   const [userAnswer, setUserAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
   const [score, setScore] = useState(0);
+  const [mode, setMode] = useState<'addition' | 'subtraction' | 'mixed'>('mixed');
 
   // Ref to hold the timeout ID so we can clear it if needed
   const timeoutRef = useRef<number | null>(null);
@@ -15,7 +16,6 @@ const BasicMath = () => {
 
   const createVisual = (count: number, emoji: string = '🍎') => (
     <div className="text-5xl leading-none">
-      {/* {emoji  ? emoji.repeat(count) : '🍎'.repeat(count)} */}
       {emoji.repeat(count)}
       <div className="text-sm mt-1">{count}</div>
     </div>
@@ -28,11 +28,18 @@ const BasicMath = () => {
       timeoutRef.current = null;
     }
 
-    const isAddition = Math.random() > 0.85;
+    // Determine operation based on mode
+    const doAddition =
+      mode === 'addition'
+        ? true
+        : mode === 'subtraction'
+        ? false
+        : Math.random() > 0.5;
+
     const n1 = Math.floor(Math.random() * 6) + 1;
     const n2 = Math.floor(Math.random() * 6) + 1;
 
-    if (isAddition) {
+    if (doAddition) {
       setOperator('+');
       setNum1(n1);
       setNum2(n2);
@@ -87,12 +94,34 @@ const BasicMath = () => {
   // Generate first problem on mount
   useEffect(() => {
     generateProblem();
-  }, []);
+  }, [mode]);  // regenerate when mode changes
 
   return (
     <section className="hero">
       <div className="hero-content flex-col w-full max-w-4xl">
-        <h1 className="text-4xl font-bold text-center">Add and Subtract with Luna!</h1>
+        <h1 className="text-4xl font-bold text-center mb-4">Add and Subtract with Luna!</h1>
+
+        {/* Mode Selection Tabs */}
+        <div className="tabs tabs-border justify-center mb-6">
+          <a
+            className={`tab ${mode === 'addition' ? 'tab-active' : ''}`}
+            onClick={() => setMode('addition')}
+          >
+            Add
+          </a>
+          <a
+            className={`tab ${mode === 'subtraction' ? 'tab-active' : ''}`}
+            onClick={() => setMode('subtraction')}
+          >
+            Subtract
+          </a>
+          <a
+            className={`tab ${mode === 'mixed' ? 'tab-active' : ''}`}
+            onClick={() => setMode('mixed')}
+          >
+            Mix them up!
+          </a>
+        </div>
 
         <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">
@@ -103,7 +132,7 @@ const BasicMath = () => {
               </div>
               <div className="grid grid-cols-1 gap-4 mt-4 text-left">
                 {createVisual(num1)}
-                {createVisual(num2, operator == "-" ? "🍽️" : '🍎')}
+                {createVisual(num2, operator === '-' ? '🍽️' : '🍎')}
               </div>
             </div>
 
