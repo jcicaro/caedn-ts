@@ -69,12 +69,12 @@ const BasicMath = () => {
       <div className="hero-content flex-col w-full max-w-4xl">
         <h1 className="text-4xl font-bold text-center">Let's Practice Math!</h1>
 
-        <div className="stats stats-vertical md:stats-horizontal shadow my-4">
+        {/* <div className="stats stats-vertical md:stats-horizontal shadow my-4">
           <div className="stat text-center">
             <div className="stat-title">Correct Answers</div>
             <div className="stat-value">{score}</div>
           </div>
-        </div>
+        </div> */}
 
         <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">
@@ -90,7 +90,9 @@ const BasicMath = () => {
             {/* Input Form */}
             <div className="flex-1 flex justify-center">
               <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend text-xl">Answer</legend>
+                <legend className="fieldset-legend text-xl text-center">
+                  <div className="badge badge-xl badge-success">Correct Answers: {score}</div>
+                </legend>
 
                 {/* <label className="label">
                   <span className="label-text">Your Answer</span>

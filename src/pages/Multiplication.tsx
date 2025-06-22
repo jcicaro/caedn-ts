@@ -111,12 +111,12 @@ export default function Multiplication() {
           Luna's Fun with Products!
         </h1>
 
-        <div className="stats stats-vertical md:stats-horizontal shadow my-4">
+        {/* <div className="stats stats-vertical md:stats-horizontal shadow my-4">
           <div className="stat text-center">
             <div className="stat-title">Correct Answers</div>
             <div className="stat-value">{score}</div>
           </div>
-        </div>
+        </div> */}
 
         <div className="card shadow w-full mb-8">
           <div className="card-body lg:flex-row lg:items-center p-6">
@@ -131,7 +131,9 @@ export default function Multiplication() {
 
             <div className="flex-1 flex justify-center">
               <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend text-xl">Answer</legend>
+                <legend className="fieldset-legend text-xl text-center">
+                  <div className="badge badge-xl badge-success">Correct Answers: {score}</div>
+                </legend>
 
                 <input
                   type="number"
