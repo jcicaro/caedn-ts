@@ -5,10 +5,10 @@ import { ChatInput }  from "../components/ChatInput"
 import { useChat }    from "../hooks/useChat"
 
 const INITIAL_PROMPT = `
-Hello, I am Luna.
+Hello, Luna is my name.
 Teach me about something interesting for primary schoolers?
 Make it very easy to understand.
-Make it very easy to read for Year 1 students.
+Make it easy to read for Year 1 students.
 `.trim()
 
 export default function LunaChat() {
@@ -36,7 +36,7 @@ export default function LunaChat() {
       </ul>
 
       <div className="mt-2 flex space-x-2">
-        {["enlighten me", "simplify", "expand"].map((cmd) => (
+        {["simplify", "expand"].map((cmd) => (
           <button
             key={cmd}
             className="btn btn-xs btn-info btn-outline"
