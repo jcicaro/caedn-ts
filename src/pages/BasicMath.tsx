@@ -91,7 +91,7 @@ const BasicMath = () => {
   return (
     <section className="hero">
       <div className="hero-content flex-col w-full max-w-4xl">
-        <h1 className="text-4xl font-bold text-center">Let's Practice Math!</h1>
+        <h1 className="text-4xl font-bold text-center">Add and Subtract with Luna!</h1>
 
         <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">

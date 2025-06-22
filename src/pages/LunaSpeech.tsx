@@ -111,6 +111,7 @@ export default function LunaSpeech() {
     // </div>
 
     <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-4xl font-bold text-center mb-6">Luna's Speech Generator</h1>
       <ul className="chat flex flex-col space-y-2">
         {messages.map((msg, idx) => (
           <li key={idx} className={msg.role === 'user' ? 'chat-end' : 'chat-start'}>
