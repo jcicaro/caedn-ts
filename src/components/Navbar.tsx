@@ -16,6 +16,7 @@ export default function Navbar() {
         <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
         <Link to="/lunaspeech" className="btn btn-ghost">Speech</Link>
         <Link to="/lunanarrative" className="btn btn-ghost">Narrative</Link>
+        <Link to="/lunachat" className="btn btn-ghost">Chat</Link>
       </div>
 
       
@@ -60,6 +61,7 @@ export default function Navbar() {
           <li><Link to="/multiplication">Multiplication</Link></li>
           <li><Link to="/lunaspeech">Speech</Link></li>
           <li><Link to="/lunanarrative">Narrative</Link></li>
+          <li><Link to="/lunachat">Chat</Link></li>
         </ul>
       </div>
 

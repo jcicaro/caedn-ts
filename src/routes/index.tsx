@@ -6,6 +6,7 @@ import BasicMath from "../pages/BasicMath";
 import Multiplication from "../pages/Multiplication";
 import LunaSpeech from "../pages/LunaSpeech";
 import LunaNarrative from "../pages/LunaNarrative";
+import LunaChat from "../pages/LunaChat";
 
 export const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: "multiplication", element: <Multiplication /> }, 
       { path: "lunaspeech", element: <LunaSpeech /> }, 
       { path: "lunanarrative", element: <LunaNarrative /> }, 
+      { path: "lunachat", element: <LunaChat /> }, 
     ]
   }
 ]);
