@@ -4,11 +4,20 @@ import { ChatBubble } from "../components/ChatBubble"
 import { ChatInput }  from "../components/ChatInput"
 import { useChat }    from "../hooks/useChat"
 
+// const INITIAL_PROMPT = `
+// Hello, Luna is my name.
+// Teach me about something interesting for primary schoolers?
+// Make it very easy to understand.
+// Make it easy to read for Year 1 students.
+// `.trim()
+
 const INITIAL_PROMPT = `
-Hello, Luna is my name.
-Teach me about something interesting for primary schoolers?
+The user's name is Luna.
+Teach the user about something interesting for primary schoolers.
 Make it very easy to understand.
 Make it easy to read for Year 1 students.
+Give some examples.
+Ask the user if there's anything else they would like to learn.
 `.trim()
 
 export default function LunaChat() {
