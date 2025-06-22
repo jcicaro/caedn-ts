@@ -6,7 +6,7 @@ const OPENAI_BASE_URL = import.meta.env.VITE_OPENAI_BASE_URL;
 // const OPENAI_MODEL = import.meta.env.VITE_OPENAI_MODEL;
 
 export interface ChatMessage {
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "system";
   content: string;
 }
 
