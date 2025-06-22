@@ -101,27 +101,6 @@ const BasicMath = () => {
       <div className="hero-content flex-col w-full max-w-4xl">
         <h1 className="text-4xl font-bold text-center mb-4">Add and Subtract with Luna!</h1>
 
-        {/* Mode Selection Tabs */}
-        <div className="tabs tabs-border justify-center mb-6">
-          <a
-            className={`tab ${mode === 'addition' ? 'tab-active' : ''}`}
-            onClick={() => setMode('addition')}
-          >
-            Add
-          </a>
-          <a
-            className={`tab ${mode === 'subtraction' ? 'tab-active' : ''}`}
-            onClick={() => setMode('subtraction')}
-          >
-            Subtract
-          </a>
-          <a
-            className={`tab ${mode === 'mixed' ? 'tab-active' : ''}`}
-            onClick={() => setMode('mixed')}
-          >
-            Mix them up!
-          </a>
-        </div>
 
         <div className="card shadow-xl w-full">
           <div className="card-body lg:flex-row">
@@ -186,6 +165,31 @@ const BasicMath = () => {
             </div>
           </div>
         </div>
+
+
+        {/* Mode Selection Tabs */}
+        <div className="tabs tabs-border justify-center mb-6">
+          <a
+            className={`tab ${mode === 'addition' ? 'tab-active' : ''}`}
+            onClick={() => setMode('addition')}
+          >
+            Add
+          </a>
+          <a
+            className={`tab ${mode === 'subtraction' ? 'tab-active' : ''}`}
+            onClick={() => setMode('subtraction')}
+          >
+            Subtract
+          </a>
+          <a
+            className={`tab ${mode === 'mixed' ? 'tab-active' : ''}`}
+            onClick={() => setMode('mixed')}
+          >
+            Mix them up!
+          </a>
+        </div>
+
+        
       </div>
     </section>
   );
