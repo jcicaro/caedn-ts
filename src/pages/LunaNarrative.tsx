@@ -96,7 +96,7 @@ export default function LunaNarrative() {
       </ul>
 
       {/* Explain button under responses */}
-      <div className="mt-2 flex justify-start">
+      <div className="mt-2 flex justify-start space-x-2">
         <button
           type="button"
           className="btn btn-xs btn-info btn-outline"
@@ -105,7 +105,24 @@ export default function LunaNarrative() {
         >
           Enlighten me
         </button>
+        <button
+          type="button"
+          className="btn btn-xs btn-info btn-outline"
+          onClick={() => fetchChat('simplify')}
+          disabled={loading}
+        >
+          Simplify
+        </button>
+        <button
+          type="button"
+          className="btn btn-xs btn-info btn-outline"
+          onClick={() => fetchChat('expand')}
+          disabled={loading}
+        >
+          Expand
+        </button>
       </div>
+      
 
       {error && <div className="text-red-500 mt-4">{error}</div>}
 
