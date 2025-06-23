@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <div className="min-h-screen bg-base-100 py-12 px-6">
-      <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-bold text-primary mb-6">Welcome to LunaLearn</h1>
         <p className="text-lg text-base-content mb-12">
           Explore our interactive learning tools for young minds. From basic math to storytelling, Luna and friends are here to guide your child every step of the way!
@@ -47,6 +47,11 @@ const Home = () => {
             title="Luna's Narrative"
             desc="Generate example Luna's educational narratives made just for kids."
             link="/lunanarrative"
+          />
+          <Card
+            title="Luna's Teacher Chat"
+            desc="Talk to a teacher and learn new interesting things."
+            link="/lunachat"
           />
         </div>
       </div>
