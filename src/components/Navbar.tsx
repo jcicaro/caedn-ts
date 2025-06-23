@@ -9,38 +9,29 @@ export default function Navbar() {
         </Link>
       </div>
 
-
-      <div className="flex-none hidden md:flex space-x-4">
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center space-x-2">
         <Link to="/" className="btn btn-ghost">Home</Link>
-        <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
-        <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
-        <Link to="/lunaspeech" className="btn btn-ghost">Speech</Link>
-        <Link to="/lunanarrative" className="btn btn-ghost">Narrative</Link>
+
+        <div className="dropdown dropdown-hover">
+          <label tabIndex={0} className="btn btn-ghost">
+            Learn
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-sm dropdown-content mt-2 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li><Link to="/basicmath">Basic Math</Link></li>
+            <li><Link to="/multiplication">Multiplication</Link></li>
+            <li><Link to="/lunaspeech">Speech</Link></li>
+            <li><Link to="/lunanarrative">Narrative</Link></li>
+          </ul>
+        </div>
+
         <Link to="/lunachat" className="btn btn-ghost">Chat</Link>
       </div>
 
-      
-      {/* <div className="flex-none">
-        <ul className="menu menu-horizontal px-20">
-          <li><Link to="/" className="btn btn-ghost">Home</Link></li>
-          <li>
-            <details>
-              <summary className="btn btn-ghost">Learn</summary>
-              <ul className="bg-base-100 rounded-t-none p-2">
-                <li>
-                  <Link to="/basicmath" className="btn btn-ghost">Basic Math</Link>
-                </li>
-                <li>
-                  <Link to="/multiplication" className="btn btn-ghost">Multiplication</Link>
-                </li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </div> */}
-
-
-
+      {/* Mobile Hamburger */}
       <div className="dropdown dropdown-end md:hidden">
         <label tabIndex={0} className="btn btn-ghost btn-circle">
           <svg
@@ -49,12 +40,17 @@ export default function Navbar() {
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </label>
         <ul
           tabIndex={0}
-          className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-40"
+          className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-44"
         >
           <li><Link to="/">Home</Link></li>
           <li><Link to="/basicmath">Basic Math</Link></li>
@@ -64,8 +60,6 @@ export default function Navbar() {
           <li><Link to="/lunachat">Chat</Link></li>
         </ul>
       </div>
-
-
     </div>
   );
 }
