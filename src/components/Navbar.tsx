@@ -131,7 +131,7 @@ export default function Navbar() {
           </div>
 
           {/* Filter with input-group */}
-          {/* <div className="flex input-group mb-4">
+          <div className="hidden md:flex input-group mb-4">
             <input
               type="text"
               placeholder="Filter menu..."
@@ -147,7 +147,7 @@ export default function Navbar() {
                 <svg />
               </button>
             )}
-          </div> */}
+          </div>
 
           {filteredCategories.map((cat, idx) => (
             <div
