@@ -13,11 +13,10 @@ import { useChat }    from "../hooks/useChat"
 
 const INITIAL_PROMPT = `
 The user's name is Luna.
-Teach the user about something interesting for primary schoolers.
-Make it very easy to understand.
-Make it easy to read for Year 1 students.
-Give some examples.
-Ask the user if there's anything else they would like to learn.
+Write a short and fun explanation of an interesting topic for a Year 1 student.
+Use simple words and short sentences so it's easy for young children to understand.
+Include a few cute or fun examples to help explain the topic.
+At the end, ask Luna if she wants to learn more about something else.
 `.trim()
 
 export default function LunaChat() {
