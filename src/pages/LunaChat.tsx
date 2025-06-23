@@ -15,7 +15,7 @@ const INITIAL_PROMPT = `
 The user's name is Luna.
 Write a short and fun explanation of an interesting topic for a Year 1 student.
 Use simple words and short sentences so it's easy for young children to understand.
-Include a few cute or fun examples to help explain the topic.
+Include a few cute or fun examples to help explain the topic. Also include emojis to make it visual.
 At the end, ask Luna if she wants to learn more about something else.
 `.trim()
 
