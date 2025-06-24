@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeHighlight from 'rehype-highlight';
 import { ChatMessage } from '../services/openaiService'
 
 export function ChatBubble({ msg }: { msg: ChatMessage }) {
@@ -19,7 +20,7 @@ export function ChatBubble({ msg }: { msg: ChatMessage }) {
         }`}
         style={{ whiteSpace: 'pre-wrap' }}
       >
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
           {msg.content}
         </ReactMarkdown>
       </div>
