@@ -29,19 +29,16 @@ export default function Navbar() {
   const currentItem = allItems.find((item) => item.path === location.pathname);
   const pageName = currentItem?.name || 'LunaLearn';
 
-  // persist theme
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // controls which panels are open
   const [openStates, setOpenStates] = useState<boolean[]>(
     menuCategories.map(() => true)
   );
   const [allOpen, setAllOpen] = useState(true);
 
-  //–– NEW: whenever you type into filter, force all panels open
   useEffect(() => {
     if (filter) {
       setOpenStates(menuCategories.map(() => true));
@@ -104,7 +101,6 @@ export default function Navbar() {
               }
             >
               {theme === 'light' ? (
-                /* sun icon */
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6"
@@ -120,7 +116,6 @@ export default function Navbar() {
                   />
                 </svg>
               ) : (
-                /* moon icon */
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6"
@@ -145,16 +140,44 @@ export default function Navbar() {
         <label htmlFor="navbar-drawer" className="drawer-overlay" />
         <div className="p-4 w-64 bg-base-100 h-full overflow-y-auto">
 
-          {/* Open/Close All with grayscale emoji */}
+          {/* Open/Close All using collapse-arrow icons */}
           <div className="flex justify-end mb-4">
             <button
               className="btn btn-sm btn-outline"
               onClick={toggleAll}
               aria-label={allOpen ? 'Close all categories' : 'Open all categories'}
             >
-              <span className="text-xl filter grayscale">
-                {allOpen ? '➖' : '➕' }
-              </span>
+              {allOpen ? (
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  {/* down chevron */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  {/* right chevron */}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              )}
             </button>
           </div>
 
@@ -183,7 +206,7 @@ export default function Navbar() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
+                    strokeWidth="2"
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
