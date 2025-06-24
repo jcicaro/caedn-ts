@@ -11,9 +11,7 @@ export default function Navbar() {
   const menuCategories = [
     {
       category: 'General',
-      items: [
-        { name: 'Home', path: '/' },
-      ],
+      items: [{ name: 'Home', path: '/' }],
     },
     {
       category: 'Luna',
@@ -27,8 +25,8 @@ export default function Navbar() {
     },
   ];
 
-  const allItems = menuCategories.flatMap(cat => cat.items);
-  const currentItem = allItems.find(item => item.path === location.pathname);
+  const allItems = menuCategories.flatMap((cat) => cat.items);
+  const currentItem = allItems.find((item) => item.path === location.pathname);
   const pageName = currentItem?.name || 'LunaLearn';
 
   // persist theme
@@ -58,18 +56,18 @@ export default function Navbar() {
   };
 
   const filteredCategories = menuCategories
-    .map(cat => {
+    .map((cat) => {
       if (cat.category.toLowerCase().includes(filter.toLowerCase())) {
         return cat;
       }
       return {
         ...cat,
-        items: cat.items.filter(item =>
+        items: cat.items.filter((item) =>
           item.name.toLowerCase().includes(filter.toLowerCase())
         ),
       };
     })
-    .filter(cat => cat.items.length > 0);
+    .filter((cat) => cat.items.length > 0);
 
   return (
     <div className="drawer">
@@ -98,21 +96,44 @@ export default function Navbar() {
               {pageName}
             </Link>
           </div>
-          {/* Theme toggle controller on right */}
           <div className="flex-none">
             <button
               className="btn btn-ghost btn-circle"
-              onClick={() => setTheme(prev => (prev === 'light' ? 'dark' : 'light'))}
+              onClick={() =>
+                setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
+              }
             >
               {theme === 'light' ? (
                 /* sun icon */
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1M18.364 5.636l-.707.707M6.343 17.657l-.707.707M18.364 18.364l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14a7 7 0 000-14z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 3v1m0 16v1m8.66-9h-1M4.34 12h-1M18.364 5.636l-.707.707M6.343 17.657l-.707.707M18.364 18.364l-.707-.707M6.343 6.343l-.707-.707M12 5a7 7 0 100 14a7 7 0 000-14z"
+                  />
                 </svg>
               ) : (
                 /* moon icon */
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                  />
                 </svg>
               )}
             </button>
@@ -123,28 +144,49 @@ export default function Navbar() {
       <div className="drawer-side">
         <label htmlFor="navbar-drawer" className="drawer-overlay" />
         <div className="p-4 w-64 bg-base-100 h-full overflow-y-auto">
-          
+
+          {/* Open/Close All with grayscale emoji */}
           <div className="flex justify-end mb-4">
-            <button className="btn btn-sm btn-outline" onClick={toggleAll}>
-              {allOpen ? 'Close All' : 'Open All'}
+            <button
+              className="btn btn-sm btn-outline"
+              onClick={toggleAll}
+              aria-label={allOpen ? 'Close all categories' : 'Open all categories'}
+            >
+              <span className="text-xl filter grayscale">
+                {allOpen ? '➖' : '➕' }
+              </span>
             </button>
           </div>
 
-          {/* Filter with input-group */}
+          {/* Filter input */}
           <div className="hidden md:flex input-group mb-4">
             <input
               type="text"
               placeholder="Filter menu..."
               value={filter}
-              onChange={e => setFilter(e.target.value)}
+              onChange={(e) => setFilter(e.target.value)}
               className="input input-bordered flex-1"
             />
             {filter && (
               <button
                 onClick={() => setFilter('')}
                 className="btn btn-square btn-md btn-outline"
+                aria-label="Clear filter"
               >
-                <svg />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
               </button>
             )}
           </div>
@@ -168,7 +210,7 @@ export default function Navbar() {
                 {cat.category}
               </div>
               <div className="collapse-content">
-                {cat.items.map(item => (
+                {cat.items.map((item) => (
                   <Link
                     to={item.path}
                     key={item.path}
