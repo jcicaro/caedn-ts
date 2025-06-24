@@ -18,3 +18,10 @@
 body {
   font-family: var(--font-primary);
 }
+
+.chat-bubble pre {
+  overflow-x: auto;      /* allows horizontal scroll */
+  max-width: 100%;        /* never exceed the bubble’s width */
+  white-space: pre-wrap;  /* wrap long lines if needed */
+  word-break: break-word; /* break up very long tokens */
+}
