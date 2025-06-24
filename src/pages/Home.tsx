@@ -98,7 +98,7 @@ const Home: React.FC = () => {
         </p>
 
         {/* Filter Input */}
-        <div className="input-group mb-8">
+        <div className="flex input-group mb-8">
           <input
             type="text"
             placeholder="Filter tools..."
