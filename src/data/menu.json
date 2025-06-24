@@ -1,0 +1,42 @@
+[
+    {
+        "category": "General",
+        "items": [
+            {
+                "title": "Home",
+                "desc": "Go to the homepage.",
+                "link": "/"
+            }
+        ]
+    },
+    {
+        "category": "Luna",
+        "items": [
+            {
+                "title": "Basic Math",
+                "desc": "Start learning numbers and operations with simple visual maths problems.",
+                "link": "/basicmath"
+            },
+            {
+                "title": "Multiplication",
+                "desc": "Practice your times tables with dynamic multiplication exercises.",
+                "link": "/multiplication"
+            },
+            {
+                "title": "Luna's Speech",
+                "desc": "Generate example Luna's educational speeches made just for kids.",
+                "link": "/lunaspeech"
+            },
+            {
+                "title": "Luna's Narrative",
+                "desc": "Generate example Luna's educational narratives made just for kids.",
+                "link": "/lunanarrative"
+            },
+            {
+                "title": "Luna's Teacher Chat",
+                "desc": "Talk to a teacher and learn new interesting things.",
+                "link": "/lunachat"
+            }
+        ]
+    }
+]

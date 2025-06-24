@@ -1,5 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import rawMenu from '../data/menu.json';
+
+// Define the shape of your JSON data
+interface RawMenuItem {
+  name?: string;
+  title?: string;
+  desc?: string;
+  link: string;
+}
+
+interface RawMenuCategory {
+  category: string;
+  items: RawMenuItem[];
+}
+
+// Transform JSON to the shape expected by the component
+interface MenuItem {
+  name: string;
+  path: string;
+}
+
+interface MenuCategory {
+  category: string;
+  items: MenuItem[];
+}
 
 export default function Navbar() {
   const location = useLocation();
@@ -8,23 +33,19 @@ export default function Navbar() {
     localStorage.getItem('theme') || 'light'
   );
 
-  const menuCategories = [
-    {
-      category: 'General',
-      items: [{ name: 'Home', path: '/' }],
-    },
-    {
-      category: 'Luna',
-      items: [
-        { name: 'Basic Math', path: '/basicmath' },
-        { name: 'Multiplication', path: '/multiplication' },
-        { name: 'Speech', path: '/lunaspeech' },
-        { name: 'Narrative', path: '/lunanarrative' },
-        { name: 'Teacher Chat', path: '/lunachat' },
-      ],
-    },
-  ];
+  // Convert raw JSON into categories with consistent fields
+  const menuCategories: MenuCategory[] = useMemo(() => {
+    const data = rawMenu as RawMenuCategory[];
+    return data.map((cat) => ({
+      category: cat.category,
+      items: cat.items.map((item) => ({
+        name: item.title ?? item.name ?? '',
+        path: item.link,
+      })),
+    }));
+  }, []);
 
+  // Flattened list to derive the page name
   const allItems = menuCategories.flatMap((cat) => cat.items);
   const currentItem = allItems.find((item) => item.path === location.pathname);
   const pageName = currentItem?.name || 'LunaLearn';
@@ -44,7 +65,7 @@ export default function Navbar() {
       setOpenStates(menuCategories.map(() => true));
       setAllOpen(true);
     }
-  }, [filter, menuCategories]);
+  }, [filter]);
 
   const toggleAll = () => {
     const newOpen = !allOpen;
@@ -154,7 +175,6 @@ export default function Navbar() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  {/* down chevron */}
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -169,7 +189,6 @@ export default function Navbar() {
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  {/* right chevron */}
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -214,6 +233,7 @@ export default function Navbar() {
             )}
           </div>
 
+          {/* Render filtered categories */}
           {filteredCategories.map((cat, idx) => (
             <div
               key={cat.category}
