@@ -143,7 +143,7 @@ export default function Navbar() {
           {/* Open/Close All using collapse-arrow icons */}
           <div className="flex justify-end mb-4">
             <button
-              className="btn btn-sm btn-outline"
+              className="btn btn-sm"
               onClick={toggleAll}
               aria-label={allOpen ? 'Close all categories' : 'Open all categories'}
             >
