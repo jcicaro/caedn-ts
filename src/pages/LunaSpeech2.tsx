@@ -1,4 +1,4 @@
-// src/pages/LunaChat.tsx
+
 import React from "react"
 import { ChatBubble } from "../components/ChatBubble"
 import { ChatInput }  from "../components/ChatInput"
@@ -13,13 +13,14 @@ import { useChat }    from "../hooks/useChat"
 
 const INITIAL_PROMPT = `
 The user's name is Luna.
-Write a short and fun explanation of an interesting topic for a Year 1 student.
-Use simple words and short sentences so it's easy for young children to understand.
-Include a few cute or fun examples to help explain the topic. Also include emojis to make it visual.
-At the end, ask Luna if she wants to learn more about something else.
+Write a Year 1 speech for about something interesting for primary schoolers? 
+It should have an Introduction, 3 main points, a "secret sauce" to make it more engaging, and a conclusion. 
+Use simple, easy-to-read language.
+Also include emojis to make it visual.
+At the end, ask Luna if she wants to another speech about another subject.
 `.trim()
 
-export default function LunaChat() {
+export default function LunaSpeech2() {
   const { messages, loading, error, send } = useChat(
     INITIAL_PROMPT,
     import.meta.env.VITE_OPENAI_MODEL
@@ -28,7 +29,7 @@ export default function LunaChat() {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-4xl font-bold text-center mb-6">
-        Luna's Teacher Chat
+        Luna's Speech Generator
       </h1>
 
       <ul className="chat flex flex-col space-y-2">
