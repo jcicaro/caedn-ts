@@ -1,7 +1,8 @@
 To add a new page:
 - Create a page
 - Modify routes/index.tsx
-- Modify Navbar.tsx
+- -- Modify Navbar.tsx --
+- Modify data/menu.json
 
 --
 
