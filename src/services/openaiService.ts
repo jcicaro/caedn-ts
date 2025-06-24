@@ -21,7 +21,7 @@ export async function fetchChatCompletion(
       "Content-Type":  "application/json",
       Authorization:   `Bearer ${OPENAI_KEY}`,
     },
-    body: JSON.stringify({ model, messages }),
+    body: JSON.stringify({ model, messages, temperature: 1.5 }),
   });
 
   if (!res.ok) {
