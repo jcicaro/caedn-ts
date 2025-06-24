@@ -17,7 +17,7 @@ Write a Year 1 speech for about something interesting for primary schoolers?
 It should have an Introduction, 3 main points, a "secret sauce" to make it more engaging, and a conclusion. 
 Use simple, easy-to-read language.
 Also include emojis to make it visual.
-At the end, ask Luna if she wants to another speech about another subject.
+At the end, ask Luna if she wants another speech about another subject.
 `.trim()
 
 export default function LunaSpeech2() {
