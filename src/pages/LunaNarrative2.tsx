@@ -16,7 +16,6 @@ The user's name is Luna.
 Write a very short narrative for Year 1 primary schoolers. 
 The story should include and clearly label an Orientation, a Complication, a "secret sauce" to make it more engaging, and a Resolution. 
 Use simple, easy-to-read language.
-Also include emojis to make it visual.
 At the end, ask Luna if she wants to another narrative about another subject.
 `.trim()
 
