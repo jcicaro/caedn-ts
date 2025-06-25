@@ -28,7 +28,7 @@ export default function LunaChat() {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-4xl font-bold text-center mb-6">
-        Luna's Teacher Chat
+        Luna's Curiosity Chat
       </h1>
 
       <ul className="chat flex flex-col space-y-2">

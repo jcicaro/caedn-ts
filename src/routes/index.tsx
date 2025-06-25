@@ -6,8 +6,8 @@ import About from "../pages/About";
 
 import JcProgrammingCheatsheet from "../pages/JcProgrammingCheatsheet";
 
-import BasicMath from "../pages/BasicMath";
-import Multiplication from "../pages/Multiplication";
+import BasicMath from "../pages/BasicMath2";
+import Multiplication from "../pages/Multiplication2";
 import LunaSpeech2 from "../pages/LunaSpeech2";
 import LunaNarrative2 from "../pages/LunaNarrative2";
 import LunaChat from "../pages/LunaChat";

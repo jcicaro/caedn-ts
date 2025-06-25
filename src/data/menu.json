@@ -9,16 +9,7 @@
             }
         ]
     },
-    {
-        "category": "JC",
-        "items": [
-            {
-                "title": "Programming Cheatsheets",
-                "desc": "Get cheatsheets for common programming languages.",
-                "link": "/jcprogrammingcheatsheet"
-            }
-        ]
-    },
+    
     {
         "category": "Luna",
         "items": [
@@ -33,19 +24,30 @@
                 "link": "/multiplication"
             },
             {
-                "title": "Luna's Speech",
-                "desc": "Generate example Luna's educational speeches made just for kids.",
+                "title": "Speech Playground",
+                "desc": "Generate example educational speeches made just for kids.",
                 "link": "/lunaspeech"
             },
             {
-                "title": "Luna's Narrative",
-                "desc": "Generate example Luna's educational narratives made just for kids.",
+                "title": "Narrative Playground",
+                "desc": "Generate example educational stories made just for kids.",
                 "link": "/lunanarrative"
             },
             {
-                "title": "Luna's Teacher Chat",
-                "desc": "Talk to a teacher and learn new interesting things.",
+                "title": "Curiosity Chat",
+                "desc": "Talk to an AI mentor and learn new interesting things.",
                 "link": "/lunachat"
+            }
+        ]
+    },
+    
+    {
+        "category": "JC",
+        "items": [
+            {
+                "title": "Programming Cheatsheets",
+                "desc": "Get cheatsheets for common programming languages.",
+                "link": "/jcprogrammingcheatsheet"
             }
         ]
     }

@@ -17,7 +17,7 @@ export default function JcProgrammingCheatsheet() {
   )
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-4xl font-bold text-center mb-6">
         JC's Programming Cheatsheets
       </h1>

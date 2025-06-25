@@ -29,7 +29,7 @@ export default function LunaSpeech2() {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-4xl font-bold text-center mb-6">
-        Luna's Speech Generator
+        Luna's Speech Playground
       </h1>
 
       <ul className="chat flex flex-col space-y-2">

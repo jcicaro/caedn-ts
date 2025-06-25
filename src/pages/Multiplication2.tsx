@@ -1,4 +1,6 @@
+// src/pages/Multiplication.tsx
 import React, { useState, useEffect, useRef } from 'react';
+import MathAnswerSection from '../components/MathAnswerSection';
 
 const DIFFICULTY = {
   EASY: 'easy',
@@ -27,7 +29,11 @@ const ProblemDisplay: React.FC<{ num1: number; num2: number }> = ({ num1, num2 }
   </div>
 );
 
-const SkipCountVisual: React.FC<{ times: number; step: number; icon?: string }> = ({ times, step, icon = '⭐' }) => (
+const SkipCountVisual: React.FC<{ times: number; step: number; icon?: string }> = ({
+  times,
+  step,
+  icon = '⭐',
+}) => (
   <div className="flex flex-col gap-4 items-center lg:items-start">
     {Array.from({ length: times }).map((_, i) => {
       const count = (i + 1) * step;
@@ -35,7 +41,9 @@ const SkipCountVisual: React.FC<{ times: number; step: number; icon?: string }> 
         <div key={i} className="flex items-center gap-2">
           <div className="flex flex-wrap gap-1">
             {Array.from({ length: step }).map((_, j) => (
-              <span key={j} className="text-3xl">{icon}</span>
+              <span key={j} className="text-3xl">
+                {icon}
+              </span>
             ))}
           </div>
           <span className="ml-4 text-lg font-semibold"> {count}</span>
@@ -80,8 +88,7 @@ export default function Multiplication() {
     }
     if (val === problem.answer) {
       setFeedback('✅ Correct!');
-      setScore((s) => s + 1);
-      // 2-second delay before loading next problem
+      setScore(s => s + 1);
       setTimeout(newProblem, 2000);
     } else {
       setFeedback(`❌ Wrong! ${problem.num1}×${problem.num2}=${problem.answer}`);
@@ -89,8 +96,8 @@ export default function Multiplication() {
   };
 
   const toggleMultiple = (n: number) => {
-    setSelectedMultiples((prev) =>
-      prev.includes(n) ? prev.filter((x) => x !== n) : [...prev, n].sort((a, b) => a - b)
+    setSelectedMultiples(prev =>
+      prev.includes(n) ? prev.filter(x => x !== n) : [...prev, n].sort((a, b) => a - b)
     );
   };
 
@@ -108,9 +115,7 @@ export default function Multiplication() {
   return (
     <section className="hero">
       <div className="hero-content flex-col w-full max-w-4xl">
-        <h1 className="text-4xl font-bold text-center">
-          Luna's Fun with Products!
-        </h1>
+        <h1 className="text-4xl font-bold text-center">Luna's Fun with Products!</h1>
 
         <div className="card shadow w-full mb-8">
           <div className="card-body lg:flex-row lg:items-center p-6">
@@ -124,41 +129,15 @@ export default function Multiplication() {
             </div>
 
             <div className="flex-1 flex justify-center">
-              <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-                <legend className="fieldset-legend text-xl text-center">
-                  <div className="badge badge-xl badge-success">Score: {score}</div>
-                </legend>
-
-                <input
-                  type="number"
-                  placeholder="?"
-                  value={userAnswer}
-                  onChange={(e) => setUserAnswer(e.target.value)}
-                  onKeyDown={onKey}
-                  ref={inputRef}
-                  className="input input-bordered input-lg mb-4 w-full text-center"
-                />
-
-                <div className="flex flex-col justify-center gap-2">
-                  <button
-                    onClick={(e) => { e.preventDefault(); check(); }}
-                    className="btn btn-outline btn-success w-full"
-                  >
-                    Check
-                  </button>
-                  <button
-                    onClick={(e) => { e.preventDefault(); newProblem(); }}
-                    className="btn btn-outline btn-primary w-full"
-                  >
-                    New
-                  </button>
-                </div>
-
-                {feedback && (
-                  <div className={`text-lg text-center mt-4 ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}>{feedback}</div>
-                )}
-
-              </fieldset>
+              <MathAnswerSection
+                ref={inputRef}
+                score={score}
+                userAnswer={userAnswer}
+                onAnswerChange={setUserAnswer}
+                onCheck={check}
+                onNew={newProblem}
+                feedback={feedback}
+              />
             </div>
           </div>
         </div>
@@ -175,7 +154,7 @@ export default function Multiplication() {
                 id="difficulty"
                 className="select select-bordered w-full"
                 value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+                onChange={e => setDifficulty(e.target.value as Difficulty)}
               >
                 <option value={DIFFICULTY.EASY}>Easy</option>
                 <option value={DIFFICULTY.MEDIUM}>Medium</option>
@@ -186,7 +165,7 @@ export default function Multiplication() {
             <div className="form-control">
               <span className="label-text mb-2 font-semibold block">Select Multiples:</span>
               <div className="flex flex-wrap gap-3">
-                {allMultiples.map((n) => (
+                {allMultiples.map(n => (
                   <label key={n} className="label cursor-pointer flex items-center gap-2">
                     <input
                       type="checkbox"
