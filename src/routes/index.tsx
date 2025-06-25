@@ -1,7 +1,11 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/Home";
+
 import About from "../pages/About";
+
+import JcProgrammingCheatsheet from "../pages/JcProgrammingCheatsheet";
+
 import BasicMath from "../pages/BasicMath";
 import Multiplication from "../pages/Multiplication";
 import LunaSpeech2 from "../pages/LunaSpeech2";
@@ -14,7 +18,11 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { index: true, element: <Home /> },
+
       { path: "about", element: <About /> },
+
+      { path: "jcprogrammingcheatsheet", element: <JcProgrammingCheatsheet /> }, 
+
       { path: "basicmath", element: <BasicMath /> }, 
       { path: "multiplication", element: <Multiplication /> }, 
       { path: "lunaspeech", element: <LunaSpeech2 /> }, 

@@ -10,6 +10,16 @@
         ]
     },
     {
+        "category": "JC",
+        "items": [
+            {
+                "title": "Programming Cheatsheets",
+                "desc": "Get cheatsheets for common programming languages.",
+                "link": "/jcprogrammingcheatsheet"
+            }
+        ]
+    },
+    {
         "category": "Luna",
         "items": [
             {
