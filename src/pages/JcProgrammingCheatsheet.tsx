@@ -6,7 +6,8 @@ import { useChat }    from "../hooks/useChat"
 
 
 const INITIAL_PROMPT = `
-Write a self-contained TypeScript module that demonstrates the key language features, each with a short comment explaining it.
+Write a self-contained Typescript module that demonstrates the key language features of that programming language, each with a short comment explaining the concept. 
+At the end, ask the user about another programming language or whether to simplify or expand on the topics shown.
 `.trim()
 
 export default function JcProgrammingCheatsheet() {
@@ -34,7 +35,7 @@ export default function JcProgrammingCheatsheet() {
       </ul>
 
       <div className="mt-2 flex space-x-2">
-        {["simplify", "expand", "another"].map((cmd) => (
+        {["simplify", "expand", "another", "es6 and beyond", "python 3", "powershell"].map((cmd) => (
           <button
             key={cmd}
             className="btn btn-xs btn-info btn-outline"
