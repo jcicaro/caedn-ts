@@ -35,7 +35,7 @@ export default function JcProgrammingCheatsheet() {
       </ul>
 
       <div className="mt-2 flex space-x-2">
-        {["simplify", "expand", "another", "es6 and beyond", "python 3", "powershell"].map((cmd) => (
+        {["es6 and beyond", "python 3", "powershell"].map((cmd) => (
           <button
             key={cmd}
             className="btn btn-xs btn-info btn-outline"
