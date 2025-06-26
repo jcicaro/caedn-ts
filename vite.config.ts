@@ -14,7 +14,13 @@ export default defineConfig({
     host: true, // Same as '0.0.0.0', allows LAN access
     port: 8090,
     strictPort: true,
-    // allowedHosts: ['msi.local'],
+    allowedHosts: [
+      'node.icaro.com.au',
+      'localhost',
+      '192.168.1.107',
+      '127.0.0.1',
+      'msi.local'
+    ],
     // historyApiFallback: true,
     hmr: {
       protocol: 'ws',
