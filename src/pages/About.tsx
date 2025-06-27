@@ -3,48 +3,98 @@ import { createPlayground } from 'livecodes';
 import type { Config, EmbedOptions } from 'livecodes';
 
 const temp = `
-import { useState } from "react";
+import React from 'react';
 
-function App() {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <p>You clicked {count} times.</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
+const HeroSection = () => (
+  <>
+    <style>{\`
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      .hero {
+        position: relative;
+        height: 100vh;
+        background: url('https://source.unsplash.com/1600x900/?nature,water') center/cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: #fff;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 800px;
+        padding: 20px;
+      }
+      .hero-content h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        letter-spacing: 1px;
+      }
+      .hero-content p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        line-height: 1.5;
+      }
+      .hero-content a {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background: #ff6b6b;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: background 0.3s ease;
+      }
+      .hero-content a:hover {
+        background: #ff4757;
+      }
+      @media (max-width: 768px) {
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+        .hero-content p {
+          font-size: 1rem;
+        }
+      }
+    \`}</style>
 
-      <p>You clicked {count} times.</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
+    <section className="hero">
+      <div className="hero-content">
+        <h1>Elevate Your Experience</h1>
+        <p>Discover cutting-edge solutions that empower your business and inspire innovation.</p>
+        <a href="#features">Learn More</a>
+      </div>
+    </section>
+  </>
+);
 
-    </div>
-  );
-}
-export default App;
-`
+export default HeroSection;
+`;
 
-const config: Config = {
-  markup: {
-    language: 'markdown',
-    content: '',
-  },
-  style: {
-    language: 'css',
-    content: 'body { color: blue; }',
-  },
-  script: {
-    language: 'jsx',
-    content: temp,
-  },
+const config: Partial<Config> = {
+  markup:  { language: 'markdown', content: '' },
+  style:   { language: 'css',    content: 'body { color: blue; }' },
+  script:  { language: 'jsx',    content: temp },
   activeEditor: 'script',
+  view: 'result',
+  mode: 'lite',
 };
 
 const embedOptions: EmbedOptions = {
-  // merge your normal config + add lite mode here
-  config: {
-    ...config,
-    // mode: 'lite',
-    view: 'result'
+  config,
+  params: {
+    console: 'none',
   },
-  params: { console: 'none' },
 };
 
 export default function About() {
