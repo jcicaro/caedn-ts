@@ -52,6 +52,19 @@ export function ChatBubble({ msg }: { msg: ChatMessage }) {
           isUser ? 'items-end' : 'items-start'
         }`}
       >
+        
+        {/* TTS controls for assistant messages */}
+        {!isUser && !isSystem && (
+          <div className="flex justify-start mt-2">
+            <TTSControls
+              loading={loading}
+              error={error}
+              audioUrl={audioUrl}
+              onGenerate={handleGenerate}
+            />
+          </div>
+        )}
+        
         <div
           className={`chat-bubble p-4 rounded-2xl shadow-md transition-colors ease-in-out
             ${isSystem
@@ -68,17 +81,7 @@ export function ChatBubble({ msg }: { msg: ChatMessage }) {
           </ReactMarkdown>
         </div>
 
-        {/* TTS controls for assistant messages */}
-        {!isUser && !isSystem && (
-          <div className="flex justify-start">
-            <TTSControls
-              loading={loading}
-              error={error}
-              audioUrl={audioUrl}
-              onGenerate={handleGenerate}
-            />
-          </div>
-        )}
+        
       </div>
     </li>
   );

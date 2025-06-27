@@ -25,7 +25,7 @@ const TTSControls: React.FC<TTSControlsProps> = ({ loading, error, audioUrl, onG
           onClick={onGenerate}
           disabled={loading}
         >
-          {loading ? 'Gen…' : 'Generate Audio'}
+          {loading ? 'Gen…' : '🔈'}
         </button>
 
         {audioUrl && (
