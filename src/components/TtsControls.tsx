@@ -21,7 +21,7 @@ const TTSControls: React.FC<TTSControlsProps> = ({ loading, error, audioUrl, onG
     <div className="w-full max-w-lg space-y-4">
       <div className="flex items-center space-x-2">
         <button
-          className={`btn btn-outline btn-xs ${loading ? 'loading' : ''}`}
+          className={`btn btn-sm ${loading ? 'loading' : ''}`}
           onClick={onGenerate}
           disabled={loading}
         >
