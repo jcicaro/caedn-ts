@@ -1,123 +1,229 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import TTSControls from '../components/TtsControls';
 
-const MathPractice = () => {
-  const [num1, setNum1] = useState(0);
-  const [num2, setNum2] = useState(0);
-  const [operator, setOperator] = useState('+');
-  const [correctAnswer, setCorrectAnswer] = useState(0);
-  const [userAnswer, setUserAnswer] = useState('');
-  const [feedback, setFeedback] = useState('');
-  const [score, setScore] = useState(0);
+export default function About() {
+  const [apiKey, setApiKey] = useState('');
+  const [text, setText] = useState(
+    'Hello, I am your AI assistant! Just let me know how I can help bring your ideas to life.'
+  );
+  const [model, setModel] = useState('tts-1');
+  const [voice, setVoice] = useState('alloy');
+  const [audioUrl, setAudioUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const answerInputRef = useRef(null);
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError('');
+    setAudioUrl('');
 
-  const createVisual = (count) => {
-    return (
-      <span>
-        {"🍎".repeat(count)}
-        <sub className="ml-2 text-gray-500 text-xs">{count}</sub>
-      </span>
-    );
-  };
-
-  const generateProblem = () => {
-    const isAddition = Math.random() > 0.5;
-    const n1 = Math.floor(Math.random() * 6) + 1;
-    const n2 = Math.floor(Math.random() * 6) + 1;
-
-    setNum1(n1);
-    setNum2(n2);
-    setUserAnswer('');
-    setFeedback('');
-
-    if (isAddition) {
-      setOperator('+');
-      setCorrectAnswer(n1 + n2);
-    } else {
-      setOperator('-');
-      const larger = Math.max(n1, n2);
-      const smaller = Math.min(n1, n2);
-      setNum1(larger); // Update for display
-      setNum2(smaller); // Update for display
-      setCorrectAnswer(larger - smaller);
-    }
-    answerInputRef.current?.focus();
-  };
-
-  const checkAnswer = () => {
-    const parsedUserAnswer = parseInt(userAnswer);
-    if (parsedUserAnswer === correctAnswer) {
-      setFeedback('✅ Great Job!');
-      setScore(prevScore => prevScore + 1);
-    } else {
-      setFeedback('❌ Try Again!');
-    }
-  };
-
-  useEffect(() => {
-    generateProblem();
-  }, []);
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      checkAnswer();
-    } else if (e.key === ' ') {
-      e.preventDefault();
-      generateProblem();
+    try {
+      const res = await fetch('https://tts.icaro.com.au/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey || 'your_api_key_here'}`,
+        },
+        body: JSON.stringify({ model, input: text, voice }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      setAudioUrl(URL.createObjectURL(blob));
+    } catch (e: any) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <section className="bg-gradient-to-b from-blue-100 to-white flex flex-col justify-center items-center py-10 min-h-screen">
-      <div className="container mx-auto text-center">
-        <h1 className="font-bold text-5xl mb-4 text-gray-900">Let's Practice Math!</h1>
-        <p className="font-semibold text-lg mb-5 text-gray-900">
-          ✅ Correct Answers: <span id="correct-count">{score}</span>
-        </p>
+    <div className="min-h-screen bg-base-100 p-6 flex flex-col items-center">
+      <h1 className="text-3xl font-bold mb-6">Icaro TTS Tester</h1>
 
-        <div id="math-card" className="bg-white rounded-2xl shadow-xl p-6 mx-auto max-w-lg">
-          <div className="mb-4">
-            <h2 id="problem" className="text-gray-800 font-bold text-6xl mb-3">
-              {num1} {operator} {num2} = ?
-            </h2>
-
-            <div id="visual-aid" className="text-4xl inline-block mx-auto text-left">
-              <div id="visual-row-1" className="mb-2 text-left">
-                {createVisual(num1)}
-              </div>
-              <div id="visual-row-2" className="text-left">
-                {createVisual(num2)}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-center gap-4 mb-6">
-            <input
-              id="answer"
-              type="number"
-              className="input input-bordered input-lg w-full max-w-[120px] text-center"
-              placeholder="?"
-              value={userAnswer}
-              onChange={(e) => setUserAnswer(e.target.value)}
-              onKeyDown={handleKeyDown}
-              ref={answerInputRef}
-            />
-            <button id="check-btn" className="btn btn-success btn-lg px-6" onClick={checkAnswer}>
-              <i className="bi bi-check-circle-fill mr-2"></i> Check
-            </button>
-          </div>
-
-          <div id="feedback" className={`text-xl font-bold mb-3 ${feedback.startsWith('✅') ? 'text-success' : 'text-error'}`}>
-            {feedback}
-          </div>
-          <button id="new-problem-btn" className="btn btn-primary mt-2" onClick={generateProblem}>
-            <i className="bi bi-arrow-clockwise mr-2"></i> New Problem
-          </button>
+      <div className="w-full max-w-lg space-y-4">
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">API Key</span>
+          </label>
+          <input
+            type="password"
+            placeholder="Bearer API key"
+            value={apiKey}
+            onChange={e => setApiKey(e.target.value)}
+            className="input input-bordered w-full"
+          />
         </div>
-      </div>
-    </section>
-  );
-};
 
-export default MathPractice;
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Text to Speak</span>
+          </label>
+          <textarea
+            rows={4}
+            className="textarea textarea-bordered w-full"
+            value={text}
+            onChange={e => setText(e.target.value)}
+          />
+        </div>
+
+        <div className="flex space-x-2">
+          <div className="form-control w-1/2">
+            <label className="label">
+              <span className="label-text">Model</span>
+            </label>
+            <select
+              className="select select-bordered"
+              value={model}
+              onChange={e => setModel(e.target.value)}
+            >
+              <option value="tts-1">tts-1</option>
+            </select>
+          </div>
+
+          <div className="form-control w-1/2">
+            <label className="label">
+              <span className="label-text">Voice</span>
+            </label>
+            <select
+              className="select select-bordered"
+              value={voice}
+              onChange={e => setVoice(e.target.value)}
+            >
+              <option value="alloy">alloy</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Use the reusable TTSControls component */}
+        <TTSControls
+          loading={loading}
+          error={error}
+          audioUrl={audioUrl}
+          onGenerate={handleGenerate}
+        />
+      </div>
+    </div>
+  );
+}
+
+
+// import { useState } from 'react'
+
+// export default function About() {
+//   const [apiKey, setApiKey] = useState('')
+//   const [text, setText] = useState(
+//     'Hello, I am your AI assistant! Just let me know how I can help bring your ideas to life.'
+//   )
+//   const [model, setModel] = useState('tts-1')
+//   const [voice, setVoice] = useState('alloy')
+//   const [audioUrl, setAudioUrl] = useState('')
+//   const [loading, setLoading] = useState(false)
+//   const [error, setError] = useState('')
+
+//   const handleGenerate = async () => {
+//     // if (!apiKey) {
+//     //   setError('Please enter your API key.')
+//     //   return
+//     // }
+//     setLoading(true)
+//     setError('')
+//     setAudioUrl('')
+//     try {
+//       const res = await fetch('https://tts.icaro.com.au/v1/audio/speech', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: `Bearer your_api_key_here`,
+//         },
+//         body: JSON.stringify({ model, input: text, voice }),
+//       })
+//       if (!res.ok) throw new Error(`HTTP ${res.status}`)
+//       const blob = await res.blob()
+//       const url = URL.createObjectURL(blob)
+//       setAudioUrl(url)
+//     } catch (e) {
+//       setError(e.message)
+//     } finally {
+//       setLoading(false)
+//     }
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-base-100 p-6 flex flex-col items-center">
+//       <h1 className="text-3xl font-bold mb-6">Icaro TTS Tester</h1>
+//       <div className="w-full max-w-lg space-y-4">
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text">API Key</span>
+//           </label>
+//           <input
+//             type="password"
+//             placeholder="Bearer API key"
+//             value={apiKey}
+//             onChange={e => setApiKey(e.target.value)}
+//             className="input input-bordered w-full"
+//           />
+//         </div>
+
+//         <div className="form-control">
+//           <label className="label">
+//             <span className="label-text">Text to Speak</span>
+//           </label>
+//           <textarea
+//             rows={4}
+//             className="textarea textarea-bordered w-full"
+//             value={text}
+//             onChange={e => setText(e.target.value)}
+//           />
+//         </div>
+
+//         <div className="flex space-x-2">
+//           <div className="form-control w-1/2">
+//             <label className="label">
+//               <span className="label-text">Model</span>
+//             </label>
+//             <select
+//               className="select select-bordered"
+//               value={model}
+//               onChange={e => setModel(e.target.value)}
+//             >
+//               <option value="tts-1">tts-1</option>
+//             </select>
+//           </div>
+//           <div className="form-control w-1/2">
+//             <label className="label">
+//               <span className="label-text">Voice</span>
+//             </label>
+//             <select
+//               className="select select-bordered"
+//               value={voice}
+//               onChange={e => setVoice(e.target.value)}
+//             >
+//               <option value="alloy">alloy</option>
+//             </select>
+//           </div>
+//         </div>
+
+//         <button
+//           className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
+//           onClick={handleGenerate}
+//           disabled={loading}
+//         >
+//           {loading ? 'Generating...' : 'Generate Speech'}
+//         </button>
+
+//         {error && (
+//           <div className="text-error text-center">Error: {error}</div>
+//         )}
+
+//         {audioUrl && (
+//           <audio
+//             src={audioUrl}
+//             controls
+//             className="mt-4 w-full"
+//           />
+//         )}
+//       </div>
+//     </div>
+//   )
+// }

@@ -1,15 +1,7 @@
-
-import React from "react"
-import { ChatBubble } from "../components/ChatBubble"
-import { ChatInput }  from "../components/ChatInput"
-import { useChat }    from "../hooks/useChat"
-
-// const INITIAL_PROMPT = `
-// Hello, Luna is my name.
-// Teach me about something interesting for primary schoolers?
-// Make it very easy to understand.
-// Make it easy to read for Year 1 students.
-// `.trim()
+import React from "react";
+import { ChatBubble } from "../components/ChatBubble";
+import { ChatInput } from "../components/ChatInput";
+import { useChat } from "../hooks/useChat";
 
 const INITIAL_PROMPT = `
 The user's name is Luna.
@@ -17,13 +9,13 @@ Write a Year 1 speech for about something interesting for primary schoolers?
 It should have an Introduction, 3 main points, a "secret sauce" to make it more engaging, and a conclusion. 
 Use simple, easy-to-read language.
 At the end, ask Luna if she wants another speech about another subject.
-`.trim()
+`.trim();
 
 export default function LunaSpeech2() {
-  const { messages, loading, error, send } = useChat(
+  const { messages, loading: chatLoading, error: chatError, send } = useChat(
     INITIAL_PROMPT,
     import.meta.env.VITE_OPENAI_MODEL
-  )
+  );
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -36,7 +28,7 @@ export default function LunaSpeech2() {
           <ChatBubble key={i} msg={msg} />
         ))}
 
-        {loading && (
+        {chatLoading && (
           <li className="flex items-center justify-center h-16">
             <div className="chat-bubble loading">...</div>
           </li>
@@ -49,16 +41,16 @@ export default function LunaSpeech2() {
             key={cmd}
             className="btn btn-xs btn-info btn-outline"
             onClick={() => send(cmd)}
-            disabled={loading}
+            disabled={chatLoading}
           >
             {cmd.charAt(0).toUpperCase() + cmd.slice(1)}
           </button>
         ))}
       </div>
 
-      {error && <div className="text-red-500 mt-4">{error}</div>}
+      {chatError && <div className="text-red-500 mt-4">{chatError}</div>}
 
-      <ChatInput onSend={send} disabled={loading} />
+      <ChatInput onSend={send} disabled={chatLoading} />
     </div>
-  )
+  );
 }
