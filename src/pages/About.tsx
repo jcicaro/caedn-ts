@@ -2,18 +2,33 @@ import React, { useEffect, useRef } from 'react';
 import { createPlayground } from 'livecodes';
 import type { Config, EmbedOptions } from 'livecodes';
 
+const temp = `
+import { useState } from "react";
+
+function App() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>You clicked {count} times.</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+export default App;
+`
+
 const config: Config = {
   markup: {
     language: 'markdown',
-    content: '# Hello LiveCodes!',
+    content: '',
   },
   style: {
     language: 'css',
     content: 'body { color: blue; }',
   },
   script: {
-    language: 'javascript',
-    content: 'console.log("hello from JavaScript!");',
+    language: 'jsx',
+    content: temp,
   },
   activeEditor: 'script',
 };
@@ -23,8 +38,9 @@ const embedOptions: EmbedOptions = {
   config: {
     ...config,
     mode: 'lite',
+    // view: 'result'
   },
-  params: { console: 'open' },
+  params: { console: 'none' },
 };
 
 export default function About() {
