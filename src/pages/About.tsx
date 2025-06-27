@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { createPlayground, PlaygroundConfig } from 'livecodes';
+import { createPlayground } from 'livecodes';
+import type { Config, EmbedOptions } from 'livecodes';
 
-const config: PlaygroundConfig = {
+const config: Config = {
   markup: {
     language: 'markdown',
     content: '# Hello LiveCodes!',
@@ -17,33 +18,41 @@ const config: PlaygroundConfig = {
   activeEditor: 'script',
 };
 
+const embedOptions: EmbedOptions = {
+  // merge your normal config + add lite mode here
+  config: {
+    ...config,
+    mode: 'lite',
+  },
+  params: { console: 'open' },
+};
+
 export default function About() {
-  const container1Ref = useRef<HTMLDivElement>(null);
-  const container2Ref = useRef<HTMLDivElement>(null);
-  const container3Ref = useRef<HTMLDivElement>(null);
+  const refs = [
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null),
+  ];
 
   useEffect(() => {
-    [container1Ref, container2Ref, container3Ref].forEach((ref) => {
-      if (ref.current) {
-        createPlayground(ref.current, {
-          config,
-          params: { console: 'open' },
-        });
+    refs.forEach(r => {
+      if (r.current) {
+        createPlayground(r.current, embedOptions);
       }
     });
   }, []);
 
-  const containerStyle = {
+  const style: React.CSSProperties = {
     height: 300,
     width: '100%',
     marginBottom: 20,
-  } as const;
+  };
 
   return (
     <>
-      <div ref={container1Ref} style={containerStyle} />
-      <div ref={container2Ref} style={containerStyle} />
-      <div ref={container3Ref} style={containerStyle} />
+      <div ref={refs[0]} style={style} />
+      <div ref={refs[1]} style={style} />
+      <div ref={refs[2]} style={style} />
     </>
   );
 }
