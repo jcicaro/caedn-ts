@@ -11,6 +11,10 @@ function App() {
     <div>
       <p>You clicked {count} times.</p>
       <button onClick={() => setCount(count + 1)}>Click me</button>
+
+      <p>You clicked {count} times.</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+
     </div>
   );
 }
@@ -37,8 +41,8 @@ const embedOptions: EmbedOptions = {
   // merge your normal config + add lite mode here
   config: {
     ...config,
-    mode: 'lite',
-    // view: 'result'
+    // mode: 'lite',
+    view: 'result'
   },
   params: { console: 'none' },
 };
