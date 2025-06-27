@@ -1,8 +1,15 @@
-import React, { useEffect, useRef } from 'react';
-import { createPlayground } from 'livecodes';
-import type { Config, EmbedOptions } from 'livecodes';
+import LiveCodes, { type Props } from 'livecodes/react';
 
-const temp = `
+const options: Props = {
+  config: {
+    // no markdown in this example
+    markup:  { language: 'markdown', content: '' },
+    // any global CSS you want applied inside the sandbox
+    style:   { language: 'css', content: 'body { color: blue; }' },
+    // React code to run in the sandbox
+    script:  {
+      language: 'jsx',
+      content: `
 import React from 'react';
 
 const HeroSection = () => (
@@ -79,50 +86,21 @@ const HeroSection = () => (
 );
 
 export default HeroSection;
-`;
-
-const config: Partial<Config> = {
-  markup:  { language: 'markdown', content: '' },
-  style:   { language: 'css',    content: 'body { color: blue; }' },
-  script:  { language: 'jsx',    content: temp },
-  activeEditor: 'script',
-  view: 'result',
-  mode: 'lite',
-};
-
-const embedOptions: EmbedOptions = {
-  config,
+      `
+    },
+    activeEditor: 'script',
+    view: 'result',
+    mode: 'lite',
+  },
   params: {
     console: 'none',
   },
 };
 
-export default function About() {
-  const refs = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ];
+const Playground = () => (
+  <div style={{ height: '90vh', width: '100%' }}>
+    <LiveCodes {...options} style={{ height: '90%', width: '100%' }} />
+  </div>
+);
 
-  useEffect(() => {
-    refs.forEach(r => {
-      if (r.current) {
-        createPlayground(r.current, embedOptions);
-      }
-    });
-  }, []);
-
-  const style: React.CSSProperties = {
-    height: 300,
-    width: '100%',
-    marginBottom: 20,
-  };
-
-  return (
-    <>
-      <div ref={refs[0]} style={style} />
-      <div ref={refs[1]} style={style} />
-      <div ref={refs[2]} style={style} />
-    </>
-  );
-}
+export default Playground;

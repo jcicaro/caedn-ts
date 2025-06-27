@@ -34,6 +34,7 @@ export function ChatBubble({ msg }: { msg: ChatMessage }) {
           Authorization: `Bearer your_api_key_here`,
         },
         body: JSON.stringify({ model: 'tts-1', input: msg.content, voice: 'alloy' }),
+        // body: JSON.stringify({ model: 'tts-1', input: msg.content, voice: 'en-US-AvaNeural' }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
