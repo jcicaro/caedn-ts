@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install --legacy-peer-deps && vite build",
+  "buildCommand": "npm install --force && vite build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
