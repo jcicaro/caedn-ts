@@ -180,6 +180,10 @@ const About: React.FC = () => {
                   showMoveHistory
                   showNavigation
                   pgn={pgn}
+                  onPositionChange={(fen, moves) => {
+                    console.log("Current FEN:", fen);
+                    console.log("Move history:", moves);
+                  }}
                 />
               </div>
             </div>

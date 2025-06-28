@@ -3,6 +3,10 @@
 
 @import 'highlight.js/styles/github.css';
 
+/* @import "@mdwebb/react-chess/dist/assets/chessground.base.css";
+@import "@mdwebb/react-chess/dist/assets/chessground.brown.css";
+@import "@mdwebb/react-chess/dist/assets/chessground.cburnett.css"; */
+
 @plugin "daisyui" {
   themes: all;
 }
