@@ -38,28 +38,28 @@ const JcChessTraining: React.FC = () => {
   const boardRef = useRef<ChessboardRef>(null);
 
   // State ------------------------------------------------------------------
-  const [pgn,         setPgn]         = useState("");
-  const [currentFen,  setCurrentFen]  = useState("");
-  const [analysis,    setAnalysis]    = useState<MoveAnalysis[] | null>(null);
+  const [pgn, setPgn] = useState("");
+  const [currentFen, setCurrentFen] = useState("");
+  const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
   const [loadingGame, setLoadingGame] = useState(false);
-  const [loadingAn,   setLoadingAn]   = useState(false);
-  const [error,       setError]       = useState<string | null>(null);
+  const [loadingAn, setLoadingAn] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const {
     messages,
     loading: chatLoading,
-    error:   chatError,
-    send:    sendToChat,
+    error: chatError,
+    send: sendToChat,
   } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
 
   // Helpers ---------------------------------------------------------------
   const normalize = (raw: any): MoveAnalysis => ({
-    move:         raw.move     ?? raw.san ?? raw.lan,
-    evaluation:   raw.eval     ?? raw.evaluation,
-    best:         raw.bestmove ?? raw.best ?? raw.bestMove,
-    depth:        raw.depth,
-    text:         raw.text     ?? raw.comment,
-    continuation: raw.continuation
+    move: raw.move ?? raw.san ?? raw.lan,
+    evaluation: raw.eval ?? raw.evaluation,
+    best: raw.bestmove ?? raw.best ?? raw.bestMove,
+    depth: raw.depth,
+    text: raw.text ?? raw.comment,
+    continuation: raw.continuation,
   });
 
   // Load a random Magnus Carlsen game -------------------------------------
@@ -77,11 +77,12 @@ const JcChessTraining: React.FC = () => {
       if (!archivesRes.ok) throw new Error("Failed to fetch archives");
       const { archives } = await archivesRes.json();
 
-      const randomArchive = archives[Math.floor(Math.random() * archives.length)];
-      const gamesRes      = await fetch(randomArchive);
+      const randomArchive =
+        archives[Math.floor(Math.random() * archives.length)];
+      const gamesRes = await fetch(randomArchive);
       if (!gamesRes.ok) throw new Error("Failed to fetch games");
-      const { games }     = await gamesRes.json();
-      const randomGame    = games[Math.floor(Math.random() * games.length)];
+      const { games } = await gamesRes.json();
+      const randomGame = games[Math.floor(Math.random() * games.length)];
 
       setPgn(randomGame.pgn);
     } catch (e) {
@@ -128,7 +129,7 @@ const JcChessTraining: React.FC = () => {
     }
   }, [currentFen, normalize, sendToChat]);
 
-  // Send analysis to chat (still available if you want manual send)
+  // Send analysis to chat (manual)
   const sendAnalysisToChat = useCallback(() => {
     if (!analysis?.length) return;
     sendToChat(JSON.stringify(analysis));
@@ -139,7 +140,9 @@ const JcChessTraining: React.FC = () => {
   // ------------------------------------------------------------------------
 
   // 1. Load a random game on mount
-  useEffect(() => { loadRandomGame(); }, [loadRandomGame]);
+  useEffect(() => {
+    loadRandomGame();
+  }, [loadRandomGame]);
 
   // 2. Parse PGN → final FEN so Analyse works immediately
   useEffect(() => {
@@ -157,114 +160,91 @@ const JcChessTraining: React.FC = () => {
   // Render
   // ------------------------------------------------------------------------
   return (
-    <div className="container mx-auto p-8 space-y-8">
-      {/* Chessboard card */}
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body flex flex-col items-center">
-          <h1 className="card-title text-4xl">Chess Training with JC</h1>
-          <p className="mb-4 text-center">
-            Random Chess.com game — navigate and click Analyse.
-          </p>
+    <div className="h-screen md:flex md:items-start gap-4 p-4 bg-base-200">
+      {/* Chessboard column (sticky on md+) */}
+      <div className="md:w-1/2 lg:w-2/5 flex-shrink-0 md:sticky md:top-4">
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body flex flex-col items-center">
+            <h1 className="card-title text-3xl text-center">Chess Training with JC</h1>
+            <p className="mb-4 text-center text-sm opacity-80">
+              Random Chess.com game — navigate and click Analyse.
+            </p>
 
-          {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error}</span>
-            </div>
-          )}
-
-          <div className="flex justify-center mb-4">
-            <Chessboard
-              id="jc-board"
-              ref={boardRef}
-              width={400}
-              height={400}
-              className="rounded-lg"
-              showNavigation
-              pgn={pgn}
-              onPositionChange={fen => setCurrentFen(fen)}
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-4 justify-center">
-            <button
-              onClick={analyzePosition}
-              disabled={loadingGame || loadingAn}
-              className={`btn btn-success btn-sm ${
-                loadingGame || loadingAn ? "btn-disabled" : ""
-              }`}
-            >
-              {loadingAn ? "Analysing…" : "Analyse"}
-            </button>
-
-            <button
-              onClick={loadRandomGame}
-              disabled={loadingGame || loadingAn}
-              className={`btn btn-primary btn-sm ${
-                loadingGame ? "btn-disabled" : ""
-              }`}
-            >
-              {loadingGame ? "Fetching…" : "New Game"}
-            </button>
-
-            <button
-              onClick={() => setAnalysis(null)}
-              disabled={loadingAn}
-              className="btn btn-ghost btn-sm"
-            >
-              Clear
-            </button>
-
-            {/* <button
-              onClick={sendAnalysisToChat}
-              disabled={!analysis?.length || chatLoading}
-              className="btn btn-info btn-sm"
-            >
-              Send to Chat
-            </button> */}
-          </div>
-
-          {false && analysis?.length && (
-            <div className="w-full bg-base-200 p-4 rounded-lg">
-              <h2 className="text-2xl font-semibold mb-2">Analysis</h2>
-              <div className="flex flex-col gap-2 text-sm">
-                {analysis.map((m, i) => (
-                  <div
-                    key={i}
-                    className="p-2 bg-white rounded shadow break-words"
-                  >
-                    {m.move && (
-                      <span className="font-bold mr-1">{m.move}:</span>
-                    )}
-                    <span>
-                      {m.text ??
-                        (m.evaluation !== undefined
-                          ? m.evaluation.toFixed(2)
-                          : "…")}
-                    </span>
-                    {m.best && <span className="ml-2">best {m.best}</span>}
-                  </div>
-                ))}
+            {error && (
+              <div className="alert alert-error mb-4">
+                <span>{error}</span>
               </div>
+            )}
+
+            <div className="flex justify-center mb-4">
+              <Chessboard
+                id="jc-board"
+                ref={boardRef}
+                width={360}
+                height={360}
+                className="rounded-lg"
+                showNavigation
+                pgn={pgn}
+                onPositionChange={(fen) => setCurrentFen(fen)}
+              />
             </div>
-          )}
+
+            <div className="flex flex-wrap gap-2 mb-2 justify-center">
+              <button
+                onClick={analyzePosition}
+                disabled={loadingGame || loadingAn}
+                className={`btn btn-success btn-sm ${
+                  loadingGame || loadingAn ? "btn-disabled" : ""
+                }`}
+              >
+                {loadingAn ? "Analysing…" : "Analyse"}
+              </button>
+
+              <button
+                onClick={loadRandomGame}
+                disabled={loadingGame || loadingAn}
+                className={`btn btn-primary btn-sm ${
+                  loadingGame ? "btn-disabled" : ""
+                }`}
+              >
+                {loadingGame ? "Fetching…" : "New Game"}
+              </button>
+
+              <button
+                onClick={() => setAnalysis(null)}
+                disabled={loadingAn}
+                className="btn btn-ghost btn-sm"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Chat Coach */}
-      <div className="card bg-base-100 shadow-xl p-6">
-        <h2 className="text-2xl font-semibold mb-4">Coach Chat</h2>
-        <ul className="chat flex flex-col space-y-2 mb-4">
-          {messages.map((msg, i) => (
-            <ChatBubble key={i} msg={msg} />
-          ))}
-          {chatLoading && (
-            <li className="flex items-center justify-center h-12">
-              <div className="chat-bubble loading">…</div>
-            </li>
-          )}
-        </ul>
-        <ChatInput onSend={sendToChat} disabled={chatLoading} />
-        {chatError && <div className="text-red-500 mt-2">{chatError}</div>}
+      {/* Chat column */}
+      <div className="mt-4 md:mt-0 flex-1 flex flex-col h-[70vh] md:h-screen">
+        <div className="card bg-base-100 shadow-xl flex-1 overflow-hidden">
+          <div className="card-body p-4 flex flex-col h-full">
+            <h2 className="text-2xl font-semibold mb-2">Coach Chat</h2>
+
+            {/* Messages list */}
+            <ul className="chat flex-1 overflow-y-auto space-y-2 pr-2">
+              {messages.map((msg, i) => (
+                <ChatBubble key={i} msg={msg} />
+              ))}
+              {chatLoading && (
+                <li className="flex items-center justify-center h-12">
+                  <div className="chat-bubble loading">…</div>
+                </li>
+              )}
+            </ul>
+
+            {/* Input */}
+            <ChatInput onSend={sendToChat} disabled={chatLoading} />
+            {chatError && <div className="text-red-500 mt-2">{chatError}</div>}
+          </div>
+        </div>
       </div>
     </div>
   );
