@@ -31,7 +31,6 @@ const JcChessTraining: React.FC = () => {
   const [gameMovesHistory, setGameMovesHistory] = useState<GameMove[]>([]);
   const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
 
-  // Load a random game PGN
   const loadRandomGame = async () => {
     setLoadingGame(true);
     setError(null);
@@ -60,17 +59,14 @@ const JcChessTraining: React.FC = () => {
     }
   };
 
-  // Navigate to a specific move
   const goToMove = useCallback((fen: string) => {
     setCurrentFen(fen);
   }, []);
 
-  // On mount, load a game
   useEffect(() => {
     loadRandomGame();
   }, []);
 
-  // Parse PGN into move history
   useEffect(() => {
     if (!pgn) {
       setGameMovesHistory([]);
@@ -92,7 +88,7 @@ const JcChessTraining: React.FC = () => {
     const tempChess = new Chess();
     const movesWithFens: GameMove[] = history.map(move => {
       tempChess.move(move);
-      const fullMoveNumber = Math.floor(tempChess.history().length / 2);
+      const fullMoveNumber = Math.floor(tempChess.history().length / 2) + (move.color === 'b' ? 0 : 1);
       let formattedSan = move.san;
       if (move.color === 'w') {
         formattedSan = `${fullMoveNumber}. ${move.san}`;
@@ -107,10 +103,8 @@ const JcChessTraining: React.FC = () => {
 
     setGameMovesHistory(movesWithFens);
     analyzePosition();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pgn]);
 
-  // Analyze position or PGN
   const analyzePosition = async () => {
     setLoadingAnalysis(true);
     setError(null);
@@ -134,7 +128,6 @@ const JcChessTraining: React.FC = () => {
     }
   };
 
-  // Build rows of white/black move pairs
   const moveRows = useMemo(() => {
     const rows: { moveNumber: number; white?: GameMove; black?: GameMove }[] = [];
     for (let i = 0; i < gameMovesHistory.length; i += 2) {
@@ -148,96 +141,94 @@ const JcChessTraining: React.FC = () => {
   }, [gameMovesHistory]);
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h1 className="card-title text-4xl">Chess Training with JC</h1>
-          <p className="mb-4">Random Chess.com game with move analysis below.</p>
-
-          {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
-
-          <div className="card mb-6">
-            <div className="card-body flex justify-center">
-              <Chessboard
-                id="jcboard"
-                ref={boardRef}
-                width={500}
-                height={500}
-                className="rounded-lg  justify-center"
-                // showMoveHistory
-                showNavigation
-                fen={currentFen}
-                pgn={pgn}
-                onPositionChange={(fen) => setCurrentFen(fen)}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2 mb-6">
-            <button
-              onClick={analyzePosition}
-              disabled={loadingGame || loadingAnalysis}
-              className={`btn btn-success ${loadingGame || loadingAnalysis ? 'btn-disabled' : ''}`}
-            >{loadingAnalysis ? 'Analyzing...' : 'Re-analyze Position'}</button>
-
-            <button
-              onClick={loadRandomGame}
-              disabled={loadingGame || loadingAnalysis}
-              className={`btn btn-primary ${loadingGame ? 'btn-disabled' : ''}`}
-            >{loadingGame ? 'Fetching Game...' : 'Load New Game'}</button>
-
-            <button
-              onClick={() => setAnalysis(null)}
-              disabled={loadingAnalysis}
-              className="btn btn-ghost"
-            >Clear Analysis</button>
-          </div>
-
-          {loadingAnalysis && <p className="mb-4">Loading analysis...</p>}
-
-          {/* Display PGN moves cleanly */}
-          {moveRows.length > 0 && (
-            <div className="card bg-base-200 p-4 rounded-lg mb-4">
-              <h2 className="text-2xl font-semibold mb-2">Game Moves (PGN)</h2>
-              <div className="space-y-1 font-mono text-sm">
-                {moveRows.map(({ moveNumber, white, black }) => (
-                  <div key={moveNumber} className="flex items-center gap-2">
-                    <span className="font-bold">{moveNumber}.</span>
-                    {white && (
-                      <button
-                        onClick={() => goToMove(white.fen)}
-                        className="btn btn-sm btn-outline btn-info"
-                      >{white.pgn.replace(/^\d+\.\s*/, '')}</button>
-                    )}
-                    {black && (
-                      <button
-                        onClick={() => goToMove(black.fen)}
-                        className="btn btn-sm btn-outline btn-info"
-                      >{black.pgn.replace(/^\d+\.\s*/, '')}</button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {analysis && (
-            <div className="card bg-base-200 p-4 rounded-lg">
-              <h2 className="text-2xl font-semibold mb-4">Analysis</h2>
-              <div className="flex flex-wrap gap-x-4 gap-y-2">
-                {analysis.map((m, idx) => (
-                  <div key={idx} className="p-2 bg-white rounded shadow text-sm">
-                    {m.move && <span className="font-bold mr-1">{m.move}:</span>}
-                    <span>Eval {m.evaluation !== undefined ? m.evaluation.toFixed(2) : 'N/A'}</span>
-                    {m.best && <span className="ml-2">, best {m.best}</span>}
-                    {m.depth !== undefined && <span className="ml-2">, depth {m.depth}</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
+    <div className="flex h-screen">
+      {/* Left column: Chessboard */}
+      <div className="w-1/2 flex items-center justify-center p-4">
+        <div className="w-full max-w-md aspect-square">
+          <Chessboard
+            id="jcboard"
+            ref={boardRef}
+            style={{ width: '100%', height: '100%' }}
+            className="rounded-lg"
+            showNavigation
+            fen={currentFen}
+            pgn={pgn}
+            onPositionChange={(fen) => setCurrentFen(fen)}
+          />
         </div>
+      </div>
+
+      {/* Right column: Moves & Controls */}
+      <div className="w-1/2 overflow-y-auto p-4">
+        <h1 className="text-3xl font-bold mb-2">Chess Training with JC</h1>
+        <p className="mb-4">Random Chess.com game with move analysis below.</p>
+
+        {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          <button
+            onClick={analyzePosition}
+            disabled={loadingGame || loadingAnalysis}
+            className={`btn btn-success ${loadingGame || loadingAnalysis ? 'btn-disabled' : ''}`}
+          >{loadingAnalysis ? 'Analyzing...' : 'Re-analyze Position'}</button>
+
+          <button
+            onClick={loadRandomGame}
+            disabled={loadingGame || loadingAnalysis}
+            className={`btn btn-primary ${loadingGame ? 'btn-disabled' : ''}`}
+          >{loadingGame ? 'Fetching Game...' : 'Load New Game'}</button>
+
+          <button
+            onClick={() => setAnalysis(null)}
+            disabled={loadingAnalysis}
+            className="btn btn-ghost"
+          >Clear Analysis</button>
+        </div>
+
+        {loadingAnalysis && <p className="mb-4">Loading analysis...</p>}
+
+        {/* Move List */}
+        {moveRows.length > 0 && (
+          <div className="mb-6">
+            <h2 className="text-2xl font-semibold mb-2">Game Moves (PGN)</h2>
+            <div className="space-y-1 font-mono text-sm">
+              {moveRows.map(({ moveNumber, white, black }) => (
+                <div key={moveNumber} className="flex items-center gap-2">
+                  <span className="font-bold">{moveNumber}.</span>
+                  {white && (
+                    <button
+                      onClick={() => goToMove(white.fen)}
+                      className="btn btn-sm btn-outline btn-info"
+                    >{white.pgn.replace(/^\d+\.\s*/, '')}</button>
+                  )}
+                  {black && (
+                    <button
+                      onClick={() => goToMove(black.fen)}
+                      className="btn btn-sm btn-outline btn-info"
+                    >{black.pgn.replace(/^\d+\.\s*/, '')}</button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Analysis List */}
+        {analysis && (
+          <div>
+            <h2 className="text-2xl font-semibold mb-2">Analysis</h2>
+            <div className="space-y-2 text-sm">
+              {analysis.map((m, idx) => (
+                <div key={idx} className="p-2 bg-gray-100 rounded shadow-sm">
+                  {m.move && <span className="font-bold mr-1">{m.move}:</span>}
+                  <span>Eval {m.evaluation !== undefined ? m.evaluation.toFixed(2) : 'N/A'}</span>
+                  {m.best && <span className="ml-2">best {m.best}</span>}
+                  {m.depth !== undefined && <span className="ml-2">depth {m.depth}</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
