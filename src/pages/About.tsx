@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import "@mdwebb/react-chess/dist/assets/chessground.base.css";
 import "@mdwebb/react-chess/dist/assets/chessground.brown.css";
 import "@mdwebb/react-chess/dist/assets/chessground.cburnett.css";
 import { Chessboard, ChessboardRef } from "@mdwebb/react-chess";
+import { Chess } from 'chess.js'; // Import Chess from chess.js
 
 interface MoveAnalysis {
   move?: string;
@@ -11,13 +12,21 @@ interface MoveAnalysis {
   depth?: number;
 }
 
+interface GameMove {
+  pgn: string; // The PGN string for display (e.g., "1. e4", "e5")
+  fen: string; // The FEN string *after* this move has been made
+  fullMoveNumber: number; // Storing the full move number for clarity
+  color: 'w' | 'b'; // Storing the color of the player who made the move
+}
+
 const About: React.FC = () => {
   const boardRef = useRef<ChessboardRef>(null);
   const [loadingGame, setLoadingGame] = useState<boolean>(false);
   const [loadingAnalysis, setLoadingAnalysis] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [pgn, setPgn] = useState<string>("");
-  const [formattedPgnMoves, setFormattedPgnMoves] = useState<string[]>([]); // New state for individual PGN moves
+  const [pgn, setPgn] = useState<string>(""); // The full PGN string of the loaded game
+  const [currentFen, setCurrentFen] = useState<string>('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'); // FEN to control the board
+  const [gameMovesHistory, setGameMovesHistory] = useState<GameMove[]>([]); // Stores objects with PGN and FEN
   const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
 
   // Function to load a random game PGN
@@ -25,6 +34,10 @@ const About: React.FC = () => {
     setLoadingGame(true);
     setError(null);
     setAnalysis(null);
+    setPgn(""); // Clear previous PGN
+    setGameMovesHistory([]); // Clear previous move history
+    setCurrentFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'); // Reset FEN to initial position
+
     try {
       const archivesRes = await fetch(
         'https://api.chess.com/pub/player/magnuscarlsen/games/archives'
@@ -45,93 +58,61 @@ const About: React.FC = () => {
     }
   };
 
+  // Function to navigate to a specific move in the game history
+  const goToMove = useCallback((fen: string) => {
+    setCurrentFen(fen); // Update the FEN state to trigger board re-render
+  }, []);
+
   // Load a random game on mount
   useEffect(() => {
     loadRandomGame();
   }, []);
 
-  // Automatically analyze once a new PGN is loaded and format moves
+  // Effect to parse PGN into individual moves with FENs for navigation
   useEffect(() => {
-    if (!pgn) return;
-    analyzePosition();
-
-    // --- Logic to extract and format PGN moves into an array ---
-    const movesOnly = pgn
-      .replace(/\[.*?\]|\{.*?\}|\s*\d+\.\.\.|\$\d+|[!?#+=]/g, '') // Remove tags, comments, black move numbers, NAGs, and annotations
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .trim();
-
-    // Split by move number (e.g., "1. e4 e5 2. Nf3 Nc6" -> ["1. e4", "e5", "2. Nf3", "Nc6"])
-    // This regex matches "NUMBER." or "NUMBER..."
-    const individualMoves = movesOnly.split(/(\d+\.\s*(?:\.\.\.)?)/g)
-        .filter(segment => segment.trim() !== '') // Remove empty strings
-        .reduce((acc: string[], segment, index, array) => {
-            if (segment.match(/^\d+\.\s*(\.\.\.)?$/)) { // If it's a move number (e.g., "1." or "1...")
-                if (array[index + 1]) { // If there's a next segment (the move itself)
-                    acc.push(segment + array[index + 1].trim());
-                    // If there's a third segment (Black's move for that turn) and it's not another move number
-                    if (array[index + 2] && !array[index + 2].match(/^\d+\.\s*(\.\.\.)?$/)) {
-                        acc.push(array[index + 2].trim());
-                    }
-                }
-            } else if (!segment.match(/^\d+\.\s*(\.\.\.)?$/) && segment.trim() !== '') {
-                // Handle cases where a move might not immediately follow a number (uncommon, but for robustness)
-                // Or if there's an odd number of segments after a split by turn number
-                // This typically captures black's move if the reduce didn't already
-                if (acc.length > 0 && acc[acc.length -1].startsWith(segment.trim())) {
-                  // This condition prevents duplicate additions if Black's move was already added in the if-block
-                  // based on the array[index + 2] check.
-                  return acc;
-                }
-                 if (segment.trim() !== '') {
-                    // Add segments that are actual moves but not turn numbers, if they haven't been added.
-                    // This handles cases like `...e5` not directly following `1.`
-                    // Need to be careful not to double add if it was already handled by array[index+2]
-                    const lastMoveAdded = acc[acc.length - 1];
-                    if (!lastMoveAdded || !lastMoveAdded.includes(segment.trim())) {
-                        // This check makes sure we don't re-add black's move if it was already added with the white move
-                        acc.push(segment.trim());
-                    }
-                }
-            }
-            return acc;
-        }, []);
-
-    // A simpler way to clean up the PGN into an array of moves (less robust for every edge case, but often sufficient):
-    const simplifiedMoves = pgn
-        .replace(/\[.*?\]/g, '') // Remove tags
-        .replace(/\{[^}]*\}/g, '') // Remove comments
-        .replace(/\s+/g, ' ') // Normalize spaces
-        .replace(/\d+\.\.\./g, '') // Remove black's move indicators (e.g., "2...")
-        .replace(/\s*([!?#+=])\s*/g, '$1') // Remove spaces around annotations
-        .trim()
-        .split(' ') // Split by space
-        .filter(move => move.length > 0 && !/^\d+\.$/.test(move)); // Remove empty strings and standalone move numbers
-
-    // Re-join moves with their numbers for display, if desired, or just keep individual pieces
-    // For clean display, we want something like "1. e4", "e5", "2. Nf3", "Nc6"
-    let finalMoves: string[] = [];
-    const moveRegex = /(\d+\.)(\s*[^\s]+)(\s*[^\s]+)?/g;
-    let match;
-    let tempPgnForRegex = pgn
-        .replace(/\[.*?\]|\{.*?\}|\s*\d+\.\.\.|\$\d+|[!?#+=]/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-
-    while ((match = moveRegex.exec(tempPgnForRegex)) !== null) {
-        if (match[2]) { // White's move
-            finalMoves.push(match[1] + match[2]);
-        }
-        if (match[3]) { // Black's move
-            finalMoves.push(match[3].trim());
-        }
+    if (!pgn) {
+      setGameMovesHistory([]);
+      return;
     }
 
-    setFormattedPgnMoves(finalMoves);
-    // --- End of logic to extract and format moves from PGN ---
+    const chess = new Chess();
+    try {
+      chess.loadPgn(pgn);
+      // After loading PGN, set the initial FEN to the start of the game
+      setCurrentFen(new Chess().fen()); // Initial FEN before any moves are made
+    } catch (e) {
+      console.error("Error loading PGN for history:", e);
+      setGameMovesHistory([]);
+      setCurrentFen('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'); // Fallback to initial FEN
+      return;
+    }
 
+    const history = chess.history({ verbose: true }); // Get detailed history
+    const movesWithFens: GameMove[] = [];
+    const tempChess = new Chess(); // Use a temporary instance to step through moves
+
+    history.forEach((move) => {
+      tempChess.move(move); // Apply the move to the temporary board
+
+      // Use the full_move_number and color from the move object for display
+      let formattedMove = move.san;
+      if (move.color === 'w') {
+        // The full move number is the 6th field in a FEN string (0-indexed)
+        formattedMove = `${move.after.split(' ')[5]}. ${move.san}`;
+      }
+
+      movesWithFens.push({
+        pgn: formattedMove,
+        fen: tempChess.fen(), // FEN *after* this move
+        fullMoveNumber: parseInt(move.after.split(' ')[5]), // Parse the full move number from the FEN
+        color: move.color,
+      });
+    });
+
+    setGameMovesHistory(movesWithFens);
+    analyzePosition(); // Re-analyze after new PGN and history are set
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pgn]);
+  }, [pgn]); // Only re-run when PGN changes
 
 
   // Analyze current board position or PGN using Chess-API.com v1
@@ -140,8 +121,9 @@ const About: React.FC = () => {
     setError(null);
     setAnalysis(null);
     try {
-      const fen = boardRef.current?.game?.fen();
-      const payload = fen ? { fen } : { pgn };
+      // Use the currentFen state for analysis, not boardRef.current?.game?.fen()
+      // as boardRef.current.game might not be in sync if FEN is controlled by prop
+      const payload = currentFen ? { fen: currentFen } : { pgn }; // Prefer FEN for analysis if available
       const res = await fetch('https://chess-api.com/v1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -179,10 +161,18 @@ const About: React.FC = () => {
                   className="rounded-lg"
                   showMoveHistory
                   showNavigation
-                  pgn={pgn}
+                  // Pass the currentFen state as the fen prop
+                  fen={currentFen}
+                  // It's still useful to keep the pgn prop for initial load/full game context
+                  // or if the component internally uses it for history traversal.
+                  // However, for explicit position setting, 'fen' is king.
+                  pgn={pgn} // Keep PGN for the component to build its internal game history
                   onPositionChange={(fen, moves) => {
-                    console.log("Current FEN:", fen);
-                    console.log("Move history:", moves);
+                    console.log("Current FEN (from onPositionChange):", fen);
+                    console.log("Move history (from onPositionChange):", moves);
+                    // Optionally, if the user navigates using Chessboard's controls,
+                    // you might want to update your currentFen state here to keep it in sync.
+                    // setCurrentFen(fen);
                   }}
                 />
               </div>
@@ -216,14 +206,18 @@ const About: React.FC = () => {
           {loadingAnalysis && <p className="mb-4">Loading analysis...</p>}
 
           {/* Display PGN moves with spacing */}
-          {formattedPgnMoves.length > 0 && (
+          {gameMovesHistory.length > 0 && (
             <div className="card bg-base-200 p-4 rounded-lg mb-4">
               <h2 className="text-2xl font-semibold mb-2">Game Moves (PGN)</h2>
-              <div className="flex flex-wrap gap-x-3 gap-y-1"> {/* Added flex and gap for spacing */}
-                {formattedPgnMoves.map((move, index) => (
-                  <span key={index} className="font-mono text-sm">
-                    {move}
-                  </span>
+              <div className="flex flex-wrap gap-x-3 gap-y-1">
+                {gameMovesHistory.map((move, index) => (
+                  <button
+                    key={index}
+                    onClick={() => goToMove(move.fen)} // Pass the FEN to goToMove
+                    className="btn btn-sm btn-outline btn-info font-mono text-sm"
+                  >
+                    {move.pgn}
+                  </button>
                 ))}
               </div>
             </div>
