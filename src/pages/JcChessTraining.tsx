@@ -19,6 +19,7 @@ interface MoveAnalysis {
   best?: string;
   depth?: number;
   text?: string;
+  continuation?: Array<Object>;
 }
 
 // --------------------------------------------------------------------------
@@ -57,6 +58,7 @@ const JcChessTraining: React.FC = () => {
     best:       raw.bestmove ?? raw.best ?? raw.bestMove,
     depth:      raw.depth,
     text:       raw.text     ?? raw.comment,
+    continuation: raw.continuation
   });
 
   // Load a random Magnus Carlsen game -------------------------------------
@@ -107,6 +109,8 @@ const JcChessTraining: React.FC = () => {
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
 
+      console.log('analyzePosition', data);
+
       const arr = Array.isArray(data)
         ? data
         : Array.isArray(data.moves)
@@ -124,18 +128,20 @@ const JcChessTraining: React.FC = () => {
   // Send analysis to chat --------------------------------------------------
   const sendAnalysisToChat = useCallback(() => {
     if (!analysis?.length) return;
-    const txt = analysis
-      .map(m => {
-        const parts: string[] = [];
-        if (m.move) parts.push(m.move);
-        if (m.text) parts.push(m.text);
-        else if (m.evaluation !== undefined)
-          parts.push(`Eval ${m.evaluation.toFixed(2)}`);
-        if (m.best) parts.push(`best ${m.best}`);
-        return parts.join(" – ");
-      })
-      .join("\n");
-    sendToChat(txt);
+    // const txt = analysis
+    //   .map(m => {
+    //     const parts: string[] = [];
+    //     if (m.move) parts.push(m.move);
+    //     if (m.text) parts.push(m.text);
+    //     else if (m.evaluation !== undefined)
+    //       parts.push(`Eval ${m.evaluation.toFixed(2)}`);
+    //     if (m.best) parts.push(`best ${m.best}`);
+    //     return parts.join(" – ");
+    //   })
+    //   .join("\n");
+    // console.log('sendAnalysisToChat', txt, analysis);
+    // sendToChat(txt);
+    sendToChat(JSON.stringify(analysis));
   }, [analysis, sendToChat]);
 
   // ------------------------------------------------------------------------
