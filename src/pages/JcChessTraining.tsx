@@ -1,4 +1,3 @@
-// src/pages/JcChessTraining.tsx
 import React, { useRef, useEffect, useState, useCallback } from "react";
 import { Chess } from "chess.js";
 import "@mdwebb/react-chess/dist/assets/chessground.base.css";
@@ -42,16 +41,15 @@ const cssVar = (name: string, value: string) =>
 const JcChessTraining: React.FC = () => {
   const boardRef = useRef<ChessboardRef>(null);
 
-  // ----------------------------------------------------------------------
   // State
-  // ----------------------------------------------------------------------
-  const [pgn, setPgn] = useState("");
-  const [currentFen, setCurrentFen] = useState("");
+  const [pgn, setPgn] = useState<string>("");
+  const [currentFen, setCurrentFen] = useState<string>("");
   const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
-  const [loadingGame, setLoadingGame] = useState(false);
-  const [loadingAn, setLoadingAn] = useState(false);
+  const [loadingGame, setLoadingGame] = useState<boolean>(false);
+  const [loadingAn, setLoadingAn] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [boardSize, setBoardSize] = useState(360);
+  const [boardSize, setBoardSize] = useState<number>(360);
+  const [showPgnModal, setShowPgnModal] = useState<boolean>(false);
 
   const {
     messages,
@@ -60,9 +58,7 @@ const JcChessTraining: React.FC = () => {
     send: sendToChat,
   } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
 
-  // ----------------------------------------------------------------------
   // Helpers
-  // ----------------------------------------------------------------------
   const normalize = (raw: any): MoveAnalysis => ({
     move: raw.move ?? raw.san ?? raw.lan,
     evaluation: raw.eval ?? raw.evaluation,
@@ -72,107 +68,86 @@ const JcChessTraining: React.FC = () => {
     continuation: raw.continuation,
   });
 
-  // Responsive board – recalc on resize
+  const copyToClipboard = (text: string) => {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      navigator.clipboard.writeText(text).catch(err => console.error('Async copy failed', err));
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'absolute';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      const selected = document.getSelection()?.rangeCount ? document.getSelection()!.getRangeAt(0) : null;
+      textarea.select();
+      try { document.execCommand('copy'); } catch {};
+      document.body.removeChild(textarea);
+      if (selected) {
+        document.getSelection()?.removeAllRanges();
+        document.getSelection()?.addRange(selected);
+      }
+    }
+  };
+
+  // Responsive board
   useEffect(() => {
     const calc = () => {
-      const max = Math.min(360, window.innerWidth - 48); // p-4 (2rem) = 32 + small buffer
+      const max = Math.min(360, window.innerWidth - 48);
       setBoardSize(max < 240 ? 240 : max);
     };
     calc();
-    window.addEventListener("resize", calc);
-    return () => window.removeEventListener("resize", calc);
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
   }, []);
 
-  // ----------------------------------------------------------------------
   // Load random Magnus game
-  // ----------------------------------------------------------------------
   const loadRandomGame = useCallback(async () => {
     setLoadingGame(true);
     setError(null);
     setAnalysis(null);
     setPgn("");
     setCurrentFen("");
-
     try {
-      const archivesRes = await fetch(
-        "https://api.chess.com/pub/player/magnuscarlsen/games/archives"
-      );
-      if (!archivesRes.ok) throw new Error("Failed to fetch archives");
+      const archivesRes = await fetch('https://api.chess.com/pub/player/magnuscarlsen/games/archives');
+      if (!archivesRes.ok) throw new Error('Failed to fetch archives');
       const { archives } = await archivesRes.json();
-
-      const randomArchive =
-        archives[Math.floor(Math.random() * archives.length)];
+      const randomArchive = archives[Math.floor(Math.random() * archives.length)];
       const gamesRes = await fetch(randomArchive);
-      if (!gamesRes.ok) throw new Error("Failed to fetch games");
+      if (!gamesRes.ok) throw new Error('Failed to fetch games');
       const { games } = await gamesRes.json();
       const randomGame = games[Math.floor(Math.random() * games.length)];
-      console.log('loadRandomGame', randomGame);
       setPgn(randomGame.pgn);
-    } catch (e) {
-      setError((e as Error).message);
+    } catch (e: any) {
+      setError(e.message);
     } finally {
       setLoadingGame(false);
     }
   }, []);
 
-  // ----------------------------------------------------------------------
-  // Analyse current FEN
-  // ----------------------------------------------------------------------
+  // Analyse position
   const analyzePosition = useCallback(async () => {
-    if (!currentFen) {
-      setError("Position not ready. Try again in a moment.");
-      return;
-    }
-
+    if (!currentFen) { setError('Position not ready.'); return; }
     setLoadingAn(true);
     setError(null);
-
     try {
-      const res = await fetch("https://chess-api.com/v1", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fen: currentFen }),
-      });
+      const res = await fetch('https://chess-api.com/v1', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fen: currentFen }) });
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
-
-      const arr = Array.isArray(data)
-        ? data
-        : Array.isArray(data.moves)
-        ? data.moves
-        : [data];
-
-      const norm = arr.map(normalize);
-      setAnalysis(norm);
-      sendToChat(JSON.stringify(norm));
-    } catch (e) {
-      setError((e as Error).message);
+      const arr = Array.isArray(data) ? data : Array.isArray(data.moves) ? data.moves : [data];
+      setAnalysis(arr.map(normalize));
+      sendToChat(JSON.stringify(arr.map(normalize)));
+    } catch (e: any) {
+      setError(e.message);
     } finally {
       setLoadingAn(false);
     }
   }, [currentFen, sendToChat]);
 
-  // ----------------------------------------------------------------------
   // Effects
-  // ----------------------------------------------------------------------
-  useEffect(() => {
-    loadRandomGame();
-  }, [loadRandomGame]);
+  useEffect(() => { loadRandomGame(); }, [loadRandomGame]);
+  useEffect(() => { if (!pgn) return; const c = new Chess(); try { c.loadPgn(pgn); setCurrentFen(c.fen()); } catch {} }, [pgn]);
 
-  useEffect(() => {
-    if (!pgn) return;
-    const c = new Chess();
-    try {
-      c.loadPgn(pgn);
-      setCurrentFen(c.fen());
-    } catch (err) {
-      console.error("PGN parse failed", err);
-    }
-  }, [pgn]);
-
-  // ----------------------------------------------------------------------
   // Render
-  // ----------------------------------------------------------------------
   return (
     <div className="h-screen md:flex md:items-start gap-4 p-4 bg-base-200">
       {/* Board column */}
@@ -181,13 +156,7 @@ const JcChessTraining: React.FC = () => {
           <div className="card-body flex flex-col items-center">
             <h1 className="card-title text-3xl text-center">Chess Training with JC</h1>
             <p className="mb-4 text-center text-sm opacity-80">Random Chess.com game — navigate and click Analyse.</p>
-
-            {error && (
-              <div className="alert alert-error mb-4">
-                <span>{error}</span>
-              </div>
-            )}
-
+            {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
             <div className="flex justify-center mb-4 w-full">
               <Chessboard
                 id="jc-board"
@@ -197,53 +166,39 @@ const JcChessTraining: React.FC = () => {
                 className="rounded-lg"
                 showNavigation
                 pgn={pgn}
-                onPositionChange={(fen) => setCurrentFen(fen)}
+                onPositionChange={fen => setCurrentFen(fen)}
               />
             </div>
-
             <div className="flex flex-wrap gap-2 mb-2 justify-center">
-              <button
-                onClick={analyzePosition}
-                disabled={loadingGame || loadingAn}
-                className={`btn btn-success btn-sm ${loadingGame || loadingAn ? "btn-disabled" : ""}`}
-              >
-                {loadingAn ? "Analysing…" : "Analyse"}
-              </button>
-              <button
-                onClick={loadRandomGame}
-                disabled={loadingGame || loadingAn}
-                className={`btn btn-primary btn-sm ${loadingGame ? "btn-disabled" : ""}`}
-              >
-                {loadingGame ? "Fetching…" : "New Game"}
-              </button>
+              <button onClick={analyzePosition} disabled={loadingGame||loadingAn} className="btn btn-success btn-sm" >{loadingAn?'Analysing…':'Analyse'}</button>
+              <button onClick={loadRandomGame} disabled={loadingGame||loadingAn} className="btn btn-primary btn-sm" >{loadingGame?'Fetching…':'New Game'}</button>
+              <button onClick={()=>setShowPgnModal(true)} disabled={!pgn||loadingGame} className="btn btn-secondary btn-sm">Show PGN</button>
             </div>
           </div>
         </div>
       </div>
-
       {/* Chat column */}
       <div className="mt-4 md:mt-0 flex-1 flex flex-col h-[70vh] md:h-screen">
         <div className="card bg-base-100 shadow-xl flex-1 overflow-hidden">
           <div className="card-body p-4 flex flex-col h-full">
             <h2 className="text-2xl font-semibold mb-2">Coach Chat</h2>
-
-            {/* Messages */}
-            <ul
-              className="chat flex-1 overflow-y-auto space-y-2 pr-1 break-all"
-              style={cssVar("--chat-bubble-max-width", "95%")}
-            >
-              {messages.map((m, i) => (
-                <ChatBubble key={i} msg={m} />
-              ))}
-              {chatLoading && (
-                <li className="flex items-center justify-center h-12">
-                  <div className="chat-bubble loading">…</div>
-                </li>
-              )}
+            <ul className="chat flex-1 overflow-y-auto space-y-2 pr-1 break-all" style={cssVar('--chat-bubble-max-width','95%')}>
+              {messages.map((m,i)=><ChatBubble key={i} msg={m}/>)}
+              {chatLoading && <li className="flex items-center justify-center h-12"><div className="chat-bubble loading">…</div></li>}
             </ul>
-
-            <ChatInput onSend={sendToChat} disabled={chatLoading} />
+            <ChatInput onSend={sendToChat} disabled={chatLoading}/>
             {chatError && <div className="text-red-500 mt-2">{chatError}</div>}
+          </div>
+        </div>
+      </div>
+      {/* PGN Modal */}
+      <div className={`modal ${showPgnModal?'modal-open':''}`} onClick={e=>e.currentTarget===e.target&&setShowPgnModal(false)}>
+        <div className="modal-box relative">
+          <h3 className="font-bold text-lg">Game PGN</h3>
+          <pre className="whitespace-pre-wrap my-4">{pgn}</pre>
+          <div className="modal-action">
+            <button onClick={()=>copyToClipboard(pgn)} className="btn btn-outline btn-sm">Copy PGN</button>
+            <button onClick={()=>setShowPgnModal(false)} className="btn btn-primary btn-sm">Close</button>
           </div>
         </div>
       </div>
