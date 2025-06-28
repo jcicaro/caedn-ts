@@ -48,6 +48,11 @@
                 "title": "Programming Cheatsheets",
                 "desc": "Get cheatsheets for common programming languages.",
                 "link": "/jcprogrammingcheatsheet"
+            },
+            {
+                "title": "Chess Training",
+                "desc": "Train with an AI tutor to improve your chess skills.",
+                "link": "/jcchesstraining"
             }
         ]
     }

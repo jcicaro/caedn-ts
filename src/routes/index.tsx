@@ -5,6 +5,7 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 
 import JcProgrammingCheatsheet from "../pages/JcProgrammingCheatsheet";
+import JcChessTraining from "../pages/JcChessTraining";
 
 import BasicMath from "../pages/BasicMath2";
 import Multiplication from "../pages/Multiplication2";
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { path: "about", element: <About /> },
 
       { path: "jcprogrammingcheatsheet", element: <JcProgrammingCheatsheet /> }, 
+      { path: "jcchesstraining", element: <JcChessTraining /> }, 
 
       { path: "basicmath", element: <BasicMath /> }, 
       { path: "multiplication", element: <Multiplication /> }, 

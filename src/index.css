@@ -109,3 +109,7 @@ body {
   white-space: pre-wrap;  /* wrap long lines if needed */
   word-break: break-word; /* break up very long tokens */
 }
+
+#jcboard div {
+  @apply justify-center
+}
