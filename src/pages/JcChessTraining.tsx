@@ -27,7 +27,8 @@ interface MoveAnalysis {
 // --------------------------------------------------------------------------
 const INITIAL_PROMPT = `
 Your name is ChessBuddy.
-Whenever I give you a board position and analysis, explain it in simple terms.
+Whenever I give you a board position and analysis, explain it in simple terms that a 6 year old can understand.
+Unless I specify, the "move" I mention is the best next move the AI has determined.
 Do not mention anything about the depth.
 `.trim();
 
@@ -105,7 +106,7 @@ const JcChessTraining: React.FC = () => {
       if (!gamesRes.ok) throw new Error("Failed to fetch games");
       const { games } = await gamesRes.json();
       const randomGame = games[Math.floor(Math.random() * games.length)];
-
+      console.log('loadRandomGame', randomGame);
       setPgn(randomGame.pgn);
     } catch (e) {
       setError((e as Error).message);
