@@ -19,7 +19,7 @@ interface MoveAnalysis {
   best?: string;
   depth?: number;
   text?: string;
-  continuation?: Array<Object>;
+  continuation?: Array<object>;
 }
 
 // --------------------------------------------------------------------------
@@ -31,19 +31,26 @@ Whenever I give you a board position and analysis, explain it in simple terms.
 Do not mention anything about the depth.
 `.trim();
 
+// Utility to help with TS & CSS custom props
+const cssVar = (name: string, value: string) =>
+  ({ [name]: value } as React.CSSProperties);
+
 // --------------------------------------------------------------------------
 // Component
 // --------------------------------------------------------------------------
 const JcChessTraining: React.FC = () => {
   const boardRef = useRef<ChessboardRef>(null);
 
-  // State ------------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // State
+  // ----------------------------------------------------------------------
   const [pgn, setPgn] = useState("");
   const [currentFen, setCurrentFen] = useState("");
   const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
   const [loadingGame, setLoadingGame] = useState(false);
   const [loadingAn, setLoadingAn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [boardSize, setBoardSize] = useState(360);
 
   const {
     messages,
@@ -52,7 +59,9 @@ const JcChessTraining: React.FC = () => {
     send: sendToChat,
   } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
 
-  // Helpers ---------------------------------------------------------------
+  // ----------------------------------------------------------------------
+  // Helpers
+  // ----------------------------------------------------------------------
   const normalize = (raw: any): MoveAnalysis => ({
     move: raw.move ?? raw.san ?? raw.lan,
     evaluation: raw.eval ?? raw.evaluation,
@@ -62,7 +71,20 @@ const JcChessTraining: React.FC = () => {
     continuation: raw.continuation,
   });
 
-  // Load a random Magnus Carlsen game -------------------------------------
+  // Responsive board – recalc on resize
+  useEffect(() => {
+    const calc = () => {
+      const max = Math.min(360, window.innerWidth - 48); // p-4 (2rem) = 32 + small buffer
+      setBoardSize(max < 240 ? 240 : max);
+    };
+    calc();
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
+  }, []);
+
+  // ----------------------------------------------------------------------
+  // Load random Magnus game
+  // ----------------------------------------------------------------------
   const loadRandomGame = useCallback(async () => {
     setLoadingGame(true);
     setError(null);
@@ -92,15 +114,17 @@ const JcChessTraining: React.FC = () => {
     }
   }, []);
 
-  // Analyse current position ----------------------------------------------
+  // ----------------------------------------------------------------------
+  // Analyse current FEN
+  // ----------------------------------------------------------------------
   const analyzePosition = useCallback(async () => {
     if (!currentFen) {
       setError("Position not ready. Try again in a moment.");
       return;
     }
+
     setLoadingAn(true);
     setError(null);
-    setAnalysis(null);
 
     try {
       const res = await fetch("https://chess-api.com/v1", {
@@ -117,58 +141,45 @@ const JcChessTraining: React.FC = () => {
         ? data.moves
         : [data];
 
-      const normalized = arr.map(normalize);
-      setAnalysis(normalized);
-
-      // **Send the analysis immediately to the chat**
-      sendToChat(JSON.stringify(normalized));
+      const norm = arr.map(normalize);
+      setAnalysis(norm);
+      sendToChat(JSON.stringify(norm));
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setLoadingAn(false);
     }
-  }, [currentFen, normalize, sendToChat]);
+  }, [currentFen, sendToChat]);
 
-  // Send analysis to chat (manual)
-  const sendAnalysisToChat = useCallback(() => {
-    if (!analysis?.length) return;
-    sendToChat(JSON.stringify(analysis));
-  }, [analysis, sendToChat]);
-
-  // ------------------------------------------------------------------------
+  // ----------------------------------------------------------------------
   // Effects
-  // ------------------------------------------------------------------------
-
-  // 1. Load a random game on mount
+  // ----------------------------------------------------------------------
   useEffect(() => {
     loadRandomGame();
   }, [loadRandomGame]);
 
-  // 2. Parse PGN → final FEN so Analyse works immediately
   useEffect(() => {
     if (!pgn) return;
-    const chess = new Chess();
+    const c = new Chess();
     try {
-      chess.loadPgn(pgn);
-      setCurrentFen(chess.fen());
+      c.loadPgn(pgn);
+      setCurrentFen(c.fen());
     } catch (err) {
       console.error("PGN parse failed", err);
     }
   }, [pgn]);
 
-  // ------------------------------------------------------------------------
+  // ----------------------------------------------------------------------
   // Render
-  // ------------------------------------------------------------------------
+  // ----------------------------------------------------------------------
   return (
     <div className="h-screen md:flex md:items-start gap-4 p-4 bg-base-200">
-      {/* Chessboard column (sticky on md+) */}
+      {/* Board column */}
       <div className="md:w-1/2 lg:w-2/5 flex-shrink-0 md:sticky md:top-4">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body flex flex-col items-center">
             <h1 className="card-title text-3xl text-center">Chess Training with JC</h1>
-            <p className="mb-4 text-center text-sm opacity-80">
-              Random Chess.com game — navigate and click Analyse.
-            </p>
+            <p className="mb-4 text-center text-sm opacity-80">Random Chess.com game — navigate and click Analyse.</p>
 
             {error && (
               <div className="alert alert-error mb-4">
@@ -176,12 +187,12 @@ const JcChessTraining: React.FC = () => {
               </div>
             )}
 
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-4 w-full">
               <Chessboard
                 id="jc-board"
                 ref={boardRef}
-                width={360}
-                height={360}
+                width={boardSize}
+                height={boardSize}
                 className="rounded-lg"
                 showNavigation
                 pgn={pgn}
@@ -193,29 +204,16 @@ const JcChessTraining: React.FC = () => {
               <button
                 onClick={analyzePosition}
                 disabled={loadingGame || loadingAn}
-                className={`btn btn-success btn-sm ${
-                  loadingGame || loadingAn ? "btn-disabled" : ""
-                }`}
+                className={`btn btn-success btn-sm ${loadingGame || loadingAn ? "btn-disabled" : ""}`}
               >
                 {loadingAn ? "Analysing…" : "Analyse"}
               </button>
-
               <button
                 onClick={loadRandomGame}
                 disabled={loadingGame || loadingAn}
-                className={`btn btn-primary btn-sm ${
-                  loadingGame ? "btn-disabled" : ""
-                }`}
+                className={`btn btn-primary btn-sm ${loadingGame ? "btn-disabled" : ""}`}
               >
                 {loadingGame ? "Fetching…" : "New Game"}
-              </button>
-
-              <button
-                onClick={() => setAnalysis(null)}
-                disabled={loadingAn}
-                className="btn btn-ghost btn-sm"
-              >
-                Clear
               </button>
             </div>
           </div>
@@ -228,10 +226,13 @@ const JcChessTraining: React.FC = () => {
           <div className="card-body p-4 flex flex-col h-full">
             <h2 className="text-2xl font-semibold mb-2">Coach Chat</h2>
 
-            {/* Messages list */}
-            <ul className="chat flex-1 overflow-y-auto space-y-2 pr-2">
-              {messages.map((msg, i) => (
-                <ChatBubble key={i} msg={msg} />
+            {/* Messages */}
+            <ul
+              className="chat flex-1 overflow-y-auto space-y-2 pr-1 break-all"
+              style={cssVar("--chat-bubble-max-width", "95%")}
+            >
+              {messages.map((m, i) => (
+                <ChatBubble key={i} msg={m} />
               ))}
               {chatLoading && (
                 <li className="flex items-center justify-center h-12">
@@ -240,7 +241,6 @@ const JcChessTraining: React.FC = () => {
               )}
             </ul>
 
-            {/* Input */}
             <ChatInput onSend={sendToChat} disabled={chatLoading} />
             {chatError && <div className="text-red-500 mt-2">{chatError}</div>}
           </div>
