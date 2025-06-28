@@ -1,5 +1,6 @@
 {
-  "buildCommand": "npm install --force && vite build",
+  "installCommand": "npm install --force",
+  "buildCommand": "vite build",
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
   ]
