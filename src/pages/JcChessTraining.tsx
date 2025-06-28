@@ -1,20 +1,13 @@
 // src/pages/JcChessTraining.tsx
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useCallback,
-} from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import "@mdwebb/react-chess/dist/assets/chessground.base.css";
 import "@mdwebb/react-chess/dist/assets/chessground.brown.css";
 import "@mdwebb/react-chess/dist/assets/chessground.cburnett.css";
 import { Chessboard, ChessboardRef } from "@mdwebb/react-chess";
-import { Chess } from 'chess.js';
 
-// Chat UI pieces
 import { ChatBubble } from "../components/ChatBubble";
-import { ChatInput } from "../components/ChatInput";
-import { useChat } from "../hooks/useChat";
+import { ChatInput }  from "../components/ChatInput";
+import { useChat }    from "../hooks/useChat";
 
 interface MoveAnalysis {
   move?: string;
@@ -24,221 +17,163 @@ interface MoveAnalysis {
   text?: string;
 }
 
-interface GameMove {
-  pgn: string;
-  fen: string;
-  fullMoveNumber: number;
-  color: 'w' | 'b';
-}
+const INITIAL_PROMPT = `
+Your name is ChessBuddy.
+Whenever I give you a board position and analysis, explain it in simple terms.
+`.trim();
 
 const JcChessTraining: React.FC = () => {
-  // --- Chat setup ---
-  const INITIAL_PROMPT = `
-Your name is ChessBuddy.
-Whenever I give you a list of moves and evaluations, explain what’s happening in simple terms.
-  `.trim();
-
-  const {
-    messages,
-    loading: chatLoading,
-    error: chatError,
-    send: sendToChat,
-  } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
-
-  // --- Chess & analysis state ---
   const boardRef = useRef<ChessboardRef>(null);
 
+  // ---- State -------------------------------------------------------------
+  const [pgn,         setPgn]         = useState('');
+  const [currentFen,  setCurrentFen]  = useState('');
+  const [analysis,    setAnalysis]    = useState<MoveAnalysis[] | null>(null);
   const [loadingGame, setLoadingGame] = useState(false);
-  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [loadingAn,   setLoadingAn]   = useState(false);
+  const [error,       setError]       = useState<string | null>(null);
 
-  const [pgn, setPgn] = useState('');
-  const [gameMovesHistory, setGameMovesHistory] = useState<GameMove[]>([]);
-  const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
+  const {
+    messages, loading: chatLoading, error: chatError, send: sendToChat,
+  } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
 
-  // helper to read the current FEN from the board instance
-  const getBoardFen = useCallback((): string => {
-    if (!boardRef.current) return '';
-    if (typeof boardRef.current.getPosition === 'function') {
-      return boardRef.current.getPosition();
-    }
-    if (boardRef.current.api?.getPosition) {
-      return boardRef.current.api.getPosition();
-    }
-    return '';
-  }, []);
+  // ---- Helpers -----------------------------------------------------------
+  /** Convert Chess-API payload → our MoveAnalysis shape */
+  const normalize = (raw: any): MoveAnalysis => ({
+    move:       raw.move     ?? raw.san       ?? raw.lan,
+    evaluation: raw.eval     ?? raw.evaluation,
+    best:       raw.bestmove ?? raw.best      ?? raw.bestMove,
+    depth:      raw.depth,
+    text:       raw.text     ?? raw.comment,
+  });
 
-  // --- Load a random Magnus Carlsen game ---
-  const loadRandomGame = async () => {
+  // ---- Data loaders ------------------------------------------------------
+  const loadRandomGame = useCallback(async () => {
     setLoadingGame(true);
     setError(null);
     setAnalysis(null);
     setPgn('');
-    setGameMovesHistory([]);
+    setCurrentFen('');
 
     try {
-      const archivesRes = await fetch(
-        'https://api.chess.com/pub/player/magnuscarlsen/games/archives'
-      );
+      const archivesRes = await fetch('https://api.chess.com/pub/player/magnuscarlsen/games/archives');
       if (!archivesRes.ok) throw new Error('Failed to fetch archives');
       const { archives } = await archivesRes.json();
-      const randomArchive =
-        archives[Math.floor(Math.random() * archives.length)];
-      const gamesRes = await fetch(randomArchive);
+
+      const randomArchive = archives[Math.floor(Math.random() * archives.length)];
+      const gamesRes      = await fetch(randomArchive);
       if (!gamesRes.ok) throw new Error('Failed to fetch games');
-      const { games } = await gamesRes.json();
-      const randomGame = games[Math.floor(Math.random() * games.length)];
-      setPgn(randomGame.pgn);
+      const { games }     = await gamesRes.json();
+      const randomGame    = games[Math.floor(Math.random() * games.length)];
+
+      setPgn(randomGame.pgn);             // board will emit onPositionChange
     } catch (e) {
-      console.error(e);
-      setError((e as Error).message || 'Failed to load game.');
+      setError((e as Error).message);
     } finally {
       setLoadingGame(false);
     }
-  };
+  }, []);
 
-  // --- Analyze & store in state (manual only) ---
   const analyzePosition = useCallback(async () => {
-    setLoadingAnalysis(true);
+    if (!currentFen) {
+      setError('Position not ready. Navigate first, then click Analyse.');
+      return;
+    }
+    setLoadingAn(true);
     setError(null);
     setAnalysis(null);
 
     try {
-      const fen = getBoardFen();
-      const payload = fen
-        ? { fen }
-        : { input: pgn };    // use `input` instead of `pgn` for PGN payload
-      const res = await fetch('https://chess-api.com/v1', {
+      const res  = await fetch('https://chess-api.com/v1', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ fen: currentFen }),
       });
-      if (!res.ok) throw new Error(`Analysis API failed: ${res.status}`);
+      if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
-      const moves: MoveAnalysis[] = Array.isArray(data.moves)
-        ? data.moves
-        : [data];
-      setAnalysis(moves);
+
+      // API can return a single object or an array
+      const arr  = Array.isArray(data) ? data
+               : Array.isArray(data.moves) ? data.moves
+               : [data];
+
+      setAnalysis(arr.map(normalize));
     } catch (e) {
-      console.error(e);
-      setError((e as Error).message || 'Analysis failed.');
+      setError((e as Error).message);
     } finally {
-      setLoadingAnalysis(false);
+      setLoadingAn(false);
     }
-  }, [pgn, getBoardFen]);
+  }, [currentFen]);
 
-  // --- Parse PGN into move history (no auto-analysis) ---
-  useEffect(() => {
-    if (!pgn) {
-      setGameMovesHistory([]);
-      return;
-    }
-
-    const chess = new Chess();
-    chess.loadPgn(pgn);
-
-    const history = chess.history({ verbose: true });
-    const tempChess = new Chess();
-    const movesWithFens = history.map(move => {
-      tempChess.move(move);
-      const fullMoveNumber = Math.ceil(tempChess.history().length / 2);
-      const formattedSan =
-        move.color === 'w' ? `${fullMoveNumber}. ${move.san}` : move.san;
-      return {
-        pgn: formattedSan,
-        fen: tempChess.fen(),
-        fullMoveNumber,
-        color: move.color,
-      };
-    });
-
-    setGameMovesHistory(movesWithFens);
-  }, [pgn]);
-
-  // --- Send analysis into chat on demand ---
   const sendAnalysisToChat = useCallback(() => {
     if (!analysis?.length) return;
-    const text = analysis
-      .map(m =>
-        m.move
-          ? `${m.move}: ${m.text ?? m.evaluation?.toFixed(2)}${
-              m.best ? ` (best: ${m.best})` : ''
-            }`
-          : ''
-      )
+    const txt = analysis
+      .map(m => {
+        const parts = [];
+        if (m.move)             parts.push(m.move);
+        if (m.text)             parts.push(m.text);
+        else if (m.evaluation !== undefined) parts.push(`Eval ${m.evaluation.toFixed(2)}`);
+        if (m.best)             parts.push(`best ${m.best}`);
+        return parts.join(' – ');
+      })
       .join('\n');
-    sendToChat(text);
+    sendToChat(txt);
   }, [analysis, sendToChat]);
 
-  // --- Jump to a specific move FEN via board API ---
-  const goToMove = useCallback((fen: string) => {
-    if (!boardRef.current) return;
-    if (typeof boardRef.current.set === 'function') {
-      boardRef.current.set({ fen });
-    } else if (boardRef.current.api?.setPosition) {
-      boardRef.current.api.setPosition(fen);
-    }
-  }, []);
+  // ---- Lifecycle ---------------------------------------------------------
+  /** Load a game on first mount */
+  useEffect(() => { loadRandomGame(); }, [loadRandomGame]);
 
-  // --- On mount, load a game ---
-  useEffect(() => {
-    loadRandomGame();
-  }, []);
-
+  // ---- Render ------------------------------------------------------------
   return (
     <div className="container mx-auto p-8 space-y-8">
-      {/* ==== Chessboard & Controls ==== */}
+      {/* Chessboard card */}
       <div className="card bg-base-100 shadow-xl">
         <div className="card-body flex flex-col items-center">
           <h1 className="card-title text-4xl">Chess Training with JC</h1>
-          <p className="mb-4 text-center">
-            Random Chess.com game — click “Re-analyze” when you want fresh analysis.
-          </p>
+          <p className="mb-4 text-center">Random Chess.com game — navigate and click Analyse.</p>
 
-          {error && (
-            <div className="alert alert-error mb-4">
-              <span>{error}</span>
-            </div>
-          )}
+          {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
 
           <div className="flex justify-center mb-4">
             <Chessboard
-              id="jcboard"
+              id="jc-board"
               ref={boardRef}
               width={400}
               height={400}
               className="rounded-lg"
-              showNavigation  // PGN-driven navigation arrows
-              pgn={pgn}        // board driven only by PGN
+              showNavigation
+              pgn={pgn}
+              /* <-- this is the correct callback */
+              onPositionChange={(fen /*, moves */) => setCurrentFen(fen)}
             />
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4 justify-center">
             <button
               onClick={analyzePosition}
-              disabled={loadingGame || loadingAnalysis}
-              className={`btn btn-success btn-sm ${
-                loadingGame || loadingAnalysis ? 'btn-disabled' : ''
-              }`}
+              disabled={loadingGame || loadingAn}
+              className={`btn btn-success btn-sm ${loadingGame || loadingAn ? 'btn-disabled' : ''}`}
             >
-              {loadingAnalysis ? 'Analyzing...' : 'Re-analyze'}
+              {loadingAn ? 'Analyzing...' : 'Analyse'}
             </button>
+
             <button
               onClick={loadRandomGame}
-              disabled={loadingGame || loadingAnalysis}
-              className={`btn btn-primary btn-sm ${
-                loadingGame ? 'btn-disabled' : ''
-              }`}
+              disabled={loadingGame || loadingAn}
+              className={`btn btn-primary btn-sm ${loadingGame ? 'btn-disabled' : ''}`}
             >
               {loadingGame ? 'Fetching...' : 'New Game'}
             </button>
+
             <button
               onClick={() => setAnalysis(null)}
-              disabled={loadingAnalysis}
+              disabled={loadingAn}
               className="btn btn-ghost btn-sm"
             >
-              Clear Analysis
+              Clear
             </button>
+
             <button
               onClick={sendAnalysisToChat}
               disabled={!analysis?.length || chatLoading}
@@ -248,38 +183,19 @@ Whenever I give you a list of moves and evaluations, explain what’s happening 
             </button>
           </div>
 
-          {gameMovesHistory.length > 0 && (
-            <div className="w-full bg-base-200 p-2 rounded-lg mb-4 text-xs font-mono overflow-x-auto">
-              <div className="inline-flex items-baseline flex-wrap gap-1">
-                {gameMovesHistory.map((move, idx) => (
-                  <React.Fragment key={idx}>
-                    {move.color === 'w' && (
-                      <span className="font-bold mr-0.5">
-                        {move.fullMoveNumber}.
-                      </span>
-                    )}
-                    <button
-                      onClick={() => goToMove(move.fen)}
-                      className="btn btn-ghost btn-xs py-0 px-1 align-baseline"
-                    >
-                      {move.pgn.replace(/^\d+\.\s*/, '')}
-                    </button>
-                  </React.Fragment>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {analysis && (
+          {analysis?.length && (
             <div className="w-full bg-base-200 p-4 rounded-lg">
               <h2 className="text-2xl font-semibold mb-2">Analysis</h2>
-              <div className="flex flex-wrap gap-2 text-sm">
+              <div className="flex flex-col gap-2 text-sm">
                 {analysis.map((m, i) => (
-                  <div key={i} className="p-2 bg-white rounded shadow">
-                    {m.move && (
-                      <span className="font-bold mr-1">{m.move}:</span>
-                    )}
-                    <span>{m.text ?? m.evaluation?.toFixed(2)}</span>
+                  <div key={i} className="p-2 bg-white rounded shadow break-words">
+                    {m.move && <span className="font-bold mr-1">{m.move}:</span>}
+                    <span>
+                      {m.text ??
+                        (m.evaluation !== undefined
+                          ? m.evaluation.toFixed(2)
+                          : '…')}
+                    </span>
                     {m.best && <span className="ml-2">best {m.best}</span>}
                   </div>
                 ))}
@@ -289,16 +205,14 @@ Whenever I give you a list of moves and evaluations, explain what’s happening 
         </div>
       </div>
 
-      {/* ==== Chat Coach ==== */}
+      {/* Chat Coach */}
       <div className="card bg-base-100 shadow-xl p-6">
         <h2 className="text-2xl font-semibold mb-4">Coach Chat</h2>
         <ul className="chat flex flex-col space-y-2 mb-4">
-          {messages.map((msg, i) => (
-            <ChatBubble key={i} msg={msg} />
-          ))}
+          {messages.map((msg, i) => <ChatBubble key={i} msg={msg} />)}
           {chatLoading && (
             <li className="flex items-center justify-center h-12">
-              <div className="chat-bubble loading">...</div>
+              <div className="chat-bubble loading">…</div>
             </li>
           )}
         </ul>
