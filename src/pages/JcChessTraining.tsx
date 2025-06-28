@@ -28,6 +28,7 @@ interface MoveAnalysis {
 const INITIAL_PROMPT = `
 Your name is ChessBuddy.
 Whenever I give you a board position and analysis, explain it in simple terms.
+Do not mention anything about the depth.
 `.trim();
 
 // --------------------------------------------------------------------------
@@ -53,11 +54,11 @@ const JcChessTraining: React.FC = () => {
 
   // Helpers ---------------------------------------------------------------
   const normalize = (raw: any): MoveAnalysis => ({
-    move:       raw.move     ?? raw.san ?? raw.lan,
-    evaluation: raw.eval     ?? raw.evaluation,
-    best:       raw.bestmove ?? raw.best ?? raw.bestMove,
-    depth:      raw.depth,
-    text:       raw.text     ?? raw.comment,
+    move:         raw.move     ?? raw.san ?? raw.lan,
+    evaluation:   raw.eval     ?? raw.evaluation,
+    best:         raw.bestmove ?? raw.best ?? raw.bestMove,
+    depth:        raw.depth,
+    text:         raw.text     ?? raw.comment,
     continuation: raw.continuation
   });
 
@@ -82,7 +83,7 @@ const JcChessTraining: React.FC = () => {
       const { games }     = await gamesRes.json();
       const randomGame    = games[Math.floor(Math.random() * games.length)];
 
-      setPgn(randomGame.pgn); // board renders, hook below sets FEN
+      setPgn(randomGame.pgn);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -109,38 +110,27 @@ const JcChessTraining: React.FC = () => {
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
 
-      console.log('analyzePosition', data);
-
       const arr = Array.isArray(data)
         ? data
         : Array.isArray(data.moves)
         ? data.moves
         : [data];
 
-      setAnalysis(arr.map(normalize));
+      const normalized = arr.map(normalize);
+      setAnalysis(normalized);
+
+      // **Send the analysis immediately to the chat**
+      sendToChat(JSON.stringify(normalized));
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setLoadingAn(false);
     }
-  }, [currentFen]);
+  }, [currentFen, normalize, sendToChat]);
 
-  // Send analysis to chat --------------------------------------------------
+  // Send analysis to chat (still available if you want manual send)
   const sendAnalysisToChat = useCallback(() => {
     if (!analysis?.length) return;
-    // const txt = analysis
-    //   .map(m => {
-    //     const parts: string[] = [];
-    //     if (m.move) parts.push(m.move);
-    //     if (m.text) parts.push(m.text);
-    //     else if (m.evaluation !== undefined)
-    //       parts.push(`Eval ${m.evaluation.toFixed(2)}`);
-    //     if (m.best) parts.push(`best ${m.best}`);
-    //     return parts.join(" – ");
-    //   })
-    //   .join("\n");
-    // console.log('sendAnalysisToChat', txt, analysis);
-    // sendToChat(txt);
     sendToChat(JSON.stringify(analysis));
   }, [analysis, sendToChat]);
 
@@ -157,7 +147,7 @@ const JcChessTraining: React.FC = () => {
     const chess = new Chess();
     try {
       chess.loadPgn(pgn);
-      setCurrentFen(chess.fen());      // final position
+      setCurrentFen(chess.fen());
     } catch (err) {
       console.error("PGN parse failed", err);
     }
@@ -224,16 +214,16 @@ const JcChessTraining: React.FC = () => {
               Clear
             </button>
 
-            <button
+            {/* <button
               onClick={sendAnalysisToChat}
               disabled={!analysis?.length || chatLoading}
               className="btn btn-info btn-sm"
             >
               Send to Chat
-            </button>
+            </button> */}
           </div>
 
-          {analysis?.length && (
+          {false && analysis?.length && (
             <div className="w-full bg-base-200 p-4 rounded-lg">
               <h2 className="text-2xl font-semibold mb-2">Analysis</h2>
               <div className="flex flex-col gap-2 text-sm">
