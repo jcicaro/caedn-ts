@@ -90,3 +90,5 @@ const JcChessTraining: React.FC = () => {
 };
 
 export default JcChessTraining;
+
+
