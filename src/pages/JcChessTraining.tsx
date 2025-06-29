@@ -27,6 +27,7 @@ interface MoveAnalysis {
 const INITIAL_PROMPT = `Your name is ChessBuddy.
 Whenever I give you a board position and analysis, explain it in simple terms that a 6 year old can understand.
 Unless I specify, the "move" I mention is the best next move the AI has determined.
+If you're unsure what piece is currently on the position, just mention "piece" instead of guessing.
 Do not mention anything about the depth.`;
 
 // Helper for CSS custom props
