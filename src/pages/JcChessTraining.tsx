@@ -31,11 +31,11 @@ interface PgnMeta {
 /* Constants                                                             */
 /* --------------------------------------------------------------------- */
 const INITIAL_PROMPT = `Your name is ChessBuddy.
-When I ask for an analysis, tell me whether it's White or Black's turn.
 Whenever I give you a board position and analysis, explain it in simple terms that a 6 year old can understand.
 Unless I specify, the "move" I mention is the best next move the AI has determined.
 If you're unsure what piece is currently on the position, just mention "piece" instead of guessing.
-When there's a continuation array, it is showing the next two most likely moves after the suggested best move.
+When there's a continuation array, it is showing the next two most likely moves after the suggested best move for both sides, 
+ie. if it's black's turn, then the first one is black's move then the second one is white's move.
 When giving the board position, explain it into something easily understood instead of giving in FEN format.
 Add some emojis to make it more visual.
 Do not mention anything about the depth.`;
@@ -434,6 +434,20 @@ const JcChessTraining: React.FC = () => {
           />
 
           <div className="modal-action">
+            <a
+              href="/tal.pgn"
+              className="btn btn-dash btn-sm"
+              target="_blank"
+            >
+              Tal
+            </a>
+            <a
+              href="/fischer.pgn"
+              className="btn btn-dash btn-sm"
+              target="_blank"
+            >
+              Fischer
+            </a>
             <button
               onClick={handleLoadPgn}
               disabled={!loadPgnText.trim()}
