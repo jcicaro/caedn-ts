@@ -276,9 +276,9 @@ const JcChessTraining: React.FC = () => {
   /* UI                                                                 */
   /* ------------------------------------------------------------------ */
   return (
-    <div className="h-screen md:flex md:items-start gap-4 p-4">
+    <div className="h-screen md:flex md:items-start gap-4">
       {/* board column */}
-      <div className="md:w-1/2 lg:w-2/5 flex-shrink-0 md:sticky md:top-4">
+      <div className="md:w-1/2 lg:w-2/5 flex-shrink-0 md:sticky md:top-0">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body flex flex-col items-center">
             <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
