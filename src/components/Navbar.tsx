@@ -166,7 +166,7 @@ export default function Navbar() {
         {/* Floating “Show Navbar” button */}
         {!showNavbar && (
           <button
-            className="fixed bottom-4 left-4 z-50 btn btn-primary btn-circle shadow-lg"
+            className="fixed top-4 right-8 z-50 btn btn-circle shadow-lg"
             onClick={() => setShowNavbar(true)}
             aria-label="Show Navbar"
           >
