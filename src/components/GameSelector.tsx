@@ -25,7 +25,11 @@ const GameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChang
       disabled={disabled}
     >
       {games.length ? (
-        games.map((g) => {
+        games
+        .filter((g) => {
+          return (g.time_class == 'rapid' || g.time_class == 'blitz');
+        })
+        .map((g) => {
           const opp = g.white.username.toLowerCase() === "magnuscarlsen" ? g.black.username : g.white.username;
           const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opp} [${g.time_class}]`;
           return (
