@@ -68,6 +68,7 @@ export const useChessGame = () => {
   }, [pgn]);
 
   const filteredGames = gamesList.filter((g) => {
+    // const timeClass = g.time_class;
     const opp =
       g.white.username.toLowerCase() === "magnuscarlsen"
         ? g.black.username

@@ -27,7 +27,7 @@ const GameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChang
       {games.length ? (
         games.map((g) => {
           const opp = g.white.username.toLowerCase() === "magnuscarlsen" ? g.black.username : g.white.username;
-          const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opp}`;
+          const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opp} [${g.time_class}]`;
           return (
             <option key={g.url} value={g.url}>
               {label}
