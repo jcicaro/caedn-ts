@@ -185,6 +185,7 @@ const JcChessTraining: React.FC = () => {
       });
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
+      console.log('analyzePosition', data);
       const arr = Array.isArray(data)
         ? data
         : Array.isArray(data.moves)
@@ -205,7 +206,7 @@ const JcChessTraining: React.FC = () => {
       <div className="md:w-1/2 lg:w-2/5 flex-shrink-0 md:sticky md:top-4">
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body flex flex-col items-center">
-            <h1 className="card-title text-3xl text-center">Chess Training with JC</h1>
+            <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
             {/* <p className="mb-4 text-sm opacity-80 text-center">Games (last 12 mo)</p> */}
             {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
             <div className="mb-4 w-full">
