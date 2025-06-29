@@ -103,7 +103,7 @@ const JcChessTraining: React.FC = () => {
         const { archives } = await archivesRes.json();
 
         const cutoffDate = new Date();
-        cutoffDate.setMonth(cutoffDate.getMonth() - 12);
+        cutoffDate.setMonth(cutoffDate.getMonth() - 3);
 
         const collected: any[] = [];
         for (const url of archives.slice().reverse()) {
@@ -205,7 +205,7 @@ const JcChessTraining: React.FC = () => {
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body flex flex-col items-center">
             <h1 className="card-title text-3xl text-center">Chess Training with JC</h1>
-            <p className="mb-4 text-sm opacity-80 text-center">Games (last 12 mo)</p>
+            {/* <p className="mb-4 text-sm opacity-80 text-center">Games (last 12 mo)</p> */}
             {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
             <div className="mb-4 w-full">
               <input
