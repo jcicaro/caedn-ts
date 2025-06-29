@@ -19,7 +19,7 @@ export const LoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) => {
 
   return open ? (
     <div className="modal modal-open" onClick={(e) => e.currentTarget === e.target && onClose()}>
-      <div className="modal-box relative">
+      <div className="modal-box relative max-h-[80vh]">
         <button onClick={onClose} className="btn btn-xs btn-circle absolute right-2 top-2">
           ✕
         </button>
