@@ -36,7 +36,8 @@ Add some emojis to make it more visual.
 Do not mention anything about the depth.`;
 
 // Helper for CSS custom props
-const cssVar = (name: string, value: string) => ({ [name]: value } as React.CSSProperties);
+const cssVar = (name: string, value: string) =>
+  ({ [name]: value } as React.CSSProperties);
 
 // --------------------------------------------------------------------------
 // Component
@@ -44,7 +45,9 @@ const cssVar = (name: string, value: string) => ({ [name]: value } as React.CSSP
 const JcChessTraining: React.FC = () => {
   const boardRef = useRef<ChessboardRef>(null);
 
+  // ----------------------------------------------------------------------
   // State
+  // ----------------------------------------------------------------------
   const [gamesList, setGamesList] = useState<any[]>([]);
   const [search, setSearch] = useState<string>("");
   const [selectedGameUrl, setSelectedGameUrl] = useState<string>("");
@@ -54,12 +57,21 @@ const JcChessTraining: React.FC = () => {
   const [loadingGames, setLoadingGames] = useState<boolean>(false);
   const [loadingAn, setLoadingAn] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPgnModal, setShowPgnModal] = useState<boolean>(false);
 
-  const { messages, loading: chatLoading, error: chatError, send: sendToChat } =
-    useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
+  const [showPgnModal, setShowPgnModal] = useState<boolean>(false);   // view-only modal
+  const [showLoadModal, setShowLoadModal] = useState<boolean>(false); // new load-PGN modal
+  const [loadPgnText, setLoadPgnText] = useState<string>("");
 
-  // Normalize API response
+  const {
+    messages,
+    loading: chatLoading,
+    error: chatError,
+    send: sendToChat,
+  } = useChat(INITIAL_PROMPT, import.meta.env.VITE_OPENAI_MODEL);
+
+  // ----------------------------------------------------------------------
+  // Helpers
+  // ----------------------------------------------------------------------
   const normalize = (raw: any): MoveAnalysis => ({
     move: raw.move ?? raw.san ?? raw.lan,
     evaluation: raw.eval ?? raw.evaluation,
@@ -67,27 +79,28 @@ const JcChessTraining: React.FC = () => {
     depth: raw.depth,
     text: raw.text ?? raw.comment,
     continuation: raw.continuation,
-    fen: raw.fen
+    fen: raw.fen,
   });
 
-  // Copy to clipboard utility
   const copyToClipboard = (text: string) => {
-    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-      navigator.clipboard.writeText(text).catch(err => console.error('Async copy failed', err));
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      navigator.clipboard.writeText(text).catch((err) => console.error("Async copy failed", err));
     } else {
-      const textarea = document.createElement('textarea');
+      const textarea = document.createElement("textarea");
       textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'absolute';
-      textarea.style.left = '-9999px';
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
       document.body.appendChild(textarea);
       textarea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textarea);
     }
   };
 
+  // ----------------------------------------------------------------------
   // Responsive board size
+  // ----------------------------------------------------------------------
   const [boardSize, setBoardSize] = useState<number>(360);
   useEffect(() => {
     const calc = () => {
@@ -95,18 +108,22 @@ const JcChessTraining: React.FC = () => {
       setBoardSize(max < 240 ? 240 : max);
     };
     calc();
-    window.addEventListener('resize', calc);
-    return () => window.removeEventListener('resize', calc);
+    window.addEventListener("resize", calc);
+    return () => window.removeEventListener("resize", calc);
   }, []);
 
-  // Fetch Magnus Carlsen's games from last 12 months
+  // ----------------------------------------------------------------------
+  // Fetch Magnus Carlsen's games (last 3 months)
+  // ----------------------------------------------------------------------
   useEffect(() => {
     const loadGames = async () => {
       setLoadingGames(true);
       setError(null);
       try {
-        const archivesRes = await fetch('https://api.chess.com/pub/player/magnuscarlsen/games/archives');
-        if (!archivesRes.ok) throw new Error('Failed to fetch archives');
+        const archivesRes = await fetch(
+          "https://api.chess.com/pub/player/magnuscarlsen/games/archives",
+        );
+        if (!archivesRes.ok) throw new Error("Failed to fetch archives");
         const { archives } = await archivesRes.json();
 
         const cutoffDate = new Date();
@@ -114,7 +131,7 @@ const JcChessTraining: React.FC = () => {
 
         const collected: any[] = [];
         for (const url of archives.slice().reverse()) {
-          const parts = url.split('/');
+          const parts = url.split("/");
           const year = parseInt(parts[parts.length - 2], 10);
           const month = parseInt(parts[parts.length - 1], 10) - 1;
           const archiveDate = new Date(year, month, 1);
@@ -123,7 +140,6 @@ const JcChessTraining: React.FC = () => {
             const res = await fetch(url);
             if (!res.ok) continue;
             const { games } = await res.json();
-            // include all game types
             collected.push(...games);
           } catch {
             continue;
@@ -153,17 +169,16 @@ const JcChessTraining: React.FC = () => {
     loadGames();
   }, []);
 
-  // Filter games by search term
+  // ----------------------------------------------------------------------
+  // Game selection & PGN handling
+  // ----------------------------------------------------------------------
   const filteredGames = gamesList.filter((g) => {
     const opponent =
-      g.white?.username?.toLowerCase() === 'magnuscarlsen'
-        ? g.black.username
-        : g.white.username;
+      g.white?.username?.toLowerCase() === "magnuscarlsen" ? g.black.username : g.white.username;
     const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opponent}`;
     return label.toLowerCase().includes(search.toLowerCase());
   });
 
-  // Handle game selection
   const handleSelectGame = (url: string) => {
     const game = gamesList.find((g) => g.url === url);
     if (game) {
@@ -172,7 +187,7 @@ const JcChessTraining: React.FC = () => {
     }
   };
 
-  // Update FEN when PGN changes
+  // update board FEN when pgn changes
   useEffect(() => {
     if (!pgn) return;
     const c = new Chess();
@@ -180,18 +195,24 @@ const JcChessTraining: React.FC = () => {
     setCurrentFen(c.fen());
   }, [pgn]);
 
-  // Analyze current position
+  // ----------------------------------------------------------------------
+  // Analysis
+  // ----------------------------------------------------------------------
   const analyzePosition = useCallback(async () => {
-    if (!currentFen) { setError('Position not ready.'); return; }
-    setLoadingAn(true); setError(null);
+    if (!currentFen) {
+      setError("Position not ready.");
+      return;
+    }
+    setLoadingAn(true);
+    setError(null);
     try {
-      const res = await fetch('https://chess-api.com/v1', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("https://chess-api.com/v1", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fen: currentFen }),
       });
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
-      console.log('analyzePosition', data);
       const arr = Array.isArray(data)
         ? data
         : Array.isArray(data.moves)
@@ -206,6 +227,20 @@ const JcChessTraining: React.FC = () => {
     }
   }, [currentFen, sendToChat]);
 
+  // ----------------------------------------------------------------------
+  // NEW: Load PGN handler
+  // ----------------------------------------------------------------------
+  const handleLoadPgn = () => {
+    if (!loadPgnText.trim()) return;
+    setPgn(loadPgnText.trim());
+    setSelectedGameUrl("");       // clear game selection so dropdown doesn't look out-of-sync
+    setShowLoadModal(false);
+    setLoadPgnText("");
+  };
+
+  // ----------------------------------------------------------------------
+  // UI
+  // ----------------------------------------------------------------------
   return (
     <div className="h-screen md:flex md:items-start gap-4 p-4 bg-base-200">
       {/* Board & Selector */}
@@ -213,12 +248,18 @@ const JcChessTraining: React.FC = () => {
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body flex flex-col items-center">
             <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
-            {/* <p className="mb-4 text-sm opacity-80 text-center">Games (last 12 mo)</p> */}
-            {error && <div className="alert alert-error mb-4"><span>{error}</span></div>}
+
+            {error && (
+              <div className="alert alert-error mb-4">
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* search + dropdown */}
             <div className="mb-4 w-full">
               <input
                 type="text"
-                placeholder="Search games..."
+                placeholder="Search games…"
                 className="input input-bordered w-full mb-2"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -233,12 +274,10 @@ const JcChessTraining: React.FC = () => {
                 {filteredGames.length ? (
                   filteredGames.map((g) => {
                     const opponent =
-                      g.white.username.toLowerCase() === 'magnuscarlsen'
+                      g.white.username.toLowerCase() === "magnuscarlsen"
                         ? g.black.username
                         : g.white.username;
-                    const label = `${new Date(
-                      g.end_time * 1000
-                    ).toLocaleDateString()} vs ${opponent}`;
+                    const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opponent}`;
                     return (
                       <option key={g.url} value={g.url}>
                         {label}
@@ -250,6 +289,8 @@ const JcChessTraining: React.FC = () => {
                 )}
               </select>
             </div>
+
+            {/* board */}
             <div className="flex justify-center mb-4 w-full">
               <Chessboard
                 ref={boardRef}
@@ -261,21 +302,25 @@ const JcChessTraining: React.FC = () => {
                 onPositionChange={(fen) => setCurrentFen(fen)}
               />
             </div>
+
+            {/* action buttons */}
             <div className="flex flex-wrap gap-2 justify-center">
               <button
                 onClick={analyzePosition}
                 disabled={!currentFen || loadingAn}
                 className="btn btn-success btn-sm"
               >
-                {loadingAn ? 'Analysing…' : 'Analyse'}
+                {loadingAn ? "Analysing…" : "Analyse"}
               </button>
+
+              {/* NEW Load PGN button */}
               <button
-                onClick={() => handleSelectGame(selectedGameUrl)}
-                disabled={!selectedGameUrl || loadingGames}
+                onClick={() => setShowLoadModal(true)}
                 className="btn btn-primary btn-sm"
               >
-                {loadingGames ? 'Loading…' : 'Reload'}
+                Load PGN
               </button>
+
               <button
                 onClick={() => setShowPgnModal(true)}
                 disabled={!pgn}
@@ -295,9 +340,11 @@ const JcChessTraining: React.FC = () => {
             <h2 className="text-2xl font-semibold mb-2">Coach Chat</h2>
             <ul
               className="chat flex-1 overflow-y-auto space-y-2 pr-2 break-all"
-              style={cssVar('--chat-bubble-max-width','95%')}
+              style={cssVar("--chat-bubble-max-width", "95%")}
             >
-              {messages.map((m,i)=><ChatBubble key={i} msg={m}/>)}
+              {messages.map((m, i) => (
+                <ChatBubble key={i} msg={m} />
+              ))}
               {chatLoading && (
                 <li className="flex items-center justify-center h-12">
                   <div className="chat-bubble loading">…</div>
@@ -310,21 +357,56 @@ const JcChessTraining: React.FC = () => {
         </div>
       </div>
 
-      {/* PGN Modal */}
+      {/* View-only PGN Modal */}
       <div
-        className={`modal ${showPgnModal ? 'modal-open' : ''}`}
+        className={`modal ${showPgnModal ? "modal-open" : ""}`}
         onClick={(e) => e.currentTarget === e.target && setShowPgnModal(false)}
       >
         <div className="modal-box relative">
           <button
             onClick={() => setShowPgnModal(false)}
             className="btn btn-xs btn-circle absolute right-2 top-2"
-          >✕</button>
+          >
+            ✕
+          </button>
           <h3 className="font-bold text-lg">Game PGN</h3>
           <pre className="whitespace-pre-wrap my-4">{pgn}</pre>
           <div className="modal-action">
             <button onClick={() => copyToClipboard(pgn)} className="btn btn-outline btn-sm">
               Copy PGN
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* NEW Load-PGN Modal */}
+      <div
+        className={`modal ${showLoadModal ? "modal-open" : ""}`}
+        onClick={(e) => e.currentTarget === e.target && setShowLoadModal(false)}
+      >
+        <div className="modal-box relative">
+          <button
+            onClick={() => setShowLoadModal(false)}
+            className="btn btn-xs btn-circle absolute right-2 top-2"
+          >
+            ✕
+          </button>
+          <h3 className="font-bold text-lg">Paste a PGN</h3>
+
+          <textarea
+            className="textarea textarea-bordered w-full h-40 mt-4"
+            placeholder="Paste PGN here…"
+            value={loadPgnText}
+            onChange={(e) => setLoadPgnText(e.target.value)}
+          />
+
+          <div className="modal-action">
+            <button
+              onClick={handleLoadPgn}
+              disabled={!loadPgnText.trim()}
+              className="btn btn-primary btn-sm"
+            >
+              Load
             </button>
           </div>
         </div>
