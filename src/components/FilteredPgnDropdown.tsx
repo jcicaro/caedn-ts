@@ -1,0 +1,99 @@
+import React, { useState, useEffect } from 'react';
+import { copyToClipboard } from "../utils/chess";
+
+interface FilteredPgnDropdownProps {
+    /** URL to fetch the PGN text file from */
+    pgnUrl: string;
+    /**
+     * Callback fired when a PGN is selected.
+     * Receives the full PGN string of the selected game.
+     */
+    onPgnSelect?: (pgn: string) => void;
+}
+
+const FilteredPgnDropdown: React.FC<FilteredPgnDropdownProps> = ({
+    pgnUrl,
+    onPgnSelect,
+}) => {
+    const [pgnList, setPgnList] = useState<string[]>([]);
+    const [filter, setFilter] = useState<string>('');
+    const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
+    const [selectedPgn, setSelectedPgn] = useState<string | undefined>();
+
+    useEffect(() => {
+        fetch(pgnUrl)
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to fetch: ' + res.status);
+                return res.text();
+            })
+            .then(text => {
+                const games = text
+                    // Split by blank line before the next [Event] tag (common PGN separator)
+                    .split(/\r?\n\r?\n(?=\[Event)/)
+                    .map(game => game.trim())
+                    .filter(Boolean);
+                setPgnList(games);
+            })
+            .catch(err => console.error('Error loading PGN file:', err));
+    }, [pgnUrl]);
+
+    const items = pgnList.map((pgn, idx) => ({
+        label: `Game ${idx + 1}`,
+        index: idx,
+        pgn,
+    }));
+
+    const filteredItems = items.filter(item =>
+        item.label.toLowerCase().includes(filter.toLowerCase()) ||
+        item.pgn.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const idx = parseInt(e.target.value, 10);
+        setSelectedIndex(idx);
+        const pgn = pgnList[idx];
+        setSelectedPgn(pgn);
+        onPgnSelect?.(pgn);
+    };
+
+    return (
+        <div className='flex flex-col space-y-2 w-full mt-4'>
+            <input
+                type='text'
+                placeholder='Filter games...'
+                className='input input-bordered w-full'
+                value={filter}
+                onChange={e => setFilter(e.target.value)}
+            />
+
+            <select
+                className='select select-bordered w-full'
+                value={selectedIndex !== undefined ? selectedIndex : ''}
+                onChange={handleSelect}
+            >
+                <option disabled value=''>
+                    Select a game
+                </option>
+                {filteredItems.map(item => (
+                    <option key={item.index} value={item.index}>
+                        {item.label}
+                    </option>
+                ))}
+            </select>
+
+            {selectedPgn && (
+                <>
+                    <button onClick={() => copyToClipboard(selectedPgn)} className="btn btn-outline btn-sm">
+                        Copy PGN
+                    </button>
+                    <pre className='p-2 bg-base-200 rounded-md overflow-auto'>
+                        {selectedPgn}
+                    </pre>
+                </>
+
+            )}
+        </div>
+    );
+};
+
+export default FilteredPgnDropdown;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FilteredPgnDropdown from "../components/FilteredPgnDropdown";
 
 interface Props {
   open: boolean;
@@ -34,6 +35,10 @@ export const LoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) => {
             Load
           </button>
         </div>
+        <FilteredPgnDropdown
+          pgnUrl="/tal.txt"
+          onPgnSelect={pgn => console.log('Chosen PGN:', pgn)}
+        />
       </div>
     </div>
   ) : null;
