@@ -18,6 +18,7 @@ interface MoveAnalysis {
   best?: string;
   depth?: number;
   text?: string;
+  fen?: string;
   continuation?: Array<object>;
 }
 
@@ -25,6 +26,7 @@ interface MoveAnalysis {
 // Constants
 // --------------------------------------------------------------------------
 const INITIAL_PROMPT = `Your name is ChessBuddy.
+First, tell me whether it's White or Black's turn.
 Whenever I give you a board position and analysis, explain it in simple terms that a 6 year old can understand.
 Unless I specify, the "move" I mention is the best next move the AI has determined.
 If you're unsure what piece is currently on the position, just mention "piece" instead of guessing.
@@ -62,6 +64,7 @@ const JcChessTraining: React.FC = () => {
     depth: raw.depth,
     text: raw.text ?? raw.comment,
     continuation: raw.continuation,
+    fen: raw.fen
   });
 
   // Copy to clipboard utility
