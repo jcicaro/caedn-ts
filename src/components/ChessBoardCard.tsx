@@ -50,6 +50,8 @@ export const ChessBoardCard: React.FC<Props> = ({
         Result: <span className="font-semibold">{meta.result || "—"}</span>
       </p>
 
+      {/* {selectedGameUrl} */}
+
       <GameSelector
         games={games}
         search={search}
