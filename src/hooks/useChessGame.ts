@@ -20,7 +20,9 @@ export const useChessGame = () => {
       setLoadingGames(true);
       setError(null);
       try {
-        const arcRes = await fetch("https://api.chess.com/pub/player/magnuscarlsen/games/archives");
+        const arcRes = await fetch(
+          "https://api.chess.com/pub/player/magnuscarlsen/games/archives"
+        );
         if (!arcRes.ok) throw new Error("Failed to fetch archives");
         const { archives } = await arcRes.json();
 
@@ -36,10 +38,17 @@ export const useChessGame = () => {
             if (res.ok) collected.push(...(await res.json()).games);
           } catch {}
         }
+        console.log("loadGames", collected);
         setGamesList(collected);
-        if (collected[0]) {
-          setSelectedGameUrl(collected[0].url);
-          setPgn(collected[0].pgn);
+        // if (collected[0]) {
+        //   setSelectedGameUrl(collected[0].url);
+        //   setPgn(collected[0].pgn);
+        // }
+        if (collected.length > 0) {
+          const randomIndex = Math.floor(Math.random() * collected.length);
+          const randomGame = collected[randomIndex];
+          setSelectedGameUrl(randomGame.url);
+          setPgn(randomGame.pgn);
         }
       } catch (e: any) {
         setError(e.message);
@@ -59,8 +68,13 @@ export const useChessGame = () => {
   }, [pgn]);
 
   const filteredGames = gamesList.filter((g) => {
-    const opp = g.white.username.toLowerCase() === "magnuscarlsen" ? g.black.username : g.white.username;
-    const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opp}`;
+    const opp =
+      g.white.username.toLowerCase() === "magnuscarlsen"
+        ? g.black.username
+        : g.white.username;
+    const label = `${new Date(
+      g.end_time * 1000
+    ).toLocaleDateString()} vs ${opp}`;
     return label.toLowerCase().includes(search.toLowerCase());
   });
 
@@ -89,7 +103,11 @@ export const useChessGame = () => {
       });
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();
-      const arr = Array.isArray(data) ? data : Array.isArray(data.moves) ? data.moves : [data];
+      const arr = Array.isArray(data)
+        ? data
+        : Array.isArray(data.moves)
+        ? data.moves
+        : [data];
       const norm = arr.map(normalizeAnalysis);
       setAnalysis(norm);
       return norm;
