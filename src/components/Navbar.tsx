@@ -192,14 +192,14 @@ export default function Navbar() {
         <label htmlFor="navbar-drawer" className="drawer-overlay" />
         <div className="p-4 w-64 bg-base-100 h-full overflow-y-auto">
           {/* Sidebar “Show/Hide” toggle (optional) */}
-          <div className="mb-4 text-center">
+          {/* <div className="mb-4 text-center">
             <button
               className="btn btn-sm btn-outline"
               onClick={() => setShowNavbar(prev => !prev)}
             >
               {showNavbar ? 'Hide Navbar' : 'Show Navbar'}
             </button>
-          </div>
+          </div> */}
 
           {/* Expand/Collapse All */}
           <div className="flex justify-end mb-4">
