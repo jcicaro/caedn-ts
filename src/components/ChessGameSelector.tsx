@@ -26,18 +26,19 @@ const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, on
     >
       {games.length ? (
         games
-        .filter((g) => {
-          return (g.time_class == 'rapid' || g.time_class == 'blitz');
-        })
-        .map((g) => {
-          const opp = g.white.username.toLowerCase() === "momchilpetkov" ? g.black.username : g.white.username;
-          const label = `${new Date(g.end_time * 1000).toLocaleDateString()} vs ${opp} [${g.time_class}]`;
-          return (
-            <option key={g.url} value={g.url}>
-              {label}
-            </option>
-          );
-        })
+          .filter((g) => {
+            return (g.time_class == 'rapid' || g.time_class == 'blitz');
+          })
+          .map((g) => {
+            const label = `${new Date(
+              g.end_time * 1000
+            ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
+            return (
+              <option key={g.url} value={g.url}>
+                {label}
+              </option>
+            );
+          })
       ) : (
         <option disabled>No games available</option>
       )}

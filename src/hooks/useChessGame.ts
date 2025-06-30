@@ -21,7 +21,7 @@ export const useChessGame = () => {
       setError(null);
       try {
         const arcRes = await fetch(
-          "https://api.chess.com/pub/player/momchilpetkov/games/archives"
+          "https://api.chess.com/pub/player/gmmelik/games/archives"
         );
         if (!arcRes.ok) throw new Error("Failed to fetch archives");
         const { archives } = await arcRes.json();
@@ -68,14 +68,9 @@ export const useChessGame = () => {
   }, [pgn]);
 
   const filteredGames = gamesList.filter((g) => {
-    // const timeClass = g.time_class;
-    const opp =
-      g.white.username.toLowerCase() === "momchilpetkov"
-        ? g.black.username
-        : g.white.username;
     const label = `${new Date(
       g.end_time * 1000
-    ).toLocaleDateString()} vs ${opp}`;
+    ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
     return label.toLowerCase().includes(search.toLowerCase());
   });
 
