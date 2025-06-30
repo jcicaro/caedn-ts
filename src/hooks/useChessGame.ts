@@ -21,7 +21,7 @@ export const useChessGame = () => {
       setError(null);
       try {
         const arcRes = await fetch(
-          "https://api.chess.com/pub/player/magnuscarlsen/games/archives"
+          "https://api.chess.com/pub/player/momchilpetkov/games/archives"
         );
         if (!arcRes.ok) throw new Error("Failed to fetch archives");
         const { archives } = await arcRes.json();
@@ -38,7 +38,7 @@ export const useChessGame = () => {
             if (res.ok) collected.push(...(await res.json()).games);
           } catch {}
         }
-        console.log("loadGames", collected);
+        console.log(collected);
         setGamesList(collected);
         // if (collected[0]) {
         //   setSelectedGameUrl(collected[0].url);
@@ -70,7 +70,7 @@ export const useChessGame = () => {
   const filteredGames = gamesList.filter((g) => {
     // const timeClass = g.time_class;
     const opp =
-      g.white.username.toLowerCase() === "magnuscarlsen"
+      g.white.username.toLowerCase() === "momchilpetkov"
         ? g.black.username
         : g.white.username;
     const label = `${new Date(
