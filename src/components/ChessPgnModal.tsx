@@ -7,7 +7,7 @@ interface Props {
   pgn: string;
 }
 
-export const PgnModal: React.FC<Props> = ({ open, onClose, pgn }) =>
+export const ChessPgnModal: React.FC<Props> = ({ open, onClose, pgn }) =>
   open ? (
     <div className="modal modal-open" onClick={(e) => e.currentTarget === e.target && onClose()}>
       <div className="modal-box relative">

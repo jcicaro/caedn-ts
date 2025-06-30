@@ -1,7 +1,7 @@
 import React from "react";
 import { Chessboard } from "@mdwebb/react-chess";
 import ChessGameSelector from "./ChessGameSelector";
-import { TurnBadge } from "./TurnBadge";
+import { ChessTurnBadge } from "./ChessTurnBadge";
 import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import type { PgnMeta } from "../types/chess";
 
@@ -62,7 +62,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         />
       )}
 
-      <TurnBadge turn={turn} />
+      <ChessTurnBadge turn={turn} />
 
       <div className="flex justify-center mb-4 w-full">
         <Chessboard
