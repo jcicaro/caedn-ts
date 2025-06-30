@@ -29,6 +29,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
         Black: string;
         Result: string;
         DateEvent: string;
+        ECO: string;
     }
 
     // 2) (Optionally) define a generic map for any tag → value you might capture:
@@ -57,6 +58,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
             Black: headers.Black ?? '',
             Result: headers.Result ?? '',
             DateEvent: headers.Date ?? '',
+            ECO: headers.ECO ?? '',
         };
     };
 
@@ -90,7 +92,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
         };
     });
 
-    // console.log(items);
+    console.log(items);
 
     const filteredItems = items.filter(item =>
         item.label.toLowerCase().includes(filter.toLowerCase()) ||
