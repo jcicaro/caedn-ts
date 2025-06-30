@@ -77,7 +77,7 @@ const JcChessTraining: React.FC = () => {
       </div>
 
       <PgnModal open={showPgnModal} onClose={() => setShowPgnModal(false)} pgn={pgn} />
-      <ChessLoadPgnModalLoadPgnModal
+      <ChessLoadPgnModal
         open={showLoadModal}
         onClose={() => setShowLoadModal(false)}
         onLoad={(txt) => {

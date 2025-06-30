@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ChessFilteredPgnDropdown from "../components/ChessFilteredPgnDropdown";
+import ChessFilteredPgnDropdown from "./ChessFilteredPgnDropdown";
 
 interface Props {
   open: boolean;
