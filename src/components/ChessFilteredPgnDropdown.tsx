@@ -90,7 +90,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
         };
     });
 
-    console.log(items);
+    // console.log(items);
 
     const filteredItems = items.filter(item =>
         item.label.toLowerCase().includes(filter.toLowerCase()) ||
@@ -135,9 +135,9 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
                     <button onClick={() => copyToClipboard(selectedPgn)} className="btn btn-outline btn-sm">
                         Copy PGN
                     </button>
-                    <pre className='p-2 bg-base-200 rounded-md overflow-auto'>
+                    {/* <pre className='p-2 bg-base-200 rounded-md overflow-auto'>
                         {selectedPgn}
-                    </pre>
+                    </pre> */}
                 </>
 
             )}

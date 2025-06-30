@@ -23,22 +23,27 @@ export const ChessLoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) =>
         <button onClick={onClose} className="btn btn-xs btn-circle absolute right-2 top-2">
           ✕
         </button>
+        
         <h3 className="font-bold text-lg">Paste a PGN</h3>
+
+        <ChessFilteredPgnDropdown
+          pgnUrl="/tal.txt"
+          onPgnSelect={pgn => setText(pgn)}
+        />
+
         <textarea
           className="textarea textarea-bordered w-full h-40 mt-4"
           placeholder="Paste PGN here…"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+        
         <div className="modal-action">
           <button onClick={handleLoad} disabled={!text.trim()} className="btn btn-primary btn-sm">
             Load
           </button>
         </div>
-        <ChessFilteredPgnDropdown
-          pgnUrl="/tal.txt"
-          onPgnSelect={pgn => console.log('Chosen PGN:', pgn)}
-        />
+        
       </div>
     </div>
   ) : null;

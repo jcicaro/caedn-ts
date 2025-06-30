@@ -39,7 +39,8 @@ export const useChessGame = () => {
         //   } catch {}
         // }
 
-        const arcRes = await fetch("https://project.icaro.com.au/chess-com.json");
+        // const arcRes = await fetch("https://project.icaro.com.au/chess-com.json");
+        const arcRes = await fetch("/chess-com.json");
         if (!arcRes.ok) throw new Error("Failed to fetch games");
         const collected: any[] = await arcRes.json();
 
