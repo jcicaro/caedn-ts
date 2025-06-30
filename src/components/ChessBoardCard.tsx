@@ -1,6 +1,6 @@
 import React from "react";
 import { Chessboard } from "@mdwebb/react-chess";
-import GameSelector from "./GameSelector";
+import ChessGameSelector from "./ChessGameSelector";
 import { TurnBadge } from "./TurnBadge";
 import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import type { PgnMeta } from "../types/chess";
@@ -50,9 +50,9 @@ export const ChessBoardCard: React.FC<Props> = ({
         Result: <span className="font-semibold">{meta.result || "—"}</span>
       </p>
 
-      {/* Only show GameSelector if there are games available */}
+      {/* Only show ChessGameSelector if there are games available */}
       {games.length > 0 && (
-        <GameSelector
+        <ChessGameSelector
           games={games}
           search={search}
           onSearch={onSearch}

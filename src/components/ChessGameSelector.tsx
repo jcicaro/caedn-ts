@@ -9,7 +9,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const GameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChange, disabled }) => (
+const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChange, disabled }) => (
   <div className="mb-4 w-full">
     <input
       className="input input-bordered w-full mb-2"
@@ -45,4 +45,4 @@ const GameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChang
   </div>
 );
 
-export default GameSelector;
+export default ChessGameSelector;

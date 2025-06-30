@@ -7,7 +7,7 @@ interface Props {
   onLoad: (pgn: string) => void;
 }
 
-export const LoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) => {
+export const ChessLoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) => {
   const [text, setText] = useState("");
 
   const handleLoad = () => {
