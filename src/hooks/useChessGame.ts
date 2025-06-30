@@ -20,30 +20,31 @@ export const useChessGame = () => {
       setLoadingGames(true);
       setError(null);
       try {
-        const arcRes = await fetch(
-          "https://api.chess.com/pub/player/gmmelik/games/archives"
-        );
-        if (!arcRes.ok) throw new Error("Failed to fetch archives");
-        const { archives } = await arcRes.json();
+        // const arcRes = await fetch(
+        //   "https://api.chess.com/pub/player/gmmelik/games/archives"
+        // );
+        // if (!arcRes.ok) throw new Error("Failed to fetch archives");
+        // const { archives } = await arcRes.json();
 
-        const cutoff = new Date();
-        cutoff.setMonth(cutoff.getMonth() - 3);
+        // const cutoff = new Date();
+        // cutoff.setMonth(cutoff.getMonth() - 3);
 
-        const collected: any[] = [];
-        for (const url of archives.slice().reverse()) {
-          const [year, month] = url.split("/").slice(-2).map(Number);
-          if (new Date(year, month - 1, 1) < cutoff) break;
-          try {
-            const res = await fetch(url);
-            if (res.ok) collected.push(...(await res.json()).games);
-          } catch {}
-        }
+        // const collected: any[] = [];
+        // for (const url of archives.slice().reverse()) {
+        //   const [year, month] = url.split("/").slice(-2).map(Number);
+        //   if (new Date(year, month - 1, 1) < cutoff) break;
+        //   try {
+        //     const res = await fetch(url);
+        //     if (res.ok) collected.push(...(await res.json()).games);
+        //   } catch {}
+        // }
+
+        const arcRes = await fetch("https://project.icaro.com.au/chess-com.json");
+        if (!arcRes.ok) throw new Error("Failed to fetch games");
+        const collected: any[] = await arcRes.json();
+
         console.log(collected);
         setGamesList(collected);
-        // if (collected[0]) {
-        //   setSelectedGameUrl(collected[0].url);
-        //   setPgn(collected[0].pgn);
-        // }
         if (collected.length > 0) {
           const randomIndex = Math.floor(Math.random() * collected.length);
           const randomGame = collected[randomIndex];

@@ -51,7 +51,7 @@ export const ChessBoardCard: React.FC<Props> = ({
       </p>
 
       {/* Only show ChessGameSelector if there are games available */}
-      {games.length > 0 && (
+      {true && (
         <ChessGameSelector
           games={games}
           search={search}
