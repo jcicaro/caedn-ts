@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { copyToClipboard } from "../utils/chess";
 
-interface FilteredPgnDropdownProps {
+interface ChessFilteredPgnDropdownProps {
     /** URL to fetch the PGN text file from */
     pgnUrl: string;
     /**
@@ -11,7 +11,7 @@ interface FilteredPgnDropdownProps {
     onPgnSelect?: (pgn: string) => void;
 }
 
-const FilteredPgnDropdown: React.FC<FilteredPgnDropdownProps> = ({
+const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
     pgnUrl,
     onPgnSelect,
 }) => {
@@ -145,4 +145,4 @@ const FilteredPgnDropdown: React.FC<FilteredPgnDropdownProps> = ({
     );
 };
 
-export default FilteredPgnDropdown;
+export default ChessFilteredPgnDropdown;

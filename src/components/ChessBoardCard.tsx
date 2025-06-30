@@ -2,7 +2,7 @@ import React from "react";
 import { Chessboard } from "@mdwebb/react-chess";
 import GameSelector from "./GameSelector";
 import { TurnBadge } from "./TurnBadge";
-import { AnalysisControls } from "./AnalysisControls";
+import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import type { PgnMeta } from "../types/chess";
 
 interface Props {
@@ -75,7 +75,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         />
       </div>
 
-      <AnalysisControls
+      <ChessAnalysisControls
         canAnalyse={Boolean(pgn)}
         analysing={analysing}
         onAnalyse={onAnalyse}
