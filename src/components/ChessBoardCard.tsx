@@ -45,21 +45,22 @@ export const ChessBoardCard: React.FC<Props> = ({
       <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
 
       <p className="text-sm opacity-80 text-center mb-2">
-        White: <span className="font-semibold">{meta.white || "—"}</span> | {" "}
-        Black: <span className="font-semibold">{meta.black || "—"}</span> | {" "}
+        White: <span className="font-semibold">{meta.white || "—"}</span> |{' '}
+        Black: <span className="font-semibold">{meta.black || "—"}</span> |{' '}
         Result: <span className="font-semibold">{meta.result || "—"}</span>
       </p>
 
-      {/* {selectedGameUrl} */}
-
-      <GameSelector
-        games={games}
-        search={search}
-        onSearch={onSearch}
-        value={selectedGameUrl}
-        onChange={onSelectGame}
-        disabled={loadingGames}
-      />
+      {/* Only show GameSelector if there are games available */}
+      {games.length > 0 && (
+        <GameSelector
+          games={games}
+          search={search}
+          onSearch={onSearch}
+          value={selectedGameUrl}
+          onChange={onSelectGame}
+          disabled={loadingGames}
+        />
+      )}
 
       <TurnBadge turn={turn} />
 
