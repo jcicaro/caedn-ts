@@ -12,6 +12,7 @@ import Multiplication from "../pages/Multiplication2";
 import LunaSpeech2 from "../pages/LunaSpeech2";
 import LunaNarrative2 from "../pages/LunaNarrative2";
 import LunaChat from "../pages/LunaChat";
+import JcChessComConverterForPgnPage from "../pages/JcChessComConverterForPgn";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
 
       { path: "jcprogrammingcheatsheet", element: <JcProgrammingCheatsheet /> }, 
       { path: "jcchesstraining", element: <JcChessTraining /> }, 
+      { path: "jcchesscomconverterforpgnpage", element: <JcChessComConverterForPgnPage /> }, 
 
       { path: "basicmath", element: <BasicMath /> }, 
       { path: "multiplication", element: <Multiplication /> }, 

@@ -53,6 +53,11 @@
                 "title": "Chess Buddy",
                 "desc": "Train with an AI tutor to improve your chess skills.",
                 "link": "/jcchesstraining"
+            },
+            {
+                "title": "Chess PGN to Chess.com Converter",
+                "desc": "Convert a PGN to emulate a JSON response from Chess.com.",
+                "link": "/jcchesscomconverterforpgnpage"
             }
         ]
     }
