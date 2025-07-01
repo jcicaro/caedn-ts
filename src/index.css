@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&display=swap");
 @import "tailwindcss";
 
-@import 'highlight.js/styles/github.css';
+@import "highlight.js/styles/github.css";
 
 /* @import "@mdwebb/react-chess/dist/assets/chessground.base.css";
 @import "@mdwebb/react-chess/dist/assets/chessground.brown.css";
@@ -10,7 +10,6 @@
 @plugin "daisyui" {
   themes: all;
 }
-
 
 @plugin "daisyui/theme" {
   name: "light";
@@ -47,7 +46,6 @@
   --noise: 1;
 }
 
-
 @plugin "daisyui/theme" {
   name: "dark";
   default: false;
@@ -83,17 +81,17 @@
   --noise: 1;
 }
 
-
-
 @theme {
-  --font-primary: "Montserrat", sans-serif; 
+  --font-primary: "Montserrat", sans-serif;
 }
 
 :root {
   --font-primary: "Montserrat", sans-serif;
 }
 
-html, body, #__next {
+html,
+body,
+#__next {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -104,16 +102,16 @@ body {
 }
 
 .chat-bubble pre {
-  overflow-x: auto;      /* allows horizontal scroll */
-  max-width: 100%;        /* never exceed the bubble’s width */
-  white-space: pre-wrap;  /* wrap long lines if needed */
+  overflow-x: auto; /* allows horizontal scroll */
+  max-width: 100%; /* never exceed the bubble’s width */
+  white-space: pre-wrap; /* wrap long lines if needed */
   word-break: break-word; /* break up very long tokens */
 }
 
 /* Chess Styles */
 
 #jcboard div {
-  @apply justify-center
+  @apply justify-center;
 }
 
 .cg-wrap coords.files {
@@ -122,4 +120,11 @@ body {
 
 .cg-wrap coords.ranks {
   top: -1rem;
+}
+
+button[aria-label="First move"],
+button[aria-label="Previous move"],
+button[aria-label="Next move"],
+button[aria-label="Last move"] {
+  @apply px-6;
 }
