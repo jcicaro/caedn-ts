@@ -127,5 +127,5 @@ button[aria-label="Previous move"],
 button[aria-label="Next move"],
 button[aria-label="Last move"] {
   @apply mx-1;
-  @apply btn btn-outline btn-lg;
+  @apply btn btn-outline btn-xl;
 }
