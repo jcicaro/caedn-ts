@@ -73,7 +73,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         onShowPgn={onShowPgn}
       />
 
-      <div className="mb-4"></div>
+      <div className="mb-2"></div>
 
       {/* Only show ChessGameSelector if there are games available */}
       {true && (

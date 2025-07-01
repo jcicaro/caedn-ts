@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-export const useResponsiveBoardSize = (maxPx = 360, minPx = 240) => {
+// export const useResponsiveBoardSize = (maxPx = 360, minPx = 240) => {
+export const useResponsiveBoardSize = (maxPx = 390, minPx = 240) => {
   const [size, setSize] = useState(maxPx);
 
   useEffect(() => {
