@@ -7,14 +7,19 @@ import { ChessPgnModal } from "../components/ChessPgnModal";
 import { ChessLoadPgnModal } from "../components/ChessLoadPgnModal";
 import { useChat } from "../hooks/useChat";
 
-const INITIAL_PROMPT = `Your name is ChessBuddy.
+const INITIAL_PROMPT = `
+Your name is ChessBuddy.
 Whenever I give you a board position and analysis, explain it in simple terms and make it concise.
+If there's ECO mentioned, tell information about the chess opening used.
 Unless I specify, the \"move\" I mention is the best next move the AI has determined.
 If you're unsure what piece is currently on the position, just mention \"piece\" instead of guessing.
 When there's a continuation array, it is showing the next two most likely moves after the suggested best move for both sides.
-When giving the board position, explain it into something easily understood instead of giving in FEN format.
+You do not need to give the user the current board position, but if it's relavant explain it into something easily understood instead of giving in FEN format.
 Add some emojis to make it more visual.
-Do not mention anything about the depth.`;
+Do not mention anything about the depth.
+Return the response in markdown with the key information highlighted. 
+Also break it down into multiple sections with different headers which are in bold.
+`;
 
 const JcChessTraining: React.FC = () => {
   const boardSize = useResponsiveBoardSize();
@@ -42,7 +47,7 @@ const JcChessTraining: React.FC = () => {
 
   const handleAnalyse = async () => {
     const result = await analyse();
-    if (result) sendToChat(JSON.stringify(result));
+    if (result) sendToChat('ECO: ' + meta.eco + '\n\n' + JSON.stringify(result));
   };
 
   return (

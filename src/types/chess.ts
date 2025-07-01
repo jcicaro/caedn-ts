@@ -12,4 +12,5 @@ export interface PgnMeta {
   white?: string;
   black?: string;
   result?: string;
+  eco?: string;
 }

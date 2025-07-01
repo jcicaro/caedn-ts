@@ -26,6 +26,7 @@ export const parsePgn = (pgn: string) => {
     white: extractTag("White", pgn),
     black: extractTag("Black", pgn),
     result: extractTag("Result", pgn),
+    eco: extractTag("ECO", pgn),
   };
 
   let fen = "";
