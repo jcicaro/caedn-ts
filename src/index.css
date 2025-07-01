@@ -110,6 +110,16 @@ body {
   word-break: break-word; /* break up very long tokens */
 }
 
+/* Chess Styles */
+
 #jcboard div {
   @apply justify-center
+}
+
+.cg-wrap coords.files {
+  left: 1rem;
+}
+
+.cg-wrap coords.ranks {
+  top: -1rem;
 }
