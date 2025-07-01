@@ -44,7 +44,7 @@ export const useChessGame = () => {
         if (!arcRes.ok) throw new Error("Failed to fetch games");
         const collected: any[] = await arcRes.json();
 
-        console.log(collected);
+        // console.log(collected);
         setGamesList(collected);
         if (collected.length > 0) {
           const randomIndex = Math.floor(Math.random() * collected.length);

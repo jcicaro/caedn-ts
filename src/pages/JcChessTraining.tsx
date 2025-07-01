@@ -47,7 +47,25 @@ const JcChessTraining: React.FC = () => {
 
   const handleAnalyse = async () => {
     const result = await analyse();
-    if (result) sendToChat('ECO: ' + meta.eco + '\n\n' + JSON.stringify(result));
+    console.log('handleAnalyse', result, currentTurn);
+
+    const entry = result[0];
+    if (!entry?.continuation || entry.continuation.length < 2) {
+      return '';
+    }
+
+    // continuation[0] is the next move for whoever's turn it is,
+    // continuation[1] is the reply.
+    const [firstMove, secondMove] = entry.continuation;
+
+    // decide labels based on currentTurn
+    const firstLabel  = currentTurn === 'b' ? 'White' : 'Black';
+    const secondLabel = currentTurn === 'b' ? 'Black' : 'White';
+
+    const suggestedMoves = `${entry.text}; THEN: ${firstLabel}: ${firstMove.from} to ${firstMove.to}; ` +
+         `${secondLabel}: ${secondMove.from} to ${secondMove.to}`;
+
+    if (result) sendToChat('ECO: ' + meta.eco + '\n\nSuggested Moves: ' + suggestedMoves + '\n\n' + JSON.stringify(result));
   };
 
   return (
