@@ -50,17 +50,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         Result: <span className="font-semibold">{meta.result || "—"}</span>
       </p>
 
-      {/* Only show ChessGameSelector if there are games available */}
-      {true && (
-        <ChessGameSelector
-          games={games}
-          search={search}
-          onSearch={onSearch}
-          value={selectedGameUrl}
-          onChange={onSelectGame}
-          disabled={loadingGames}
-        />
-      )}
+      
 
       <ChessTurnBadge turn={turn} />
 
@@ -82,6 +72,20 @@ export const ChessBoardCard: React.FC<Props> = ({
         onShowLoad={onShowLoad}
         onShowPgn={onShowPgn}
       />
+
+      <div className="mb-4"></div>
+
+      {/* Only show ChessGameSelector if there are games available */}
+      {true && (
+        <ChessGameSelector
+          games={games}
+          search={search}
+          onSearch={onSearch}
+          value={selectedGameUrl}
+          onChange={onSelectGame}
+          disabled={loadingGames}
+        />
+      )}
     </div>
   </div>
 );
