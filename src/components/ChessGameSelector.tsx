@@ -30,9 +30,10 @@ const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, on
             return true; // (g.time_class == 'rapid' || g.time_class == 'blitz');
           })
           .map((g) => {
-            const label = `${new Date(
-              g.end_time * 1000
-            ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
+            // const label = `${new Date(
+            //   g.end_time * 1000
+            // ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
+            const label = `${g.eco} ${g.white.username} vs ${g.black.username}`;
             return (
               <option key={g.url} value={g.url}>
                 {label}
