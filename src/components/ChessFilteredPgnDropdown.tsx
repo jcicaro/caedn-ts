@@ -83,7 +83,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
 
     const items = pgnList.map((pgn, idx) => {
         const metadata = parsePGNHeaders(pgn);
-        const label = `(${metadata.Event}) ${metadata.White} - ${metadata.Black} [${metadata.DateEvent}]`;
+        const label = `${metadata.ECO} ${metadata.White} - ${metadata.Black} (${metadata.DateEvent})`;
         return {
             label: label, // `Game ${idx + 1}`,
             index: idx,
