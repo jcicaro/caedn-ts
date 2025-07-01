@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChange, disabled }) => (
-  <div className="mb-4 w-full">
+  <div className="mb-2 w-full">
     <input
       className="input input-bordered w-full mb-2"
       placeholder="Search games…"

@@ -42,7 +42,7 @@ export const ChessBoardCard: React.FC<Props> = ({
 }) => (
   <div className="card bg-base-100 shadow-xl">
     <div className="card-body flex flex-col items-center">
-      <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
+      {/* <h1 className="card-title text-3xl text-center">Chess Buddy</h1> */}
 
       <p className="text-sm opacity-80 text-center mb-2">
         White: <span className="font-semibold">{meta.white || "—"}</span> |{' '}
