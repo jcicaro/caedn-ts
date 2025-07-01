@@ -126,5 +126,6 @@ button[aria-label="First move"],
 button[aria-label="Previous move"],
 button[aria-label="Next move"],
 button[aria-label="Last move"] {
-  @apply px-8;
+  @apply mx-1;
+  @apply btn btn-outline btn-lg;
 }
