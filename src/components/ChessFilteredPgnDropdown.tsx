@@ -66,8 +66,6 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
 
     // END: PGN Header Parsing
 
-    type HeaderMap = Record<string, string>;
-
     useEffect(() => {
         fetch(pgnUrl)
             .then(res => {
