@@ -3,7 +3,7 @@ import { useResponsiveBoardSize } from "../hooks/useResponsiveBoardSize";
 import { useChessGame } from "../hooks/useChessGame";
 import { ChessBoardCard } from "../components/ChessBoardCard";
 import { ChessCoachChat } from "../components/ChessCoachChat";
-import { ChessPgnModal } from "../components/ChessPgnModal";
+import { ChessShowPgnModal } from "../components/ChessShowPgnModal";
 import { ChessLoadPgnModal } from "../components/ChessLoadPgnModal";
 import { useChat } from "../hooks/useChat";
 
@@ -99,7 +99,7 @@ const JcChessTraining: React.FC = () => {
         />
       </div>
 
-      <ChessPgnModal open={showPgnModal} onClose={() => setShowPgnModal(false)} pgn={pgn} />
+      <ChessShowPgnModal open={showPgnModal} onClose={() => setShowPgnModal(false)} pgn={pgn} />
       <ChessLoadPgnModal
         open={showLoadModal}
         onClose={() => setShowLoadModal(false)}
