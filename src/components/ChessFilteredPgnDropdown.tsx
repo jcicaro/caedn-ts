@@ -92,7 +92,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
         };
     });
 
-    console.log(items);
+    // console.log(items);
 
     const filteredItems = items.filter(item =>
         item.label.toLowerCase().includes(filter.toLowerCase()) ||

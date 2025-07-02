@@ -13,4 +13,5 @@ export interface PgnMeta {
   black?: string;
   result?: string;
   eco?: string;
+  date?: string;
 }

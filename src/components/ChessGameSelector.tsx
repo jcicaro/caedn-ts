@@ -27,6 +27,7 @@ const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, on
       {games.length ? (
         games
           .filter((g) => {
+            // console.log(g);
             return true; // (g.time_class == 'rapid' || g.time_class == 'blitz');
           })
           .map((g) => {

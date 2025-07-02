@@ -27,6 +27,7 @@ export const parsePgn = (pgn: string) => {
     black: extractTag("Black", pgn),
     result: extractTag("Result", pgn),
     eco: extractTag("ECO", pgn),
+    date: extractTag("Date", pgn),
   };
 
   let fen = "";
