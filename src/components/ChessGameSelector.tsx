@@ -1,4 +1,5 @@
 import React from "react";
+import { extractTag } from "../utils/chess";
 
 interface Props {
   games: any[];
@@ -34,7 +35,7 @@ const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, on
             // const label = `${new Date(
             //   g.end_time * 1000
             // ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
-            const label = `${g.eco} ${g.white.username} vs ${g.black.username}`;
+            const label = `${g.eco} ${g.white.username} vs ${g.black.username} (${extractTag("Date", g.pgn)})`;
             return (
               <option key={g.url} value={g.url}>
                 {label}

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { parsePgn, normalizeAnalysis } from "../utils/chess";
+import { parsePgn, normalizeAnalysis, extractTag } from "../utils/chess";
 import type { MoveAnalysis, PgnMeta } from "../types/chess";
 
 export const useChessGame = () => {
@@ -70,9 +70,7 @@ export const useChessGame = () => {
   }, [pgn]);
 
   const filteredGames = gamesList.filter((g) => {
-    const label = `${new Date(
-      g.end_time * 1000
-    ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
+    const label = `${g.eco} ${g.white.username} vs ${g.black.username} (${extractTag("Date", g.pgn)})`;
     return label.toLowerCase().includes(search.toLowerCase());
   });
 
