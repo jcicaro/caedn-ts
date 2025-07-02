@@ -28,7 +28,7 @@ export const ChessCoachChat: React.FC<Props> = ({ messages, loading, error, onSe
   return (
     <div className="card bg-base-100 shadow-xl flex-1 overflow-hidden">
       <div className="card-body p-4 flex flex-col h-full">
-        <h1 className="text-2xl font-semibold mb-2">Chess Buddy</h1>
+        {/* <h1 className="text-2xl font-semibold mb-2">Chess Buddy</h1> */}
 
         <ul
           ref={listRef}                             // ← for Approach A
