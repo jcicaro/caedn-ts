@@ -31,11 +31,11 @@ const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, on
             // console.log(g);
             return true; // (g.time_class == 'rapid' || g.time_class == 'blitz');
           })
-          .map((g) => {
+          .map((g, i) => {
             // const label = `${new Date(
             //   g.end_time * 1000
             // ).toLocaleDateString()} ${g.white.username} vs ${g.black.username}`;
-            const label = `${g.eco} ${g.white.username} vs ${g.black.username} (${extractTag("Date", g.pgn)})`;
+            const label = `${i+1} ${g.eco} ${g.white.username} vs ${g.black.username} (${extractTag("Date", g.pgn)})`;
             return (
               <option key={g.url} value={g.url}>
                 {label}

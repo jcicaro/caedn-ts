@@ -9,7 +9,7 @@ interface Props {
   onSend: (t: string) => void;
 }
 
-export const CoachChat: React.FC<Props> = ({ messages, loading, error, onSend }) => {
+export const ChessCoachChat: React.FC<Props> = ({ messages, loading, error, onSend }) => {
   // Approach A: scroll the container itself
   const listRef = useRef<HTMLUListElement>(null);
 

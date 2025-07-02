@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useResponsiveBoardSize } from "../hooks/useResponsiveBoardSize";
 import { useChessGame } from "../hooks/useChessGame";
 import { ChessBoardCard } from "../components/ChessBoardCard";
-import { CoachChat } from "../components/CoachChat";
+import { ChessCoachChat } from "../components/ChessCoachChat";
 import { ChessPgnModal } from "../components/ChessPgnModal";
 import { ChessLoadPgnModal } from "../components/ChessLoadPgnModal";
 import { useChat } from "../hooks/useChat";
@@ -91,7 +91,7 @@ const JcChessTraining: React.FC = () => {
       </div>
 
       <div className="mt-4 md:mt-0 flex-1 flex flex-col h-[70vh] md:h-screen">
-        <CoachChat
+        <ChessCoachChat
           messages={messages}
           loading={chatLoading}
           error={chatError}

@@ -27,7 +27,7 @@ export const ChessLoadPgnModal: React.FC<Props> = ({ open, onClose, onLoad }) =>
         <h3 className="font-bold text-lg">Paste a PGN</h3>
 
         <ChessFilteredPgnDropdown
-          pgnUrl="/tal.txt"
+          pgnUrl="/100-golden-games.txt"
           onPgnSelect={pgn => setText(pgn)}
         />
 
