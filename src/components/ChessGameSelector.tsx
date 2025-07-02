@@ -11,16 +11,16 @@ interface Props {
 }
 
 const ChessGameSelector: React.FC<Props> = ({ games, search, onSearch, value, onChange, disabled }) => (
-  <div className="mb-2 w-full">
+  <div className="mb-2 w-full flex items-start gap-2">
     <input
-      className="input input-bordered w-full mb-2"
-      placeholder="Search games…"
+      className="input input-sm input-bordered"
+      placeholder="Filter games…"
       value={search}
       onChange={(e) => onSearch(e.target.value)}
       disabled={disabled}
     />
     <select
-      className="select select-bordered w-full"
+      className="select select-sm select-bordered"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}

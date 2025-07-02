@@ -108,17 +108,17 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
     };
 
     return (
-        <div className='flex flex-col space-y-2 w-full mt-4'>
+        <div className='space-y-2 w-full mt-4 flex items-start gap-2'>
             <input
                 type='text'
                 placeholder='Filter games...'
-                className='input input-bordered w-full'
+                className='input input-sm input-bordered w-full'
                 value={filter}
                 onChange={e => setFilter(e.target.value)}
             />
 
             <select
-                className='select select-bordered w-full'
+                className='select select-sm select-bordered w-full'
                 value={selectedIndex !== undefined ? selectedIndex : ''}
                 onChange={handleSelect}
             >
@@ -132,17 +132,15 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
                 ))}
             </select>
 
-            {selectedPgn && (
+            {/* {false && (
                 <>
                     <button onClick={() => copyToClipboard(selectedPgn)} className="btn btn-outline btn-sm">
                         Copy PGN
                     </button>
-                    {/* <pre className='p-2 bg-base-200 rounded-md overflow-auto'>
-                        {selectedPgn}
-                    </pre> */}
+                    
                 </>
 
-            )}
+            )} */}
         </div>
     );
 };
