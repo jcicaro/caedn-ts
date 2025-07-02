@@ -1,7 +1,7 @@
 import React from "react";
 import { Chessboard } from "@mdwebb/react-chess";
 import ChessGameSelector from "./ChessGameSelector";
-import { ChessTurnBadge } from "./ChessTurnBadge";
+// import { ChessTurnBadge } from "./ChessTurnBadge";
 import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import type { PgnMeta } from "../types/chess";
 
@@ -43,16 +43,17 @@ export const ChessBoardCard: React.FC<Props> = ({
   <div className="card bg-base-100 shadow-xl">
     <div className="card-body flex flex-col items-center">
       {/* <h1 className="card-title text-3xl text-center">Chess Buddy</h1> */}
-
       <p className="text-sm opacity-80 text-center mb-2">
+        
         White: <span className="font-semibold">{meta.white || "—"}</span> |{' '}
         Black: <span className="font-semibold">{meta.black || "—"}</span> |{' '}
         Result: <span className="font-semibold">{meta.result || "—"}</span>
+        {turn === "w" ? "⬜" : "⬛"}
       </p>
 
       
 
-      <ChessTurnBadge turn={turn} />
+      {/* <ChessTurnBadge turn={turn} /> */}
 
       <div className="flex justify-center mb-4 w-full">
         <Chessboard
