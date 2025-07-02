@@ -21,50 +21,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
     const [selectedIndex, setSelectedIndex] = useState<number | undefined>(undefined);
     const [selectedPgn, setSelectedPgn] = useState<string | undefined>();
 
-    // Begin: PGN Header Parsing
-
-    // 1) Define the shape of what you’ll return:
-    // interface PGNMetadata {
-    //     Event: string;
-    //     White: string;
-    //     Black: string;
-    //     Result: string;
-    //     DateEvent: string;
-    //     ECO: string;
-    // }
-
-    // 2) (Optionally) define a generic map for any tag → value you might capture:
-    // type HeaderMap = Record<string, string>;
-
-    // const parsePGNHeaders = (pgnText: string): PGNMetadata => {
     
-    //     // 3) You can annotate the regex if you like, though TS will infer it:
-    //     const headerRegex = /^\[([A-Za-z0-9_]+)\s+"([^"]*)"\]$/gm;
-
-    //     // 4) Give `headers` an index signature so you can do headers[someKey] = someValue
-    //     const headers: HeaderMap = {};
-
-    //     // 5) Declare `match` with the right union type
-    //     let match: RegExpExecArray | null;
-
-    //     // 6) Loop & fill your map
-    //     while ((match = headerRegex.exec(pgnText)) !== null) {
-    //         // match[1] is the tag, match[2] is the value
-    //         headers[match[1]] = match[2];
-    //     }
-
-    //     // 7) Return exactly the four you care about, using nullish coalescing
-    //     return {
-    //         Event: headers.Event ?? '',
-    //         White: headers.White ?? '',
-    //         Black: headers.Black ?? '',
-    //         Result: headers.Result ?? '',
-    //         DateEvent: headers.Date ?? '',
-    //         ECO: headers.ECO ?? '',
-    //     };
-    // };
-
-    // END: PGN Header Parsing
 
     useEffect(() => {
         fetch(pgnUrl)
@@ -84,18 +41,17 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
     }, [pgnUrl]);
 
     const items = pgnList.map((pgn, idx) => {
-        // const metadata = parsePGNHeaders(pgn);
         const metadata =  {
-            Event: extractTag("Event", pgn), // headers.Event ?? '',
-            White: extractTag("White", pgn), // headers.White ?? '',
-            Black: extractTag("Black", pgn), // headers.Black ?? '',
-            Result: extractTag("Result", pgn), // headers.Result ?? '',
-            DateEvent: extractTag("Date", pgn), // headers.Date ?? '',
-            ECO: extractTag("ECO", pgn), // headers.ECO ?? '',
+            event: extractTag("Event", pgn), 
+            white: extractTag("White", pgn), 
+            black: extractTag("Black", pgn), 
+            result: extractTag("Result", pgn),
+            date: extractTag("Date", pgn), 
+            eco: extractTag("ECO", pgn),
         };
-        const label = `${metadata.ECO} ${metadata.White} vs ${metadata.Black} (${metadata.DateEvent})`;
+        const label = `${idx+1} ${metadata.eco} ${metadata.white} vs ${metadata.black} (${metadata.date})`;
         return {
-            label: label, // `Game ${idx + 1}`,
+            label: label,
             index: idx,
             pgn,
             metadata
@@ -142,15 +98,6 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
                 ))}
             </select>
 
-            {/* {false && (
-                <>
-                    <button onClick={() => copyToClipboard(selectedPgn)} className="btn btn-outline btn-sm">
-                        Copy PGN
-                    </button>
-                    
-                </>
-
-            )} */}
         </div>
     );
 };

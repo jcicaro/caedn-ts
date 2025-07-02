@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useResponsiveBoardSize } from "../hooks/useResponsiveBoardSize";
+import { useChessResponsiveBoardSize } from "../hooks/useChessResponsiveBoardSize";
 import { useChessGame } from "../hooks/useChessGame";
 import { ChessBoardCard } from "../components/ChessBoardCard";
 import { ChessCoachChat } from "../components/ChessCoachChat";
@@ -24,7 +24,7 @@ Also break it down into multiple sections with different headers which are in bo
 `;
 
 const JcChessTraining: React.FC = () => {
-  const boardSize = useResponsiveBoardSize();
+  const boardSize = useChessResponsiveBoardSize();
   const {
     pgn,
     setPgn,
