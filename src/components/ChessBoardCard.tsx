@@ -96,13 +96,10 @@ export const ChessBoardCard: React.FC<Props> = ({
           </button>
 
         </div>
-
-        {/* <ChessVariationModalButton onClick={() => setIsChessVariationBoardModalOpen(true)} />
-        <ChessVariationModal boardSize={boardSize} isOpen={isChessVariationBoardModalOpen} onClose={() => setIsChessVariationBoardModalOpen(false)} /> */}
         
         <div className="mb-2"></div>
         
-        <ChessVariationPanel boardSize={boardSize} />
+        <ChessVariationPanel boardSize={boardSize-50} />
 
         <div className="mb-2"></div>
 

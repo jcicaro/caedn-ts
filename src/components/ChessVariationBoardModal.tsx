@@ -3,9 +3,18 @@ import { Chess } from 'chess.js';
 import { Chessboard } from '@mdwebb/react-chess';
 
 // This component is correct and does not need changes.
-export function ChessVariationContent({ boardSize }: { boardSize: number }) {
-  const [fenInput, setFenInput] = useState('');
-  const [movesInput, setMovesInput] = useState('[]');
+export function ChessVariationContent({ boardSize, 
+  initialFen = '',
+  initialMoves = '',
+  // initialPgn = '',
+ }: { 
+  boardSize: number, 
+  initialFen?: string,
+  initialMoves?: string,
+  // initialPgn?: string 
+}) {
+  const [fenInput, setFenInput] = useState(initialFen);
+  const [movesInput, setMovesInput] = useState(initialMoves);
   const [pgn, setPgn] = useState('');
 
   useEffect(() => {
@@ -31,7 +40,7 @@ export function ChessVariationContent({ boardSize }: { boardSize: number }) {
   }, [fenInput, movesInput]);
 
   return (
-    <div className="space-y-4">
+    <div className="">
       <div>
         <label className="block font-semibold mb-1">FEN:</label>
         <textarea
@@ -50,14 +59,17 @@ export function ChessVariationContent({ boardSize }: { boardSize: number }) {
           placeholder='e.g. ["d4d3", "h3g4", ...]'
         />
       </div>
-      <Chessboard
-        width={boardSize}
-        height={boardSize}
-        pgn={pgn}
-        showMoveHistory={false}
-        showNavigation={true}
-        className="rounded-lg"
-      />
+      <div className="flex justify-center mt-4 w-full">
+        <Chessboard
+          width={boardSize}
+          height={boardSize}
+          pgn={pgn}
+          showMoveHistory={false}
+          showNavigation={true}
+          className="rounded-lg"
+        />
+      </div>
+
     </div>
   );
 }
@@ -71,30 +83,24 @@ export default function ChessVariationPanel({ boardSize }: { boardSize: number }
   return (
     // By dynamically adding the 'collapse-open' class, we let the CSS framework handle the accordion state.
     <div
-      className={`collapse collapse-arrow bg-base-100 border border-base-300 ${
-        open ? 'collapse-open' : ''
-      }`}
+      className={`collapse collapse-arrow bg-base-100 border border-base-300 ${open ? 'collapse-open' : ''
+        }`}
     >
       <div
         className="collapse-title flex justify-between items-center text-lg font-semibold cursor-pointer"
         onClick={toggleOpen}
       >
         <span>Variation</span>
-        {/* <button
-          className="btn btn-sm btn-circle"
-          // Stop propagation is important to prevent the title's onClick from firing and re-opening the accordion.
-          onClick={e => {
-            e.stopPropagation();
-            setOpen(false);
-          }}
-        >
-          ✕
-        </button> */}
       </div>
 
       {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
       <div className="collapse-content p-4 overflow-auto">
-        <ChessVariationContent boardSize={boardSize} />
+        {/* <ChessVariationContent boardSize={boardSize} /> */}
+        <ChessVariationContent
+          boardSize={boardSize}
+          initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+          initialMoves='["e2e4","e7e5"]'
+        />
       </div>
     </div>
   );
