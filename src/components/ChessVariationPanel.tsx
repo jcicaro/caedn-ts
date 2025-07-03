@@ -3,11 +3,11 @@ import { Chess } from 'chess.js';
 import { Chessboard } from '@mdwebb/react-chess';
 
 // This component is correct and does not need changes.
-export function ChessVariationContent({ boardSize, 
+export function ChessVariationContent({ boardSize,
   initialFen = '',
   initialMoves = ''
- }: { 
-  boardSize: number, 
+ }: {
+  boardSize: number,
   initialFen?: string,
   initialMoves?: string
 }) {
@@ -74,8 +74,10 @@ export function ChessVariationContent({ boardSize,
           key={`${fenInput}-${pgn}`}  
           width={boardSize}
           height={boardSize}
-          fen={fenInput.trim() || 'start'}   
-          pgn={pgn}
+          // fen={fenInput.trim() || 'start'}  
+          // pgn={pgn}
+          pgn={pgn || undefined}
+          fen={pgn ? undefined : (fenInput.trim() || 'start')}
           showMoveHistory={false}
           showNavigation={true}
           className="rounded-lg"
@@ -87,12 +89,12 @@ export function ChessVariationContent({ boardSize,
 }
 
 // FIXED: Accordion-style panel toggled by its header
-export default function ChessVariationPanel({ 
+export default function ChessVariationPanel({
   boardSize,
   initialFen = '',
   initialMoves = ''
- }: { 
-  boardSize: number, 
+ }: {
+  boardSize: number,
   initialFen?: string,
   initialMoves?: string
 }) {
@@ -129,3 +131,4 @@ export default function ChessVariationPanel({
     </div>
   );
 }
+
