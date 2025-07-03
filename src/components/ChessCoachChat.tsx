@@ -26,7 +26,7 @@ export const ChessCoachChat: React.FC<Props> = ({ messages, loading, error, onSe
   }, [messages, loading]);
 
   return (
-    <div className="card bg-base-100 shadow-xl flex-1 overflow-hidden" style={{["z-index" as any]: "-10"}}>
+    <div className="card bg-base-100 shadow-xl flex-1 overflow-hidden" >
       <div className="card-body p-4 flex flex-col h-full">
         {/* <h1 className="text-2xl font-semibold mb-2">Chess Buddy</h1> */}
 

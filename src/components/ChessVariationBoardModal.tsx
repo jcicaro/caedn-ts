@@ -2,17 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from '@mdwebb/react-chess';
 
-// Separate button component
-export function ChessVariationModalButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button className="btn btn-outline btn-sm" onClick={onClick}>
-      Variation Board
-    </button>
-  );
-}
-
-// Controlled modal component
-export function ChessVariationModal({ isOpen, onClose, boardSize }: { isOpen: boolean; onClose: () => void; boardSize: any }) {
+// This component is correct and does not need changes.
+export function ChessVariationContent({ boardSize }: { boardSize: number }) {
   const [fenInput, setFenInput] = useState('');
   const [movesInput, setMovesInput] = useState('[]');
   const [pgn, setPgn] = useState('');
@@ -40,60 +31,71 @@ export function ChessVariationModal({ isOpen, onClose, boardSize }: { isOpen: bo
   }, [fenInput, movesInput]);
 
   return (
-    <div className={`modal ${isOpen ? 'modal-open' : ''} fixed inset-0 z-50`}>
-      <div className="modal-box w-11/12 max-w-4xl relative">
-        <button
-          className="btn btn-sm btn-circle absolute right-2 top-2"
-          onClick={onClose}
-        >
-          ✕
-        </button>
-        <h3 className="font-semibold text-xl mb-4">Variation Preview</h3>
-        <div className="space-y-4">
-          <div>
-            <label className="block font-semibold mb-1">FEN:</label>
-            <textarea
-              value={fenInput}
-              onChange={e => setFenInput(e.target.value)}
-              className="w-full h-24 border rounded p-2"
-              placeholder="Enter starting FEN (or leave blank for standard)"
-            />
-          </div>
-          <div>
-            <label className="block font-semibold mb-1">Moves (JSON array):</label>
-            <textarea
-              value={movesInput}
-              onChange={e => setMovesInput(e.target.value)}
-              className="w-full h-24 border rounded p-2"
-              placeholder='e.g. ["d4d3", "h3g4", ...]'
-            />
-          </div>
-          <Chessboard
-            width={boardSize}
-            height={boardSize}
-            className="rounded-lg"
-            pgn={pgn}
-            showMoveHistory={false}
-            showNavigation={true}
-          />
-        </div>
-        <div className="modal-action">
-          <button className="btn" onClick={onClose}>
-            Close
-          </button>
-        </div>
+    <div className="space-y-4">
+      <div>
+        <label className="block font-semibold mb-1">FEN:</label>
+        <textarea
+          value={fenInput}
+          onChange={e => setFenInput(e.target.value)}
+          className="w-full h-24 border rounded p-2"
+          placeholder="Enter starting FEN (or leave blank for standard)"
+        />
       </div>
+      <div>
+        <label className="block font-semibold mb-1">Moves (JSON array):</label>
+        <textarea
+          value={movesInput}
+          onChange={e => setMovesInput(e.target.value)}
+          className="w-full h-24 border rounded p-2"
+          placeholder='e.g. ["d4d3", "h3g4", ...]'
+        />
+      </div>
+      <Chessboard
+        width={boardSize}
+        height={boardSize}
+        pgn={pgn}
+        showMoveHistory={false}
+        showNavigation={true}
+        className="rounded-lg"
+      />
     </div>
   );
 }
 
-// // Container that ties button and modal together
-// export default function ChessVariationBoardModalContainer() {
-//   const [isOpen, setIsOpen] = useState(false);
-//   return (
-//     <>
-//       <OpenVariationModalButton onClick={() => setIsOpen(true)} />
-//       <VariationModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
-//     </>
-//   );
-// }
+// FIXED: Accordion-style panel toggled by its header
+export default function ChessVariationPanel({ boardSize }: { boardSize: number }) {
+  const [open, setOpen] = useState(false);
+
+  const toggleOpen = () => setOpen(prev => !prev);
+
+  return (
+    // By dynamically adding the 'collapse-open' class, we let the CSS framework handle the accordion state.
+    <div
+      className={`collapse collapse-arrow bg-base-100 border border-base-300 ${
+        open ? 'collapse-open' : ''
+      }`}
+    >
+      <div
+        className="collapse-title flex justify-between items-center text-lg font-semibold cursor-pointer"
+        onClick={toggleOpen}
+      >
+        <span>Variation</span>
+        {/* <button
+          className="btn btn-sm btn-circle"
+          // Stop propagation is important to prevent the title's onClick from firing and re-opening the accordion.
+          onClick={e => {
+            e.stopPropagation();
+            setOpen(false);
+          }}
+        >
+          ✕
+        </button> */}
+      </div>
+
+      {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
+      <div className="collapse-content p-4 overflow-auto">
+        <ChessVariationContent boardSize={boardSize} />
+      </div>
+    </div>
+  );
+}

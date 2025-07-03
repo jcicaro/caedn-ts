@@ -4,7 +4,8 @@ import { Chessboard } from "@mdwebb/react-chess";
 // import { ChessTurnBadge } from "./ChessTurnBadge";
 // import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import { ChessBoardAutoPlayButton } from './ChessBoardAutoPlayButton';
-import { ChessVariationModal, ChessVariationModalButton } from "./ChessVariationBoardModal";
+// import { ChessVariationModal, ChessVariationModalButton, ChessVariationPanel } from "./ChessVariationBoardModal";
+import ChessVariationPanel from "./ChessVariationBoardModal";
 import type { PgnMeta } from "../types/chess";
 import { extractTag } from "../utils/chess";
 
@@ -96,8 +97,12 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         </div>
 
-        <ChessVariationModalButton onClick={() => setIsChessVariationBoardModalOpen(true)} />
-        <ChessVariationModal boardSize={boardSize} isOpen={isChessVariationBoardModalOpen} onClose={() => setIsChessVariationBoardModalOpen(false)} />
+        {/* <ChessVariationModalButton onClick={() => setIsChessVariationBoardModalOpen(true)} />
+        <ChessVariationModal boardSize={boardSize} isOpen={isChessVariationBoardModalOpen} onClose={() => setIsChessVariationBoardModalOpen(false)} /> */}
+        
+        <div className="mb-2"></div>
+        
+        <ChessVariationPanel boardSize={boardSize} />
 
         <div className="mb-2"></div>
 
@@ -143,6 +148,8 @@ export const ChessBoardCard: React.FC<Props> = ({
               )}
             </select>
           </div>
+
+          
         )}
       </div>
     </div>
