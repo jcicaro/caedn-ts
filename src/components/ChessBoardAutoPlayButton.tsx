@@ -6,12 +6,22 @@ export function ChessBoardAutoPlayButton() {
   const [isPlaying, setIsPlaying] = useState(false);
   const intervalRef = useRef<number | null>(null);
 
-  // Finds and clicks your “Next move” button
+  // Finds and clicks your “Next move” button,
+  // but also auto-pauses if it becomes disabled.
   const clickNext = () => {
     const btn = document.querySelector<HTMLButtonElement>(
       'button[aria-label="Next move"]'
     );
-    if (btn && !btn.disabled) {
+    if (!btn) return;
+
+    if (btn.disabled) {
+      // Pause auto-play when the button is no longer enabled
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      setIsPlaying(false);
+    } else {
       btn.click();
     }
   };
@@ -45,10 +55,7 @@ export function ChessBoardAutoPlayButton() {
       className="btn btn-outline btn-sm"
       aria-label={isPlaying ? 'Pause auto-play' : 'Start auto-play'}
     >
-      {isPlaying
-        ? <Pause className="w-5 h-5" />
-        : <Play className="w-5 h-5" />
-      }
+      {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
     </button>
   );
 }
