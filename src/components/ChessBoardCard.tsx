@@ -81,13 +81,14 @@ export const ChessBoardCard: React.FC<Props> = ({
         <button onClick={onAnalyse} disabled={!Boolean(pgn) || analysing} className="btn btn-neutral btn-sm">
           {analysing ? "Analysing…" : "Analyse"}
         </button>
+        <ChessBoardAutoPlayButton/>
         <button onClick={onShowLoad} className="btn btn-outline btn-sm">
           Load PGN
         </button>
         <button onClick={onShowPgn} disabled={!Boolean(pgn)} className="btn btn-outline btn-sm">
           Game PGN
         </button>
-        <ChessBoardAutoPlayButton/>
+        
       </div>
 
       <div className="mb-2"></div>

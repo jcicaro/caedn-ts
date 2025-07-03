@@ -1,5 +1,6 @@
 // AutoPlayButton.tsx
 import React, { useState, useRef, useEffect } from 'react';
+import { Play, Pause } from 'lucide-react';
 
 export function ChessBoardAutoPlayButton() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -41,10 +42,13 @@ export function ChessBoardAutoPlayButton() {
   return (
     <button
       onClick={toggleAutoPlay}
-      className="btn btn-outline btn-sm filter grayscale"
+      className="btn btn-outline btn-sm"
       aria-label={isPlaying ? 'Pause auto-play' : 'Start auto-play'}
     >
-      {isPlaying ? '⏸️' : '▶️'}
+      {isPlaying
+        ? <Pause className="w-5 h-5" />
+        : <Play className="w-5 h-5" />
+      }
     </button>
   );
 }

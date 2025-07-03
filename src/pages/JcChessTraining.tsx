@@ -95,8 +95,6 @@ const JcChessTraining: React.FC = () => {
     }, []);
   }
   useArrowKeyMoves();
-
-  // function useAutoNextOnShortcut() {
   //   // Store the interval ID so we can clear it later
   //   const intervalRef = useRef<number | null>(null);
 
