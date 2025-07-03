@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useChessResponsiveBoardSize } from "../hooks/useChessResponsiveBoardSize";
 import { useChessGame } from "../hooks/useChessGame";
 import { ChessBoardCard } from "../components/ChessBoardCard";
@@ -61,14 +61,40 @@ const JcChessTraining: React.FC = () => {
     const [firstMove, secondMove] = entry.continuation;
 
     // decide labels based on currentTurn
-    const firstLabel  = currentTurn === 'b' ? 'White' : 'Black';
+    const firstLabel = currentTurn === 'b' ? 'White' : 'Black';
     const secondLabel = currentTurn === 'b' ? 'Black' : 'White';
 
     const suggestedMoves = `${entry.text}; THEN: ${firstLabel}: ${firstMove.from} to ${firstMove.to}; ` +
-         `${secondLabel}: ${secondMove.from} to ${secondMove.to}`;
+      `${secondLabel}: ${secondMove.from} to ${secondMove.to}`;
 
     if (result) sendToChat('ECO: ' + meta.eco + '\n\nSuggested Moves: ' + suggestedMoves + '\n\n' + JSON.stringify(result));
   };
+
+  function useArrowKeyMoves() {
+    useEffect(() => {
+      const onKeyDown = (e: KeyboardEvent) => {
+        let selector: string | null = null;
+
+        if (e.key === 'ArrowRight') {
+          selector = 'button[aria-label="Next move"]';
+        } else if (e.key === 'ArrowLeft') {
+          selector = 'button[aria-label="Previous move"]';
+        }
+
+        if (selector) {
+          const btn = document.querySelector<HTMLButtonElement>(selector);
+          if (btn && !btn.disabled) {
+            e.preventDefault();
+            btn.click();
+          }
+        }
+      };
+
+      window.addEventListener('keydown', onKeyDown);
+      return () => window.removeEventListener('keydown', onKeyDown);
+    }, []);
+  }
+  useArrowKeyMoves();
 
   return (
     <div className="h-screen md:flex md:items-start gap-4">
