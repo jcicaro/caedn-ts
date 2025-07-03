@@ -12,6 +12,7 @@ import { extractTag } from "../utils/chess";
 interface Props {
   boardSize: number;
   pgn: string;
+  fen: string;
   meta: PgnMeta;
   turn: "w" | "b" | null;
   games: any[];
@@ -30,6 +31,7 @@ interface Props {
 export const ChessBoardCard: React.FC<Props> = ({
   boardSize,
   pgn,
+  fen,
   meta,
   turn,
   games,
@@ -99,7 +101,13 @@ export const ChessBoardCard: React.FC<Props> = ({
         
         <div className="mb-2"></div>
         
-        <ChessVariationPanel boardSize={boardSize-50} />
+        <ChessVariationPanel 
+          boardSize={boardSize-50}
+          initialFen={fen}
+          // initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+          // initialMoves='["e2e4","e7e5"]' 
+          initialMoves='' 
+        />
 
         <div className="mb-2"></div>
 

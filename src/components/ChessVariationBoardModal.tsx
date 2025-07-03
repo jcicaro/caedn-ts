@@ -5,17 +5,23 @@ import { Chessboard } from '@mdwebb/react-chess';
 // This component is correct and does not need changes.
 export function ChessVariationContent({ boardSize, 
   initialFen = '',
-  initialMoves = '',
-  // initialPgn = '',
+  initialMoves = ''
  }: { 
   boardSize: number, 
   initialFen?: string,
-  initialMoves?: string,
-  // initialPgn?: string 
+  initialMoves?: string
 }) {
   const [fenInput, setFenInput] = useState(initialFen);
   const [movesInput, setMovesInput] = useState(initialMoves);
   const [pgn, setPgn] = useState('');
+
+  useEffect(() => {
+    setFenInput(initialFen);
+  }, [initialFen]);
+
+  useEffect(() => {
+    setMovesInput(initialMoves);
+  }, [initialMoves]);
 
   useEffect(() => {
     let movesArray: string[];
@@ -36,8 +42,9 @@ export function ChessVariationContent({ boardSize,
       chess.move({ from, to });
     });
 
+
     setPgn(chess.pgn() || '');
-  }, [fenInput, movesInput]);
+  }, [fenInput, movesInput, initialFen]);
 
   return (
     <div className="">
@@ -61,8 +68,10 @@ export function ChessVariationContent({ boardSize,
       </div>
       <div className="flex justify-center mt-4 w-full">
         <Chessboard
+          key={`${fenInput}-${pgn}`}  
           width={boardSize}
           height={boardSize}
+          fen={fenInput.trim() || 'start'}   
           pgn={pgn}
           showMoveHistory={false}
           showNavigation={true}
@@ -75,7 +84,15 @@ export function ChessVariationContent({ boardSize,
 }
 
 // FIXED: Accordion-style panel toggled by its header
-export default function ChessVariationPanel({ boardSize }: { boardSize: number }) {
+export default function ChessVariationPanel({ 
+  boardSize,
+  initialFen = '',
+  initialMoves = ''
+ }: { 
+  boardSize: number, 
+  initialFen?: string,
+  initialMoves?: string
+}) {
   const [open, setOpen] = useState(false);
 
   const toggleOpen = () => setOpen(prev => !prev);
@@ -95,11 +112,15 @@ export default function ChessVariationPanel({ boardSize }: { boardSize: number }
 
       {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
       <div className="collapse-content p-4 overflow-auto">
-        {/* <ChessVariationContent boardSize={boardSize} /> */}
-        <ChessVariationContent
+        {/* <ChessVariationContent
           boardSize={boardSize}
           initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
           initialMoves='["e2e4","e7e5"]'
+        /> */}
+        <ChessVariationContent
+          boardSize={boardSize}
+          initialFen={initialFen}
+          initialMoves={initialMoves}
         />
       </div>
     </div>

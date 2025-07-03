@@ -30,6 +30,7 @@ const JcChessTraining: React.FC = () => {
     pgn,
     setPgn,
     meta,
+    currentFen,
     currentTurn,
     filteredGames,
     search,
@@ -145,6 +146,7 @@ const JcChessTraining: React.FC = () => {
           boardSize={boardSize}
           pgn={pgn}
           meta={meta}
+          fen={currentFen}
           turn={currentTurn}
           games={filteredGames}
           search={search}
