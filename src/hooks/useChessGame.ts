@@ -104,6 +104,7 @@ export const useChessGame = () => {
         : Array.isArray(data.moves)
         ? data.moves
         : [data];
+      console.log('analyze', arr);
       const norm = arr.map(normalizeAnalysis);
       setAnalysis(norm);
       return norm;

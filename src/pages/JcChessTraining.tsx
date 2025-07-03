@@ -5,6 +5,7 @@ import { ChessBoardCard } from "../components/ChessBoardCard";
 import { ChessCoachChat } from "../components/ChessCoachChat";
 import { ChessShowPgnModal } from "../components/ChessShowPgnModal";
 import { ChessLoadPgnModal } from "../components/ChessLoadPgnModal";
+
 import { useChat } from "../hooks/useChat";
 
 const INITIAL_PROMPT = `
@@ -46,6 +47,7 @@ const JcChessTraining: React.FC = () => {
 
   const [showPgnModal, setShowPgnModal] = useState(false);
   const [showLoadModal, setShowLoadModal] = useState(false);
+  const [showVariationBoardModal, setShowVariationBoardModal] = useState(false);
 
   const handleAnalyse = async () => {
     const result = await analyse();
@@ -169,6 +171,7 @@ const JcChessTraining: React.FC = () => {
 
       <ChessShowPgnModal open={showPgnModal} onClose={() => setShowPgnModal(false)} pgn={pgn} />
       <ChessLoadPgnModal
+        boardSize={boardSize}
         open={showLoadModal}
         onClose={() => setShowLoadModal(false)}
         onLoad={(txt) => {
@@ -176,6 +179,7 @@ const JcChessTraining: React.FC = () => {
           selectGame("");
         }}
       />
+      
     </div>
   );
 };
