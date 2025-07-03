@@ -36,15 +36,18 @@ export function ChessVariationContent({ boardSize,
     const chess = new Chess();
     if (fenInput.trim()) chess.load(fenInput.trim());
 
-    movesArray.forEach(coord => {
-      const from = coord.slice(0, 2) as `${string}${number}`;
-      const to = coord.slice(2, 4) as `${string}${number}`;
-      chess.move({ from, to });
-    });
-
+    try {
+      movesArray.forEach(coord => {
+        const from = coord.slice(0, 2) as `${string}${number}`;
+        const to = coord.slice(2, 4) as `${string}${number}`;
+        chess.move({ from, to });
+      });
+    } catch (error) {
+      console.log('Error parsing moves', error)
+    }
 
     setPgn(chess.pgn() || '');
-  }, [fenInput, movesInput, initialFen]);
+  }, [fenInput, movesInput]);
 
   return (
     <div className="">

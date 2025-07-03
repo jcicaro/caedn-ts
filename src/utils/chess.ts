@@ -18,6 +18,8 @@ export const normalizeAnalysis = (raw: any): MoveAnalysis => ({
   depth: raw.depth,
   text: raw.text ?? raw.comment,
   continuation: raw.continuation,
+  continuationArr: raw.continuationArr,
+  continuationArrCombined: [raw.move, ...raw.continuationArr],
   fen: raw.fen,
 });
 

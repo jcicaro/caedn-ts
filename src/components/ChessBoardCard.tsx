@@ -1,11 +1,7 @@
 import React,  { useState }  from "react";
 import { Chessboard } from "@mdwebb/react-chess";
-// import ChessGameSelector from "./ChessGameSelector";
-// import { ChessTurnBadge } from "./ChessTurnBadge";
-// import { ChessAnalysisControls } from "./ChessAnalysisControls";
 import { ChessBoardAutoPlayButton } from './ChessBoardAutoPlayButton';
-// import { ChessVariationModal, ChessVariationModalButton, ChessVariationPanel } from "./ChessVariationBoardModal";
-import ChessVariationPanel from "./ChessVariationBoardModal";
+import ChessVariationPanel from "./ChessVariationPanel";
 import type { PgnMeta } from "../types/chess";
 import { extractTag } from "../utils/chess";
 
@@ -24,6 +20,7 @@ interface Props {
   onPositionChange: (fen: string) => void;
   onAnalyse: () => void;
   analysing: boolean;
+  analysis: any;
   onShowPgn: () => void;
   onShowLoad: () => void;
 }
@@ -43,11 +40,10 @@ export const ChessBoardCard: React.FC<Props> = ({
   onPositionChange,
   onAnalyse,
   analysing,
+  analysis,
   onShowPgn,
   onShowLoad,
 }) => {
-
-  const [isChessVariationBoardModalOpen, setIsChessVariationBoardModalOpen] = useState(false);
 
   return (
     <div className="card bg-base-100 shadow-xl">
@@ -62,10 +58,6 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         </p>
 
-
-
-        {/* <ChessTurnBadge turn={turn} /> */}
-
         <div className="flex justify-center mb-4 w-full">
           <Chessboard
             width={boardSize}
@@ -76,14 +68,6 @@ export const ChessBoardCard: React.FC<Props> = ({
             onPositionChange={onPositionChange}
           />
         </div>
-
-        {/* <ChessAnalysisControls
-        canAnalyse={Boolean(pgn)}
-        analysing={analysing}
-        onAnalyse={onAnalyse}
-        onShowLoad={onShowLoad}
-        onShowPgn={onShowPgn}
-      /> */}
 
         <div className="flex flex-wrap gap-2 justify-center">
           <button onClick={onAnalyse} disabled={!Boolean(pgn) || analysing} className="btn btn-neutral btn-sm">
@@ -101,26 +85,19 @@ export const ChessBoardCard: React.FC<Props> = ({
         
         <div className="mb-2"></div>
         
-        <ChessVariationPanel 
+        {true && (<ChessVariationPanel 
           boardSize={boardSize-50}
           initialFen={fen}
           // initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
           // initialMoves='["e2e4","e7e5"]' 
-          initialMoves='' 
-        />
+          //{JSON.stringify(analysis)}
+          initialMoves={(analysis && analysis.length>0) ? JSON.stringify(analysis[0].continuationArrCombined) : ''}
+        />)}
 
         <div className="mb-2"></div>
 
         {/* Only show ChessGameSelector if there are games available */}
         {true && (
-          // <ChessGameSelector
-          //   games={games}
-          //   search={search}
-          //   onSearch={onSearch}
-          //   value={selectedGameUrl}
-          //   onChange={onSelectGame}
-          //   disabled={loadingGames}
-          // />
           <div className="mb-2 w-full flex items-start gap-2">
             <input
               className="input input-sm input-bordered"

@@ -6,6 +6,8 @@ export interface MoveAnalysis {
   text?: string;
   fen?: string;
   continuation?: Array<object>;
+  continuationArr?: Array<string>;
+  continuationArrCombined?: Array<string>;
 }
 
 export interface PgnMeta {

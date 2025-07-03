@@ -40,6 +40,7 @@ const JcChessTraining: React.FC = () => {
     loadingGames,
     handlePositionChange,
     analyse,
+    analysis,
     loadingAn,
   } = useChessGame();
 
@@ -48,11 +49,11 @@ const JcChessTraining: React.FC = () => {
 
   const [showPgnModal, setShowPgnModal] = useState(false);
   const [showLoadModal, setShowLoadModal] = useState(false);
-  const [showVariationBoardModal, setShowVariationBoardModal] = useState(false);
+  // const [showVariationBoardModal, setShowVariationBoardModal] = useState(false);
 
   const handleAnalyse = async () => {
     const result = await analyse();
-    console.log('handleAnalyse', result, currentTurn);
+    // console.log('handleAnalyse', result, currentTurn);
 
     const entry = result[0];
     if (!entry?.continuation || entry.continuation.length < 2) {
@@ -98,46 +99,6 @@ const JcChessTraining: React.FC = () => {
     }, []);
   }
   useArrowKeyMoves();
-  //   // Store the interval ID so we can clear it later
-  //   const intervalRef = useRef<number | null>(null);
-
-  //   useEffect(() => {
-  //     const onKeyDown = (e: KeyboardEvent) => {
-  //       // Check for Ctrl+Shift+P
-  //       if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
-  //         e.preventDefault();
-
-  //         // If not already running, start it
-  //         if (intervalRef.current === null) {
-  //           intervalRef.current = window.setInterval(() => {
-  //             const btn = document.querySelector<HTMLButtonElement>(
-  //               'button[aria-label="Next move"]'
-  //             );
-  //             if (btn && !btn.disabled) {
-  //               btn.click();
-  //             }
-  //           }, 3000);
-  //           console.log('⏯️ Auto-next started');
-  //         }
-  //         // Otherwise, stop it
-  //         else {
-  //           clearInterval(intervalRef.current);
-  //           intervalRef.current = null;
-  //           console.log('⏹️ Auto-next stopped');
-  //         }
-  //       }
-  //     };
-
-  //     window.addEventListener('keydown', onKeyDown);
-  //     return () => {
-  //       window.removeEventListener('keydown', onKeyDown);
-  //       if (intervalRef.current !== null) {
-  //         clearInterval(intervalRef.current);
-  //       }
-  //     };
-  //   }, []);
-  // }
-  // useAutoNextOnShortcut();
 
   return (
     <div className="h-screen md:flex md:items-start gap-4">
@@ -157,6 +118,7 @@ const JcChessTraining: React.FC = () => {
           onPositionChange={handlePositionChange}
           onAnalyse={handleAnalyse}
           analysing={loadingAn}
+          analysis={analysis}
           onShowPgn={() => setShowPgnModal(true)}
           onShowLoad={() => setShowLoadModal(true)}
         />
