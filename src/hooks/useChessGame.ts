@@ -13,6 +13,7 @@ export const useChessGame = () => {
   const [analysis, setAnalysis] = useState<MoveAnalysis[] | null>(null);
   const [loadingGames, setLoadingGames] = useState(false);
   const [loadingAn, setLoadingAn] = useState(false);
+  const [showVariationPanel, setShowVariationPanel] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -77,6 +78,7 @@ export const useChessGame = () => {
   const selectGame = (url: string) => {
     const g = gamesList.find((x) => x.url === url);
     if (g) {
+      setShowVariationPanel(false);
       setSelectedGameUrl(url);
       setPgn(g.pgn);
     }
@@ -85,6 +87,7 @@ export const useChessGame = () => {
   const handlePositionChange = (fen: string) => {
     setCurrentFen(fen);
     setCurrentTurn(parsePgn(`[FEN "${fen}"]`).turn);
+    setShowVariationPanel(false);
   };
 
   const analyse = useCallback(async () => {
@@ -107,6 +110,7 @@ export const useChessGame = () => {
       console.log('analyze', arr);
       const norm = arr.map(normalizeAnalysis);
       setAnalysis(norm);
+      setShowVariationPanel(true);
       return norm;
     } catch (e: any) {
       setError(e.message);
@@ -133,5 +137,6 @@ export const useChessGame = () => {
     loadingGames,
     handlePositionChange,
     analyse,
+    showVariationPanel,
   };
 };

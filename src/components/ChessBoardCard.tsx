@@ -23,6 +23,7 @@ interface Props {
   analysis: any;
   onShowPgn: () => void;
   onShowLoad: () => void;
+  showVariationPanel: boolean;
 }
 
 export const ChessBoardCard: React.FC<Props> = ({
@@ -43,6 +44,7 @@ export const ChessBoardCard: React.FC<Props> = ({
   analysis,
   onShowPgn,
   onShowLoad,
+  showVariationPanel,
 }) => {
 
   return (
@@ -85,7 +87,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         
         <div className="mb-2"></div>
         
-        {true && (<ChessVariationPanel 
+        {showVariationPanel && (<ChessVariationPanel 
           boardSize={boardSize-50}
           initialFen={fen}
           // initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"

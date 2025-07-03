@@ -42,6 +42,7 @@ const JcChessTraining: React.FC = () => {
     analyse,
     analysis,
     loadingAn,
+    showVariationPanel,
   } = useChessGame();
 
   const { messages, loading: chatLoading, error: chatError, send: sendToChat } =
@@ -121,6 +122,7 @@ const JcChessTraining: React.FC = () => {
           analysis={analysis}
           onShowPgn={() => setShowPgnModal(true)}
           onShowLoad={() => setShowLoadModal(true)}
+          showVariationPanel={showVariationPanel}
         />
       </div>
 
