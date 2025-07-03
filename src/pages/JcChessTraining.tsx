@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useChessResponsiveBoardSize } from "../hooks/useChessResponsiveBoardSize";
 import { useChessGame } from "../hooks/useChessGame";
 import { ChessBoardCard } from "../components/ChessBoardCard";
@@ -95,6 +95,48 @@ const JcChessTraining: React.FC = () => {
     }, []);
   }
   useArrowKeyMoves();
+
+  // function useAutoNextOnShortcut() {
+  //   // Store the interval ID so we can clear it later
+  //   const intervalRef = useRef<number | null>(null);
+
+  //   useEffect(() => {
+  //     const onKeyDown = (e: KeyboardEvent) => {
+  //       // Check for Ctrl+Shift+P
+  //       if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
+  //         e.preventDefault();
+
+  //         // If not already running, start it
+  //         if (intervalRef.current === null) {
+  //           intervalRef.current = window.setInterval(() => {
+  //             const btn = document.querySelector<HTMLButtonElement>(
+  //               'button[aria-label="Next move"]'
+  //             );
+  //             if (btn && !btn.disabled) {
+  //               btn.click();
+  //             }
+  //           }, 3000);
+  //           console.log('⏯️ Auto-next started');
+  //         }
+  //         // Otherwise, stop it
+  //         else {
+  //           clearInterval(intervalRef.current);
+  //           intervalRef.current = null;
+  //           console.log('⏹️ Auto-next stopped');
+  //         }
+  //       }
+  //     };
+
+  //     window.addEventListener('keydown', onKeyDown);
+  //     return () => {
+  //       window.removeEventListener('keydown', onKeyDown);
+  //       if (intervalRef.current !== null) {
+  //         clearInterval(intervalRef.current);
+  //       }
+  //     };
+  //   }, []);
+  // }
+  // useAutoNextOnShortcut();
 
   return (
     <div className="h-screen md:flex md:items-start gap-4">

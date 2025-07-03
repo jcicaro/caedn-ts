@@ -3,6 +3,7 @@ import { Chessboard } from "@mdwebb/react-chess";
 // import ChessGameSelector from "./ChessGameSelector";
 // import { ChessTurnBadge } from "./ChessTurnBadge";
 // import { ChessAnalysisControls } from "./ChessAnalysisControls";
+import { ChessBoardAutoPlayButton } from './ChessBoardAutoPlayButton';
 import type { PgnMeta } from "../types/chess";
 import { extractTag } from "../utils/chess";
 
@@ -86,6 +87,7 @@ export const ChessBoardCard: React.FC<Props> = ({
         <button onClick={onShowPgn} disabled={!Boolean(pgn)} className="btn btn-outline btn-sm">
           Game PGN
         </button>
+        <ChessBoardAutoPlayButton/>
       </div>
 
       <div className="mb-2"></div>
