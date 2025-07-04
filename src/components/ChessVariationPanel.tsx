@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from '@mdwebb/react-chess';
+import { fenMovesToPgn } from "../utils/chess";
 
 // This component is correct and does not need changes.
 export function ChessVariationContent({ boardSize,
@@ -24,29 +25,34 @@ export function ChessVariationContent({ boardSize,
   }, [initialMoves]);
 
   useEffect(() => {
-    let movesArray: string[];
-    try {
-      movesArray = JSON.parse(movesInput);
-      if (!Array.isArray(movesArray)) throw new Error();
-    } catch {
-      setPgn('');
-      return;
-    }
+    // let movesArray: string[];
+    // try {
+    //   movesArray = JSON.parse(movesInput);
+    //   if (!Array.isArray(movesArray)) throw new Error();
+    // } catch {
+    //   setPgn('');
+    //   return;
+    // }
 
-    const chess = new Chess();
-    if (fenInput.trim()) chess.load(fenInput.trim());
+    // const chess = new Chess();
+    // if (fenInput.trim()) chess.load(fenInput.trim());
 
-    try {
-      movesArray.forEach(coord => {
-        const from = coord.slice(0, 2) as `${string}${number}`;
-        const to = coord.slice(2, 4) as `${string}${number}`;
-        chess.move({ from, to });
-      });
-    } catch (error) {
-      console.log('Error parsing moves', error)
-    }
+    // try {
+    //   movesArray.forEach(coord => {
+    //     const from = coord.slice(0, 2) as `${string}${number}`;
+    //     const to = coord.slice(2, 4) as `${string}${number}`;
+    //     chess.move({ from, to });
+    //   });
+    // } catch (error) {
+    //   console.log('Error parsing moves', error)
+    // }
 
-    setPgn(chess.pgn() || '');
+    // setPgn(chess.pgn() || '');
+
+    const convertedPgn = fenMovesToPgn(fenInput, JSON.parse(movesInput));
+    console.log('ChessVariationPanel - convertedPgn\n', convertedPgn);
+    setPgn(convertedPgn || '');
+
   }, [fenInput, movesInput]);
 
   return (
@@ -71,15 +77,15 @@ export function ChessVariationContent({ boardSize,
       </div>
       <div className="flex justify-center mt-4 w-full">
         <Chessboard
-          key={`${fenInput}-${pgn}`}  
+          // key={`${initialFen}`}  
           width={boardSize}
           height={boardSize}
           // fen={fenInput.trim() || 'start'}  
           // pgn={pgn}
           pgn={pgn || undefined}
-          fen={pgn ? undefined : (fenInput.trim() || 'start')}
+          // fen={pgn ? undefined : (fenInput.trim() || 'start')}
           showMoveHistory={false}
-          showNavigation={true}
+          showNavigation={false}
           className="rounded-lg"
         />
       </div>
