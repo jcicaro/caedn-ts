@@ -30,7 +30,7 @@ const JcChessGame: React.FC = () => {
                     : [data];
 
             setAnalysis(moves);
-            setSuggestedMove(moves[0].move);
+            setSuggestedMove(moves[0].san);
 
         } catch (e: any) {
             setError(e.message);
@@ -45,46 +45,82 @@ const JcChessGame: React.FC = () => {
         if (!game) return;
 
         setPgn(game.pgn());
-        const fen = game.fen();
-
+        
         setLoading(true);
         setError(null);
-        
-        fetchAnalysis(fen);
+
+        fetchAnalysis(game.fen());
+
+        console.log('Chessboard', Chessboard);
+        console.log('boardRef', boardRef);
+        // console.log('turn', game?.turn());
+
+        // const api = boardRef.current?.api;
+        // if (!api) return;
+        // api.toggleOrientation();
+
     };
 
     const applySuggestedMove = () => {
-        const game = boardRef.current?.game;
-        if (!game) return;
 
-        const currentPgn = game.pgn();
-        const currentFen = game.fen();
-        const combinedPgn = combinePgn(currentPgn, currentFen, [suggestedMove]);
+        const api = boardRef.current?.api;
+        if (!api) return;
 
-        console.log(combinedPgn);
+        api.move(analysis[0].from, analysis[0].to);
+
+        // This will trigger a re-render of the Chessboard with the new position.
+        // const game = boardRef.current?.game;
+        // if (!game) return;
+        // const newPgn = game.pgn();
+        // setPgn(newPgn);
+        // game.loadPgn(newPgn);
+
+        // const currentPgn = game.pgn();
+        // const currentFen = game.fen();
+        // const combinedPgn = combinePgn(currentPgn, currentFen, [suggestedMove]);
 
         // setPgn(combinedPgn);
 
-        // const updatedGame = boardRef.current?.game;
-        // if (!updatedGame) return;
-        // const fen = updatedGame.fen();
-
-        // setLoading(true);
-        // setError(null);
-
-        // fetchAnalysis(fen);
     };
 
-    return (
-        <div className="h-screen md:flex gap-4 md:mt-10">
-            {/* Left column: centered board + PGN */}
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center h-full space-y-4">
+    // const __applySuggestedMove = () => {
+    //     const board = boardRef.current;
+    //     if (!board || analysis.length === 0) return;
 
-                <h1 className="text-3xl text-center">Let's Play Chess!</h1>
+    //     const game = board.game;           // the Chess.js instance
+    //     const { from, to, promotion } = analysis[0];
+
+    //     // 1️⃣  Update the real game – this flips the turn internally
+    //     const move = game?.move({ from, to, promotion: promotion ?? 'q' });
+    //     if (!move) {
+    //         console.warn('Suggested move was illegal for current position');
+    //         return;
+    //     }
+
+    //     // 2️⃣  Tell the UI about the new position.
+    //     //     You can EITHER set PGN OR call board.api.setPosition(game.fen()).
+    //     //     PGN keeps the move list visible, so we’ll use it:
+    //     if (game) {
+    //         console.log('game', game);
+    //         setPgn(game.pgn());
+    //         game.loadPgn(game.pgn());
+    //     }
+
+    // };
+
+
+
+    return (
+        <div className="md:flex gap-4 mt-10">
+            {/* Left column: centered board + PGN */}
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center space-y-4 mb-8">
+
+                <h1 className="text-3xl font-bold text-center">Let's Play Chess!</h1>
 
                 <button
                     onClick={applySuggestedMove}
-                    disabled={!suggestedMove || loading}
+                    // disabled={!suggestedMove || loading}
+                    disabled
                     className="btn btn-ghost">
                     {suggestedMove
                         ? `${suggestedMove}`
