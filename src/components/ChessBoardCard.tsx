@@ -94,6 +94,7 @@ export const ChessBoardCard: React.FC<Props> = ({
           // initialMoves='["e2e4","e7e5"]' 
           //{JSON.stringify(analysis)}
           initialMoves={(analysis && analysis.length>0) ? JSON.stringify(analysis[0].continuationArrCombined) : ''}
+          originalPgn={pgn}
         />)}
 
         <div className="mb-1"></div>

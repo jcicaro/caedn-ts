@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Chess } from 'chess.js';
 import { Chessboard } from '@mdwebb/react-chess';
-import { fenMovesToPgn } from "../utils/chess";
+import { fenMovesToPgn, combinePgn } from "../utils/chess";
 
 // This component is correct and does not need changes.
 export function ChessVariationContent({ boardSize,
   initialFen = '',
-  initialMoves = ''
+  initialMoves = '',
+  originalPgn = ''
  }: {
   boardSize: number,
   initialFen?: string,
   initialMoves?: string
+  originalPgn?: string
 }) {
   const [fenInput, setFenInput] = useState(initialFen);
   const [movesInput, setMovesInput] = useState(initialMoves);
@@ -49,8 +51,10 @@ export function ChessVariationContent({ boardSize,
 
     // setPgn(chess.pgn() || '');
 
-    const convertedPgn = fenMovesToPgn(fenInput, JSON.parse(movesInput));
-    console.log('ChessVariationPanel - convertedPgn\n', convertedPgn);
+    // console.log('ChessVariationPanel - convertedPgn\n', originalPgn, fenInput);
+    // const convertedPgn = fenMovesToPgn(fenInput, JSON.parse(movesInput));
+    const convertedPgn = combinePgn(originalPgn, fenInput, JSON.parse(movesInput));
+    
     setPgn(convertedPgn || '');
 
   }, [fenInput, movesInput]);
@@ -72,12 +76,10 @@ export function ChessVariationContent({ boardSize,
           // key={`${initialFen}`}  
           width={boardSize}
           height={boardSize}
-          // fen={fenInput.trim() || 'start'}  
           // pgn={pgn}
           pgn={pgn || undefined}
-          // fen={pgn ? undefined : (fenInput.trim() || 'start')}
           showMoveHistory={false}
-          showNavigation={false}
+          showNavigation={true}
           className="rounded-lg"
         />
       </div>
@@ -100,11 +102,13 @@ export function ChessVariationContent({ boardSize,
 export default function ChessVariationPanel({
   boardSize,
   initialFen = '',
-  initialMoves = ''
+  initialMoves = '',
+  originalPgn = ''
  }: {
   boardSize: number,
   initialFen?: string,
   initialMoves?: string
+  originalPgn?: string
 }) {
   const [open, setOpen] = useState(false);
 
@@ -134,6 +138,7 @@ export default function ChessVariationPanel({
           boardSize={boardSize}
           initialFen={initialFen}
           initialMoves={initialMoves}
+          originalPgn={originalPgn}
         />
       </div>
     </div>
