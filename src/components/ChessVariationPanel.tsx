@@ -27,32 +27,7 @@ export function ChessVariationContent({ boardSize,
   }, [initialMoves]);
 
   useEffect(() => {
-    // let movesArray: string[];
-    // try {
-    //   movesArray = JSON.parse(movesInput);
-    //   if (!Array.isArray(movesArray)) throw new Error();
-    // } catch {
-    //   setPgn('');
-    //   return;
-    // }
 
-    // const chess = new Chess();
-    // if (fenInput.trim()) chess.load(fenInput.trim());
-
-    // try {
-    //   movesArray.forEach(coord => {
-    //     const from = coord.slice(0, 2) as `${string}${number}`;
-    //     const to = coord.slice(2, 4) as `${string}${number}`;
-    //     chess.move({ from, to });
-    //   });
-    // } catch (error) {
-    //   console.log('Error parsing moves', error)
-    // }
-
-    // setPgn(chess.pgn() || '');
-
-    // console.log('ChessVariationPanel - convertedPgn\n', originalPgn, fenInput);
-    // const convertedPgn = fenMovesToPgn(fenInput, JSON.parse(movesInput));
     const convertedPgn = combinePgn(originalPgn, fenInput, JSON.parse(movesInput));
     
     setPgn(convertedPgn || '');
@@ -129,11 +104,6 @@ export default function ChessVariationPanel({
 
       {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
       <div className="collapse-content overflow-auto">
-        {/* <ChessVariationContent
-          boardSize={boardSize}
-          initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-          initialMoves='["e2e4","e7e5"]'
-        /> */}
         <ChessVariationContent
           boardSize={boardSize}
           initialFen={initialFen}

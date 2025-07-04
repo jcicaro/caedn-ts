@@ -120,9 +120,6 @@ export function combinePgn(
   const parser = new Chess();
 
   parser.loadPgn(originalPgn);
-  // if (!parser.loadPgn(originalPgn)) {
-  //   throw new Error('Invalid PGN: could not be parsed.');
-  // }
 
   // Extract any custom starting position from headers
   const headers = parser.header();                // { Event: "...", FEN: "...", ... }

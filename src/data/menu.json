@@ -55,6 +55,11 @@
                 "link": "/jcchesstraining"
             },
             {
+                "title": "Chess Game",
+                "desc": "Play Chess with an AI to sharpen your game.",
+                "link": "/jcchessgame"
+            },
+            {
                 "title": "Chess PGN to Chess.com Converter",
                 "desc": "Convert a PGN to emulate a JSON response from Chess.com.",
                 "link": "/jcchesscomconverterforpgnpage"

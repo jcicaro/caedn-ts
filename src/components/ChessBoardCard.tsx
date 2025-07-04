@@ -92,7 +92,6 @@ export const ChessBoardCard: React.FC<Props> = ({
           initialFen={fen}
           // initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
           // initialMoves='["e2e4","e7e5"]' 
-          //{JSON.stringify(analysis)}
           initialMoves={(analysis && analysis.length>0) ? JSON.stringify(analysis[0].continuationArrCombined) : ''}
           originalPgn={pgn}
         />)}
