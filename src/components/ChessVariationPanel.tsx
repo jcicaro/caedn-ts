@@ -118,7 +118,7 @@ export default function ChessVariationPanel({
         className="collapse-title flex justify-between items-center text-lg font-semibold cursor-pointer"
         onClick={toggleOpen}
       >
-        <span>Variation</span>
+        <span>Continuation</span>
       </div>
 
       {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
