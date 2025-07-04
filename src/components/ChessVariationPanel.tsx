@@ -57,7 +57,7 @@ export function ChessVariationContent({ boardSize,
 
   return (
     <div className="">
-      <div>
+      {/* <div>
         <label className="block font-semibold mb-1">FEN:</label>
         <textarea
           value={fenInput}
@@ -65,17 +65,9 @@ export function ChessVariationContent({ boardSize,
           className="w-full h-24 border rounded p-2"
           placeholder="Enter starting FEN (or leave blank for standard)"
         />
-      </div>
-      <div>
-        <label className="block font-semibold mb-1">Moves (JSON array):</label>
-        <textarea
-          value={movesInput}
-          onChange={e => setMovesInput(e.target.value)}
-          className="w-full h-24 border rounded p-2"
-          placeholder='e.g. ["d4d3", "h3g4", ...]'
-        />
-      </div>
-      <div className="flex justify-center mt-4 w-full">
+      </div> */}
+      
+      <div className="flex justify-center w-full">
         <Chessboard
           // key={`${initialFen}`}  
           width={boardSize}
@@ -89,6 +81,16 @@ export function ChessVariationContent({ boardSize,
           className="rounded-lg"
         />
       </div>
+
+      {/* <div className='mt-4'>
+        <label className="block font-semibold mb-1">Moves (JSON array):</label>
+        <textarea
+          value={movesInput}
+          onChange={e => setMovesInput(e.target.value)}
+          className="w-full h-24 border rounded p-2"
+          placeholder='e.g. ["d4d3", "h3g4", ...]'
+        />
+      </div> */}
 
     </div>
   );
