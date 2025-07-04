@@ -122,7 +122,7 @@ export default function ChessVariationPanel({
       </div>
 
       {/* The content is now a permanent child, allowing for smooth CSS transitions. */}
-      <div className="collapse-content p-4 overflow-auto">
+      <div className="collapse-content overflow-auto">
         {/* <ChessVariationContent
           boardSize={boardSize}
           initialFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
