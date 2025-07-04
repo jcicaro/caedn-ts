@@ -100,7 +100,7 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         {/* Only show ChessGameSelector if there are games available */}
         {true && (
-          <div className="mb-2 w-full flex items-start gap-2">
+          <div className="mb-2 w-full flex items-start gap-1">
             <input
               className="input input-sm input-bordered"
               placeholder="Filter games…"
