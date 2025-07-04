@@ -51,7 +51,7 @@ export const ChessBoardCard: React.FC<Props> = ({
     <div className="card bg-base-100 shadow-xl">
       <div className="card-body flex flex-col items-center">
         <h1 className="card-title text-3xl text-center">Chess Buddy</h1>
-        <p className="text-sm opacity-80 text-center mb-2">
+        <p className="text-sm opacity-80 text-center mb-1">
 
           W: <span className="font-semibold">{meta.white || "—"}</span> {' '}
           {turn === "w" ? "⬜" : "⬛"} {' '}
@@ -85,7 +85,7 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         </div>
         
-        <div className="mb-2"></div>
+        <div className="mb-1"></div>
         
         {showVariationPanel && (<ChessVariationPanel 
           boardSize={boardSize-50}
@@ -96,7 +96,7 @@ export const ChessBoardCard: React.FC<Props> = ({
           initialMoves={(analysis && analysis.length>0) ? JSON.stringify(analysis[0].continuationArrCombined) : ''}
         />)}
 
-        <div className="mb-2"></div>
+        <div className="mb-1"></div>
 
         {/* Only show ChessGameSelector if there are games available */}
         {true && (

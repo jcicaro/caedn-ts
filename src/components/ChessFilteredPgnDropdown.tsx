@@ -74,7 +74,7 @@ const ChessFilteredPgnDropdown: React.FC<ChessFilteredPgnDropdownProps> = ({
     };
 
     return (
-        <div className='space-y-2 w-full mt-4 flex items-start gap-2'>
+        <div className='space-y-1 w-full mt-1 flex items-start gap-1'>
             <input
                 type='text'
                 placeholder='Filter games...'
