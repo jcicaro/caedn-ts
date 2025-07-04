@@ -99,7 +99,7 @@ export const useChessGame = () => {
       const res = await fetch("https://chess-api.com/v1", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fen: currentFen }),
+        body: JSON.stringify({ fen: currentFen, depth: 18, maxThinkingTime: 100 }),
       });
       if (!res.ok) throw new Error(`Analysis API failed (${res.status})`);
       const data = await res.json();

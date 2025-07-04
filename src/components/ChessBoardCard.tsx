@@ -60,7 +60,7 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         </p>
 
-        <div className="flex justify-center mb-4 w-full">
+        <div className="flex justify-center mb-2 w-full">
           <Chessboard
             width={boardSize}
             height={boardSize}
@@ -100,7 +100,7 @@ export const ChessBoardCard: React.FC<Props> = ({
 
         {/* Only show ChessGameSelector if there are games available */}
         {true && (
-          <div className="mb-2 w-full flex items-start gap-1">
+          <div className=" w-full flex items-start gap-1">
             <input
               className="input input-sm input-bordered"
               placeholder="Filter games…"
