@@ -111,16 +111,16 @@ const JcChessGame: React.FC = () => {
 
 
     return (
-        <div className="md:flex gap-4 mt-10">
+        <div className="md:flex gap-4 mt-6">
             {/* Left column: centered board + PGN */}
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center space-y-4 mb-8">
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center space-y-4 mb-4">
 
                 <h1 className="text-3xl font-bold text-center">Let's Play Chess!</h1>
 
                 <button
                     onClick={applySuggestedMove}
                     // disabled={!suggestedMove || loading}
-                    disabled
+                    disabled // applySuggestedMove doesn't work correctly
                     className="btn btn-ghost">
                     {suggestedMove
                         ? `${suggestedMove}`
