@@ -65,6 +65,7 @@ export const useChessGame = () => {
   useEffect(() => {
     if (!pgn) return;
     const { meta: m, fen, turn } = parsePgn(pgn);
+    setShowVariationPanel(false);
     setMeta(m);
     setCurrentFen(fen);
     setCurrentTurn(turn);
@@ -85,9 +86,9 @@ export const useChessGame = () => {
   };
 
   const handlePositionChange = (fen: string) => {
+    setShowVariationPanel(false);
     setCurrentFen(fen);
     setCurrentTurn(parsePgn(`[FEN "${fen}"]`).turn);
-    setShowVariationPanel(false);
   };
 
   const analyse = useCallback(async () => {
