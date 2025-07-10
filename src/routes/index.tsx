@@ -4,16 +4,17 @@ import Home from "../pages/Home";
 
 import About from "../pages/About";
 
-import JcProgrammingCheatsheet from "../pages/JcProgrammingCheatsheet";
-import JcChessTraining from "../pages/JcChessTraining";
-
 import BasicMath from "../pages/BasicMath2";
 import Multiplication from "../pages/Multiplication2";
 import LunaSpeech2 from "../pages/LunaSpeech2";
 import LunaNarrative2 from "../pages/LunaNarrative2";
 import LunaChat from "../pages/LunaChat";
+
+import JcProgrammingCheatsheet from "../pages/JcProgrammingCheatsheet";
+import JcChessTraining from "../pages/JcChessTraining";
 import JcChessComConverterForPgnPage from "../pages/JcChessComConverterForPgn";
 import JcChessGame from "../pages/JcChessGame";
+import JcRte from "../pages/JcRte";
 
 export const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: "jcchesstraining", element: <JcChessTraining /> }, 
       { path: "jcchessgame", element: <JcChessGame /> }, 
       { path: "jcchesscomconverterforpgnpage", element: <JcChessComConverterForPgnPage /> }, 
+      { path: "jcrte", element: <JcRte /> }, 
 
       { path: "basicmath", element: <BasicMath /> }, 
       { path: "multiplication", element: <Multiplication /> }, 

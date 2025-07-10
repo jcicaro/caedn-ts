@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@mdwebb/react-chess": "^1.2.0",
+    "@tiptap/pm": "^2.25.1",
+    "@tiptap/react": "^2.25.1",
+    "@tiptap/starter-kit": "^2.25.1",
     "highlight.js": "^11.11.1",
     "livecodes": "^0.11.1",
     "react": "^19.1.0",

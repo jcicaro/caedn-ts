@@ -63,6 +63,11 @@
                 "title": "Chess PGN to Chess.com Converter",
                 "desc": "Convert a PGN to emulate a JSON response from Chess.com.",
                 "link": "/jcchesscomconverterforpgnpage"
+            },
+            {
+                "title": "RTE Playground",
+                "desc": "Play around with a Rich Text Editor developed using TipTap.",
+                "link": "/jcrte"
             }
         ]
     }

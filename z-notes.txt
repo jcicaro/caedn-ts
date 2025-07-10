@@ -1,7 +1,7 @@
 To add a new page:
 - Create a page
 - Modify routes/index.tsx
-- -- Modify Navbar.tsx --
+- -- Modify Navbar.tsx -- NOT REQUIRED
 - Modify data/menu.json
 
 --
@@ -13,3 +13,7 @@ git commit -m "first commit"
 git branch -M main
 git remote add origin https://github.com/jcicaro/caedn-ts.git
 git push -u origin main
+
+-- 
+
+npm install --force
